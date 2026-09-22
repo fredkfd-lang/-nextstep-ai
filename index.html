@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXTSTEP AI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+    }
+    header {
+      background: linear-gradient(135deg,#4f46e5,#7c3aed);
+      color: white;
+      padding: 35px 20px;
+      border-radius: 0 0 25px 25px;
+    }
+    h1 { margin: 0 0 8px; }
+    .tagline { opacity: .9; }
+    main { padding: 20px; max-width: 700px; margin: auto; }
+    .card {
+      background: white;
+      padding: 18px;
+      margin: 14px 0;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.07);
+    }
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 18px;
+      background: #4f46e5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .match { color: #16a34a; font-weight: bold; }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>NEXTSTEP AI 🚀</h1>
+  <div class="tagline">Your skills. Your next opportunity.</div>
+</header>
+
+<main>
+
+  <div class="card">
+    <h2>👋 Welcome</h2>
+    <p>Find opportunities that match your skills, experience and goals.</p>
+    <button onclick="findMatches()">Find My Opportunities</button>
+  </div>
+
+  <div id="results"></div>
+
+</main>
+
+<script>
+function findMatches() {
+  document.getElementById("results").innerHTML = `
+    <div class="card">
+      <h2>🎯 Your Matches</h2>
+
+      <p><strong>Fachkraft für Lagerlogistik</strong></p>
+      <p>Hamburg · Ausbildung 2027</p>
+      <p class="match">92% Match</p>
+      <button>View Opportunity</button>
+    </div>
+
+    <div class="card">
+      <p><strong>Fachlagerist</strong></p>
+      <p>Neu Wulmstorf · Ausbildung</p>
+      <p class="match">88% Match</p>
+      <button>View Opportunity</button>
+    </div>
+
+    <div class="card">
+      <p><strong>Elektroniker Ausbildung</strong></p>
+      <p>Hamburg · Ausbildung 2027</p>
+      <p class="match">73% Match</p>
+      <button>View Opportunity</button>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
