@@ -1,92 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXTSTEP AI</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #172033;
-    }
-    header {
-      background: linear-gradient(135deg,#4f46e5,#7c3aed);
-      color: white;
-      padding: 35px 20px;
-      border-radius: 0 0 25px 25px;
-    }
-    h1 { margin: 0 0 8px; }
-    .tagline { opacity: .9; }
-    main { padding: 20px; max-width: 700px; margin: auto; }
-    .card {
-      background: white;
-      padding: 18px;
-      margin: 14px 0;
-      border-radius: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,.07);
-    }
-    button {
-      border: 0;
-      border-radius: 12px;
-      padding: 12px 18px;
-      background: #4f46e5;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .match { color: #16a34a; font-weight: bold; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXTSTEP AI</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+header{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;padding:28px 20px;border-radius:0 0 25px 25px}
+header h1{margin:0 0 6px}.tagline{opacity:.9}
+main{max-width:760px;margin:auto;padding:18px;padding-bottom:90px}
+.card{background:white;padding:18px;margin:14px 0;border-radius:18px;box-shadow:0 4px 15px rgba(0,0,0,.07)}
+button{border:0;border-radius:12px;padding:12px 16px;background:#4f46e5;color:white;font-weight:bold;cursor:pointer;margin:4px}
+button.secondary{background:#e9eafc;color:#3730a3}
+input,select{width:100%;padding:12px;margin:7px 0 12px;border:1px solid #d8dce8;border-radius:10px}
+.match{color:#16a34a;font-weight:bold}.hidden{display:none}.nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;padding:10px;display:flex;justify-content:space-around}.nav button{background:white;color:#333;margin:0}
+.badge{display:inline-block;background:#eef2ff;color:#4338ca;padding:5px 9px;border-radius:20px;font-size:12px;margin:3px}
+</style>
 </head>
-
 <body>
-
-<header>
-  <h1>NEXTSTEP AI 🚀</h1>
-  <div class="tagline">Your skills. Your next opportunity.</div>
-</header>
-
+<header><h1>NEXTSTEP AI 🚀</h1><div class="tagline">Your skills. Your next opportunity.</div></header>
 <main>
+<section id="home">
+<div class="card"><h2>👋 Welcome</h2><p>Build your profile and discover opportunities that match your skills.</p><button onclick="show('profile')">Create My Profile</button><button class="secondary" onclick="show('matches');findMatches()">Find Opportunities</button></div>
+<div class="card"><h3>What NEXTSTEP AI does</h3><p>🎯 Match your skills</p><p>📚 Find Ausbildung & jobs</p><p>📝 Help with applications</p><p>🚀 Plan your next career step</p></div>
+</section>
 
-  <div class="card">
-    <h2>👋 Welcome</h2>
-    <p>Find opportunities that match your skills, experience and goals.</p>
-    <button onclick="findMatches()">Find My Opportunities</button>
-  </div>
+<section id="profile" class="hidden">
+<div class="card"><h2>👤 My Profile</h2>
+<label>Name</label><input id="name" placeholder="Your name">
+<label>Location</label><input id="location" placeholder="e.g. Neu Wulmstorf">
+<label>German level</label><select id="german"><option>A1</option><option selected>A2</option><option>B1</option><option>B2</option><option>C1</option></select>
+<label>Career goal</label><input id="goal" placeholder="e.g. Lagerlogistik">
+<label>Skills</label><input id="skills" placeholder="e.g. Staplerschein, Lager, Elektrik">
+<label>Certificates</label><input id="certs" placeholder="e.g. Staplerschein">
+<button onclick="saveProfile()">Save Profile</button></div>
+</section>
 
-  <div id="results"></div>
-
+<section id="matches" class="hidden"><div class="card"><h2>🎯 Your Matches</h2><div id="results"></div></div></section>
+<section id="saved" class="hidden"><div class="card"><h2>⭐ Saved Opportunities</h2><div id="savedList"></div></div></section>
+<section id="applications" class="hidden"><div class="card"><h2>📋 Applications</h2><div id="appList"></div><button onclick="addApplication()">Add Demo Application</button></div></section>
+<section id="agent" class="hidden"><div class="card"><h2>🤖 AI Career Agent</h2><p id="agentText">Complete your profile first.</p><button onclick="careerPlan()">Create My Career Plan</button></div></section>
 </main>
 
+<nav class="nav">
+<button onclick="show('home')">🏠 Home</button>
+<button onclick="show('profile')">👤 Profile</button>
+<button onclick="show('matches');findMatches()">🎯 Matches</button>
+<button onclick="show('saved');renderSaved()">⭐ Saved</button>
+<button onclick="show('applications');renderApps()">📋 Apps</button>
+</nav>
+
 <script>
-function findMatches() {
-  document.getElementById("results").innerHTML = `
-    <div class="card">
-      <h2>🎯 Your Matches</h2>
+const opps=[
+{id:1,title:'Fachkraft für Lagerlogistik',place:'Hamburg',type:'Ausbildung 2027',skills:['lager','logistik','stapler'],match:92},
+{id:2,title:'Fachlagerist',place:'Neu Wulmstorf',type:'Ausbildung',skills:['lager','stapler'],match:88},
+{id:3,title:'Elektroniker',place:'Hamburg',type:'Ausbildung 2027',skills:['elektrik'],match:73},
+{id:4,title:'Kaufmann für Spedition und Logistikdienstleistung',place:'Hamburg',type:'Ausbildung 2027',skills:['logistik'],match:79}
+];
+let saved=JSON.parse(localStorage.getItem('ns_saved')||'[]');
+let apps=JSON.parse(localStorage.getItem('ns_apps')||'[]');
 
-      <p><strong>Fachkraft für Lagerlogistik</strong></p>
-      <p>Hamburg · Ausbildung 2027</p>
-      <p class="match">92% Match</p>
-      <button>View Opportunity</button>
-    </div>
-
-    <div class="card">
-      <p><strong>Fachlagerist</strong></p>
-      <p>Neu Wulmstorf · Ausbildung</p>
-      <p class="match">88% Match</p>
-      <button>View Opportunity</button>
-    </div>
-
-    <div class="card">
-      <p><strong>Elektroniker Ausbildung</strong></p>
-      <p>Hamburg · Ausbildung 2027</p>
-      <p class="match">73% Match</p>
-      <button>View Opportunity</button>
-    </div>
-  `;
-}
+function show(id){document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
+function saveProfile(){let p={name:name.value,location:location.value,german:german.value,goal:goal.value,skills:skills.value,certs:certs.value};localStorage.setItem('ns_profile',JSON.stringify(p));alert('Profile saved successfully!');}
+function loadProfile(){let p=JSON.parse(localStorage.getItem('ns_profile')||'null');if(!p)return;name.value=p.name||'';location.value=p.location||'';german.value=p.german||'A2';goal.value=p.goal||'';skills.value=p.skills||'';certs.value=p.certs||''}
+function findMatches(){let p=JSON.parse(localStorage.getItem('ns_profile')||'{}');let text=((p.goal||'')+' '+(p.skills||'')+' '+(p.certs||'')).toLowerCase();document.getElementById('results').innerHTML=opps.map(o=>{let extra=o.skills.filter(s=>text.includes(s)).length*4;let m=Math.min(99,o.match+extra);return '<div class="card"><h3>'+o.title+'</h3><p>📍 '+o.place+' · '+o.type+'</p><span class="badge">'+(m)+'% Match</span><br><button onclick="saveOpp('+o.id+')">⭐ Save</button><button class="secondary" onclick="viewOpp('+o.id+')">View Details</button></div>'}).join('')}
+function saveOpp(id){if(!saved.includes(id)){saved.push(id);localStorage.setItem('ns_saved',JSON.stringify(saved));alert('Saved!')}else alert('Already saved.')}
+function renderSaved(){document.getElementById('savedList').innerHTML=saved.length?saved.map(id=>{let o=opps.find(x=>x.id===id);return '<p><strong>'+o.title+'</strong><br>'+o.place+' · '+o.type+'</p>'}).join(''):'<p>No saved opportunities yet.</p>'}
+function viewOpp(id){let o=opps.find(x=>x.id===id);alert(o.title+'\n\n'+o.place+' · '+o.type+'\n\nNext step: save this opportunity and prepare your application.')}
+function addApplication(){apps.push({title:'Fachkraft für Lagerlogistik',status:'Interested'});localStorage.setItem('ns_apps',JSON.stringify(apps));renderApps()}
+function renderApps(){document.getElementById('appList').innerHTML=apps.length?apps.map((a,i)=>'<div class="card"><strong>'+a.title+'</strong><p>Status: '+a.status+'</p><button class="secondary" onclick="changeStatus('+i+')">Change Status</button></div>').join(''):'<p>No applications yet.</p>'}
+function changeStatus(i){let s=['Interested','Applied','Interview','Accepted'];let n=s.indexOf(apps[i].status);apps[i].status=s[(n+1)%s.length];localStorage.setItem('ns_apps',JSON.stringify(apps));renderApps()}
+function careerPlan(){let p=JSON.parse(localStorage.getItem('ns_profile')||'{}');document.getElementById('agentText').innerHTML='Based on your profile, your next steps are:<br><br>1️⃣ Complete your profile<br>2️⃣ Choose matching opportunities<br>3️⃣ Save the best ones<br>4️⃣ Prepare your CV and motivation letter<br>5️⃣ Track every application<br><br>This is the first demo of your AI Career Agent.'}
+loadProfile();show('home');
 </script>
-
 </body>
 </html>
