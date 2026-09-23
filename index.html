@@ -15,9 +15,10 @@
 .nsProfessorTop{display:flex;align-items:center;gap:12px}.nsAvatar{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#22d3ee,#8b5cf6);font-size:25px;box-shadow:0 8px 22px #0003}
 .nsProfessor strong{font-size:16px}.nsProfessor small{display:block;color:#cbd5e1;margin-top:3px}
 .nsProfessorMsg{margin-top:15px;padding:13px;border-radius:15px;background:rgba(15,23,42,.38);font-size:13px;line-height:1.5;color:#f8fafc}
-.nsMiniFeatures{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.nsMiniFeatures{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
 .nsMiniFeature{padding:14px;border:1px solid #e0e7ff;background:#fff;border-radius:16px;box-shadow:0 5px 18px #0000000a}
 .nsMiniFeature b{display:block;font-size:14px;margin:6px 0 3px}.nsMiniFeature span{font-size:12px;color:#64748b}
+@media(max-width:900px){.nsMiniFeatures{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){.nsHeroGrid{grid-template-columns:1fr}.nsHero{padding:24px 18px}.nsMiniFeatures{grid-template-columns:1fr}.nsHero h2{font-size:34px}}
 
 /* Profile / privacy / mobile form */
@@ -48,9 +49,10 @@
 </div>
 </div>
 <div class="nsMiniFeatures">
-<div class="nsMiniFeature">📄<b>CV Builder</b><span>Import a PDF and improve your Lebenslauf.</span></div>
-<div class="nsMiniFeature">🎯<b>Smart Matching</b><span>Explore jobs and Ausbildung by your profile.</span></div>
-<div class="nsMiniFeature">🚀<b>Application Helper</b><span>Prepare professional German applications.</span></div>
+<div class="nsMiniFeature">📄<b>CV Builder</b><span>Upload your CV PDF and build a professional Lebenslauf.</span></div>
+<div class="nsMiniFeature">🎯<b>Smart Matching</b><span>Find Ausbildung and jobs that fit your skills.</span></div>
+<div class="nsMiniFeature">✉️<b>Application Helper</b><span>Create and improve German application documents.</span></div>
+<div class="nsMiniFeature">🤖<b>AI Career Assistant</b><span>Get guidance for your next career step.</span></div>
 </div>
 <div class="card" style="background:#fff;border:1px solid #dbeafe">
 <h3 id="aiHomeTitle">🤖 AI Career & CV Assistant</h3>
