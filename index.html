@@ -450,7 +450,7 @@ function initBerOppAuth(){
       beroppUser=user||null;
       if(user){
         setAuthStatus('✅ Signed in as '+(user.email||user.displayName||'BerOpp user'));
-        if(beroppPendingTarget){const t=beroppPendingTarget;beroppPendingTarget='';show(t);if(t==='matches')findMatches();if(t==='ausbildung')renderBerufe();if(t==='applications')renderApps()} if(beroppPendingInternational){const u=beroppPendingInternational;beroppPendingInternational='';location.href=u;}
+        const nextInternational=new URLSearchParams(location.search).get('requireAccount'); if(nextInternational&&!user){show('auth');} if(nextInternational&&user){location.href=nextInternational;return;} if(beroppPendingTarget){const t=beroppPendingTarget;beroppPendingTarget='';show(t);if(t==='matches')findMatches();if(t==='ausbildung')renderBerufe();if(t==='applications')renderApps()} if(beroppPendingInternational){const u=beroppPendingInternational;beroppPendingInternational='';location.href=u;}
       }else setAuthStatus('Please sign in to continue.');
     });
   }catch(e){console.error(e);setAuthStatus('⚠️ Firebase configuration could not be initialized.')}
