@@ -1,8 +1,19 @@
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "https://fredkfd-lang.github.io",
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS"
-};
+const allowedOrigins = new Set([
+  "https://beropp.de",
+  "https://www.beropp.de",
+  "https://fredkfd-lang.github.io"
+]);
+
+function corsHeadersFor(request) {
+  const origin = request.headers.get("Origin") || "";
+  const allowOrigin = allowedOrigins.has(origin) ? origin : "https://beropp.de";
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Vary": "Origin",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS"
+  };
+}
 
 const schema = {
   type: "object",
@@ -19,13 +30,13 @@ const schema = {
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") {
-      return new Response("", { headers: corsHeaders });
+      return new Response("", { headers: corsHeadersFor(request) });
     }
     if (request.method !== "POST") {
-      return json({ error: "Method not allowed" }, 405);
+      return json({ error: "Method not allowed" }, 405, request);
     }
     if (!env.OPENAI_API_KEY) {
-      return json({ error: "OPENAI_API_KEY is not configured on the server." }, 500);
+      return json({ error: "OPENAI_API_KEY is not configured on the server." }, 500, request);
     }
 
     try {
@@ -103,7 +114,7 @@ export default {
 
       const raw = await openaiResponse.json();
       if (!openaiResponse.ok) {
-        return json({ error: raw?.error?.message || "OpenAI request failed." }, openaiResponse.status);
+        return json({ error: raw?.error?.message || "OpenAI request failed." }, openaiResponse.status, request);
       }
 
       const outputText = raw.output_text || "";
@@ -111,21 +122,21 @@ export default {
       try {
         result = JSON.parse(outputText);
       } catch {
-        return json({ error: "The AI returned an unexpected response format." }, 502);
+        return json({ error: "The AI returned an unexpected response format." }, 502, request);
       }
 
-      return json(result, 200);
+      return json(result, 200, request);
     } catch (error) {
-      return json({ error: "Server error: " + (error?.message || "Unknown error") }, 500);
+      return json({ error: "Server error: " + (error?.message || "Unknown error") }, 500, request);
     }
   }
 };
 
-function json(data, status = 200) {
+function json(data, status = 200, request) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
-      ...corsHeaders,
+      ...corsHeadersFor(request || new Request("https://beropp.de")),
       "Content-Type": "application/json"
     }
   });
