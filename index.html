@@ -36,7 +36,16 @@ function showBerufDetail(name,cat){
   $('berufDetail').classList.remove('hidden');$('berufDetail').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function renderBerufe(){const q=($('berufSearch')?.value||'').toLowerCase().trim(),cat=$('berufCategory')?.value||'',list=berufe.filter(b=>(!q||b[0].toLowerCase().includes(q))&&(!cat||b[1]===cat));$('berufeCount').textContent=list.length+' Berufe in BerOpp';$('berufeList').innerHTML=list.length?list.map(b=>'<div class="card" style="margin:8px 0;padding:14px"><strong>'+esc(b[0])+'</strong><br><span class="badge">'+esc(b[1])+'</span><button class="secondary" onclick="showBerufDetail('+JSON.stringify(b[0]).replace(/"/g,'&quot;')+','+JSON.stringify(b[1]).replace(/"/g,'&quot;')+')">📖 Details</button><button class="secondary" onclick="findByBeruf('+JSON.stringify(b[0]).replace(/"/g,'&quot;')+')">🔎 Stellen finden</button></div>').join(''):'<p>No professions found.</p>'}
-function findByBeruf(name){show('matches');$('oppSearch').value=name;findMatches()}n</button></div>').join(''):'<p>No professions found.</p>'}
+function findByBeruf(name){
+  show('matches');
+  $('oppSearch').value=name;
+  findMatches();
+  const results=$('results');
+  if(results&&results.textContent.includes('No matching opportunities found.')){
+    const baUrl='https://www.arbeitsagentur.de/jobsuche/suche?ausbildungsart=0&suchbereich=ausbildung&was='+encodeURIComponent(name);
+    results.innerHTML='<div class="card"><h3>🔎 '+esc(name)+'</h3><p>BerOpp currently has no saved vacancy for this profession. You can search current Ausbildung vacancies directly in the Bundesagentur für Arbeit database.</p><a class="secondary" href="'+baUrl+'" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">🔗 Search current Ausbildung vacancies</a></div>';
+  }
+}n</button></div>').join(''):'<p>No professions found.</p>'}
 function findByBeruf(name){show('matches');$('oppSearch').value=name;findMatches()}
 
 const opps=[
