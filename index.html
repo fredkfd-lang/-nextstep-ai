@@ -167,7 +167,35 @@ function saveOpp(id){if(!saved.includes(id)){saved.push(id);localStorage.setItem
     status.textContent='❌ This PDF could not be read. Try a text-based PDF (not a scanned image).';
   }
 }
-function runAICareerAssistant(){
+const BEROPP_AI_API_URL=localStorage.getItem('beropp_ai_api_url')||'';
+async function runAICareerAssistant(){
+  const res=$('aiCareerResult');
+  if(!res)return;
+  const apiUrl=(BEROPP_AI_API_URL||'').trim();
+  if(!apiUrl){runLocalAICareerAssistant();return}
+  res.classList.remove('hidden');
+  res.innerHTML='<p>⏳ BerOpp AI is analyzing your CV...</p>';
+  const p=JSON.parse(localStorage.getItem('ns_profile')||'{}');
+  const cv={title:$('cvTitle')?.value||'',about:$('cvAbout')?.value||'',education:$('cvEducation')?.value||'',experience:$('cvExperience')?.value||'',skills:$('cvSkills')?.value||'',certs:$('cvCerts')?.value||'',languages:$('cvLanguages')?.value||''};
+  const payload={prompt:($('aiCareerPrompt')?.value||'').trim(),profile:p,cv,photo:localStorage.getItem('ns_cv_photo')||''};
+  try{
+    const r=await fetch(apiUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const data=await r.json();
+    if(!r.ok)throw new Error(data.error||'AI request failed');
+    window._aiAbout=data.profile||data.about||'';
+    window._aiTitle=data.title||cv.title||p.goal||'';
+    const suggestions=Array.isArray(data.suggestions)?data.suggestions:[];
+    const letter=data.application||data.motivationLetter||'';
+    res.innerHTML='<h4>✨ BerOpp AI</h4><p><strong>Suggested target:</strong> '+esc(window._aiTitle)+'</p><ul>'+suggestions.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul><h4>📝 Suggested profile</h4><p>'+esc(window._aiAbout)+'</p><h4>✉️ German application draft</h4><p style="white-space:pre-line">'+esc(letter)+'</p><button class="secondary" onclick="applyAIToCV()">📄 Use in my CV</button>';
+    if($('aiCvStatus'))$('aiCvStatus').textContent='✅ Real AI analysis completed. Review everything before using it.';
+  }catch(err){
+    console.error(err);
+    res.innerHTML='<p>⚠️ Real AI is not connected yet. BerOpp will use its local assistant instead.</p>';
+    if($('aiCvStatus'))$('aiCvStatus').textContent='ℹ️ Using local AI assistant.';
+    runLocalAICareerAssistant();
+  }
+}
+function runLocalAICareerAssistant(){
  const box=$('aiCareerPrompt'),res=$('aiCareerResult'); if(!box||!res)return;
  const p=JSON.parse(localStorage.getItem('ns_profile')||'{}');
  const cv={title:$('cvTitle')?.value||'',about:$('cvAbout')?.value||'',education:$('cvEducation')?.value||'',experience:$('cvExperience')?.value||'',skills:$('cvSkills')?.value||'',certs:$('cvCerts')?.value||'',languages:$('cvLanguages')?.value||''};
