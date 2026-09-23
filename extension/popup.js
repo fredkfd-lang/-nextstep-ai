@@ -1,0 +1,6 @@
+const $=id=>document.getElementById(id);const status=msg=>$('status').textContent=msg;
+async function getProfile(){return (await chrome.storage.local.get('beroppProfile')).beroppProfile||null}
+$('import').addEventListener('click',async()=>{const file=$('profileFile').files[0];if(!file){status('Choose your exported profile JSON first.');return}try{const p=JSON.parse(await file.text());await chrome.storage.local.set({beroppProfile:p});status('✅ Profile imported into this extension.');}catch(e){status('❌ Invalid JSON profile file.')}});
+$('fill').addEventListener('click',async()=>{const p=await getProfile();if(!p){status('Import a profile first.');return}const [tab]=await chrome.tabs.query({active:true,currentWindow:true});if(!tab?.id){status('No active page found.');return}try{const result=await chrome.tabs.sendMessage(tab.id,{type:'BEROPP_FILL',profile:p});status(`Filled: ${result?.filled||0} · Not matched: ${result?.unmatched||0}`);}catch(e){status('This page does not allow autofill. Try a normal website tab.')}});
+$('clear').addEventListener('click',async()=>{await chrome.storage.local.remove('beroppProfile');status('Extension profile deleted.');});
+(async()=>{const p=await getProfile();if(p)status('Profile ready. Click Fill form when you are on an application page.');})();
