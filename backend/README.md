@@ -32,3 +32,30 @@ The worker does not create a database. The OpenAI request is made with `store: f
 ## OpenAI API
 
 The worker uses the OpenAI Responses API with text and optional image input. See the official OpenAI documentation for current API details and model availability.
+
+
+## Automatic deployment
+
+The repository now contains `.github/workflows/worker.yml`. It deploys the Worker automatically whenever `backend/**` changes.
+
+Before the first deployment, add these GitHub Actions repository secrets:
+
+- `CLOUDFLARE_API_TOKEN` — a Cloudflare API token allowed to deploy Workers.
+- `CLOUDFLARE_ACCOUNT_ID` — the Cloudflare account ID.
+
+Then set the Worker secrets in Cloudflare:
+
+```
+wrangler secret put OPENAI_API_KEY
+wrangler secret put OPENAI_MODEL
+```
+
+Use `gpt-5.6-luna` for `OPENAI_MODEL` if you want the cost-sensitive current model.
+
+After deployment, copy the Worker URL (for example, the `*.workers.dev` URL) and set it in the browser once:
+
+```js
+localStorage.setItem("beropp_ai_api_url", "https://YOUR-WORKER-URL")
+```
+
+The website intentionally does not contain the OpenAI API key. If the Worker is not connected, the built-in local career assistant remains available.
