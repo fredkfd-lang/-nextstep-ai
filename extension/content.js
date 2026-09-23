@@ -1,0 +1,13 @@
+(() => {
+  const normalize=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ');
+  const aliases={
+    salutation:['anrede','salutation','title'],firstName:['vorname','first name','given name','firstname'],lastName:['nachname','last name','surname','family name','lastname'],
+    birthDate:['geburtsdatum','date of birth','birth date','dob'],street:['strasse','straße','street','address','adresse'],postalCode:['plz','postal code','postcode','zip'],city:['ort','stadt','city','town'],
+    phone:['telefon','phone','telephone','mobile','mobil'],email:['e mail','email','mail'],schoolLeaving:['schulabschluss','school leaving certificate','education','degree'],school:['schule','school','graduation'],
+    german:['sprachkenntnisse','german level','language level','deutsch'],driving:['fuhrerschein','führerschein','driving licence','driver license'],internships:['praktika','praktikum','internship','work experience'],startDate:['ausbildungsbeginn','desired start','start date','beginning']
+  };
+  function fieldText(el){let parts=[el.name,el.id,el.placeholder,el.getAttribute('autocomplete'),el.getAttribute('aria-label')];if(el.labels)parts.push(...[...el.labels].map(l=>l.textContent));const parent=el.closest('label,div,fieldset');if(parent)parts.push(parent.innerText?.slice(0,250));return normalize(parts.filter(Boolean).join(' '));}
+  function findKey(el){const text=fieldText(el);for(const [key,list] of Object.entries(aliases)){if(list.some(a=>text.includes(normalize(a))))return key}return null}
+  function setValue(el,value){const proto=el instanceof HTMLTextAreaElement?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;const setter=Object.getOwnPropertyDescriptor(proto,'value')?.set;if(setter)setter.call(el,String(value));else el.value=String(value);el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));el.style.outline='3px solid #22c55e';el.style.backgroundColor='#f0fdf4';}
+  chrome.runtime.onMessage.addListener((msg,sender,sendResponse)=>{if(msg?.type!=='BEROPP_FILL')return;const p=msg.profile||{};let filled=0,unmatched=0;const seen=new Set();document.querySelectorAll('input,textarea,select').forEach(el=>{if(el.disabled||el.readOnly||el.type==='hidden'||el.type==='file'||el.type==='submit'||el.type==='button')return;const key=findKey(el);if(!key||seen.has(key))return;const value=p[key];if(value===undefined||value===null||value==='')return;try{setValue(el,value);seen.add(key);filled++}catch(e){unmatched++}});const keys=Object.keys(p).filter(k=>p[k]!==undefined&&p[k]!==null&&p[k]!=='');unmatched+=keys.filter(k=>!seen.has(k)&&aliases[k]).length;sendResponse({filled,unmatched});return true;});
+})();
