@@ -18,6 +18,7 @@
 .nsMiniFeatures{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
 .nsMiniFeature{padding:14px;border:1px solid #e0e7ff;background:#fff;border-radius:16px;box-shadow:0 5px 18px #0000000a}
 .nsMiniFeature b{display:block;font-size:14px;margin:6px 0 3px}.nsMiniFeature span{font-size:12px;color:#64748b}
+.nsFeatureButton{cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.nsFeatureButton:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(14,116,144,.14);border-color:#7dd3fc}.nsFeatureButton:focus{outline:3px solid rgba(34,211,238,.3);outline-offset:2px}.nsFeatureButton small{display:block;margin-top:10px;color:#0369a1;font-weight:700}
 @media(max-width:900px){.nsMiniFeatures{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){.nsHeroGrid{grid-template-columns:1fr}.nsHero{padding:24px 18px}.nsMiniFeatures{grid-template-columns:1fr}.nsHero h2{font-size:34px}}
 
@@ -44,6 +45,8 @@ body.dark-mode .nsProfessor small{color:#94a3b8}
 body.dark-mode .nsProfessorMsg{background:rgba(30,41,59,.82);color:#e2e8f0}
 body.dark-mode .nsMiniFeature{background:#111827;border-color:#334155}
 body.dark-mode .nsMiniFeature span{color:#94a3b8}
+body.dark-mode .nsFeatureButton:hover{border-color:#22d3ee;box-shadow:0 10px 24px rgba(34,211,238,.12)}
+body.dark-mode .nsFeatureButton small{color:#67e8f9}
 body.dark-mode .quickCopy{background:#0f172a;border-color:#334155}
 body.dark-mode .quickCopyTitle{color:#cbd5e1}
 body.dark-mode .quickCopy button{background:#1e293b;color:#c7d2fe}
@@ -80,10 +83,10 @@ body.dark-mode a{color:#67e8f9}
 </div>
 </div>
 <div class="nsMiniFeatures">
-<div class="nsMiniFeature">📄<b>CV Builder</b><span>Upload your CV PDF and build a professional Lebenslauf.</span></div>
-<div class="nsMiniFeature">🎯<b>Smart Matching</b><span>Find Ausbildung and jobs that fit your skills.</span></div>
-<div class="nsMiniFeature">✉️<b>Application Helper</b><span>Create and improve German application documents.</span></div>
-<div class="nsMiniFeature">🤖<b>AI Career Assistant</b><span>Get guidance for your next career step.</span></div>
+<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="requireAuth('cv')" onkeydown="if(event.key==='Enter'||event.key===' ')requireAuth('cv')" title="Open CV Builder">📄<b>CV Builder</b><span>Upload your CV PDF and build a professional Lebenslauf.</span><small>Open CV Builder →</small></div>
+<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="requireAuth('matches')" onkeydown="if(event.key==='Enter'||event.key===' ')requireAuth('matches')" title="Open Smart Matching">🎯<b>Smart Matching</b><span>Find Ausbildung and jobs that fit your skills.</span><small>Find opportunities →</small></div>
+<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="requireAuth('cv')" onkeydown="if(event.key==='Enter'||event.key===' ')requireAuth('cv')" title="Open Application Helper">✉️<b>Application Helper</b><span>Create and improve German application documents.</span><small>Prepare application →</small></div>
+<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="requireAuth('cv')" onkeydown="if(event.key==='Enter'||event.key===' ')requireAuth('cv')" title="Open AI Career Assistant">🤖<b>AI Career Assistant</b><span>Get guidance for your next career step.</span><small>Open AI Assistant →</small></div>
 </div>
 <div class="card" style="background:#fff;border:1px solid #dbeafe">
 <h3 id="aiHomeTitle">🤖 AI Career & CV Assistant</h3>
