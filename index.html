@@ -77,7 +77,35 @@ body.dark-mode .nsAiBubble.ai{background:#111827;border-color:#334155;color:#e5e
 @media(max-width:600px){.nsAiChatHead{flex-direction:column}.nsAiInputRow{grid-template-columns:1fr}.nsAiInputRow button{width:100%}}
 <style>
 .nsMiniFeaturesBottom{margin:28px 0 6px;padding-top:4px}
-</style></style></head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
+</style></style><style>
+/* Jobs + Ausbildung sky/white page theme */
+#matches,#ausbildung{
+  background:linear-gradient(180deg,#ffffff 0%,#f0f9ff 48%,#dbeafe 100%);
+  border-radius:26px;
+  padding:22px 18px 90px;
+  margin:0 -2px;
+  min-height:70vh;
+}
+#matches > .card,#ausbildung > .card{
+  background:rgba(255,255,255,.88);
+  border:1px solid #bae6fd;
+  box-shadow:0 10px 28px rgba(14,116,144,.10);
+}
+#matches h2,#matches h3,#ausbildung h2,#ausbildung h3{color:#0f3b5c}
+#matches .status,#ausbildung .status{background:#e0f2fe;color:#075985}
+#matches .badge,#ausbildung .badge{background:#e0f2fe;color:#0369a1}
+body.dark-mode #matches,body.dark-mode #ausbildung{
+  background:linear-gradient(180deg,#0f172a 0%,#172554 55%,#1e3a8a 100%);
+}
+body.dark-mode #matches > .card,body.dark-mode #ausbildung > .card{
+  background:rgba(15,23,42,.88);
+  border-color:#334155;
+  box-shadow:0 10px 28px rgba(0,0,0,.28);
+}
+body.dark-mode #matches h2,body.dark-mode #matches h3,body.dark-mode #ausbildung h2,body.dark-mode #ausbildung h3{color:#e0f2fe}
+body.dark-mode #matches .status,body.dark-mode #ausbildung .status{background:#0c4a6e;color:#bae6fd}
+body.dark-mode #matches .badge,body.dark-mode #ausbildung .badge{background:#164e63;color:#a5f3fc}
+</style></head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
 <section id="auth" class="hidden"><div class="card" style="max-width:520px;margin:30px auto;background:linear-gradient(135deg,#eef2ff,#fff)"><div style="text-align:center"><div class="brandMark" style="margin:auto;width:72px;height:72px"><svg viewBox="0 0 64 64"><defs><linearGradient id="authG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#authG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><h2>🔐 Create your BerOpp account</h2><p>To use Find Jobs, Find Ausbildung, Berufe and Create My CV, please sign in first.</p></div><button id="googleAuthBtn" onclick="signInWithGoogle()" style="width:100%;background:#fff;color:#1f2937;border:1px solid #cbd5e1">🔵 Continue with Google</button><div style="text-align:center;margin:10px 0;color:#64748b">or</div><label>Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"><label>Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="At least 6 characters"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button onclick="createBerOppAccount()">Create account</button><button class="secondary" onclick="signInBerOpp()">I already have an account</button></div><p id="authStatus" class="status" style="margin-top:12px">Loading secure sign-in…</p><p style="font-size:12px;color:#64748b;margin-bottom:0">Your BerOpp account is separate from your Google email password when you use email/password sign-up.</p></div></section><section id="home">
 
 <div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid">
