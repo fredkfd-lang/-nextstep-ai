@@ -39,15 +39,18 @@ function renderBerufe(){const q=($('berufSearch')?.value||'').toLowerCase().trim
 function findByBeruf(name){
   show('matches');
   $('oppSearch').value=name;
-  $('oppType').value='Ausbildung 2027';
+  $('oppType').value='';
+  $('oppField').value='';
+  $('oppGerman').value='';
   findMatches();
-  const city=($('oppCity')?.value||'').trim();
   const results=$('results');
-  if(results&&results.textContent.includes('no saved vacancy')){
+  if(results&&results.textContent.toLowerCase().includes('no saved vacancy')){
+    const city=($('oppCity')?.value||'').trim();
     const baUrl=buildBAUrl(name,city);
-    results.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p>BerOpp has no saved vacancy for this profession yet. Here you can open the current Ausbildung search from the Bundesagentur für Arbeit.</p><a class="secondary" href="'+baUrl+'" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">🔗 Search current Ausbildung vacancies</a></div>';
+    results.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p>BerOpp has no saved vacancy for this profession yet. You can search current Ausbildung vacancies directly in the Bundesagentur für Arbeit database.</p><a class="secondary" href="'+baUrl+'" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">🔗 Search current Ausbildung vacancies</a><br><button class="secondary" onclick="show(\'ausbildung\');renderBerufe()">← Back to Berufe</button></div>';
   }
 }
+
 
 const opps=[
 {id:1,title:'Ausbildung Fachkraft für Lagerlogistik 2027',company:'RCL Rade GmbH (Rhenus)',place:'Neu Wulmstorf',type:'Ausbildung 2027',start:'01.08.2027',salary:'Nicht angegeben',skills:['lager','logistik','stapler'],match:92,description:'Dreijährige Ausbildung im Lager mit Planung und Organisation logistischer Prozesse.',requirements:['Schulabschluss','Interesse an Lagerlogistik','Bereitschaft, im Lager und auch mit Büroaufgaben zu arbeiten'],tasks:['Lagerprozesse planen und organisieren','Waren annehmen und lagern','Kommissionieren und Versand vorbereiten'],conditions:['Vollzeit','Standort: Neu Wulmstorf / Hamburg-Rade','Referenz: JR124746'],applyUrl:'https://www.rhenus.group/karriere/JR124746/'},
