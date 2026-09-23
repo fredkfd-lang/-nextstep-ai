@@ -145,19 +145,38 @@ function requireAuth(target){
 }
 async function signInWithGoogle(){
   if(!firebaseReady()){setAuthStatus('⚙️ Google login is not activated yet. Add the Firebase web config to BerOpp.');return}
-  try{const provider=new firebase.auth.GoogleAuthProvider();await beroppAuth.signInWithRedirect(provider)}catch(e){setAuthStatus('❌ '+(e.message||'Google sign-in failed'))}
+  try{
+    const provider=new firebase.auth.GoogleAuthProvider();
+    setAuthStatus('⏳ Opening Google sign-in…');
+    await beroppAuth.signInWithPopup(provider);
+  }catch(e){
+    console.error(e);
+    setAuthStatus('❌ Google login: '+(e.code||'error')+' — '+(e.message||'Google sign-in failed'));
+  }
 }
 async function createBerOppAccount(){
   if(!firebaseReady()){setAuthStatus('⚙️ Email accounts are not activated yet. Add the Firebase web config to BerOpp.');return}
   const email=($('authEmail')?.value||'').trim(),password=$('authPassword')?.value||'';
   if(!email||password.length<6){setAuthStatus('Please enter a valid email and a password with at least 6 characters.');return}
-  try{await beroppAuth.createUserWithEmailAndPassword(email,password)}catch(e){setAuthStatus('❌ '+(e.message||'Account creation failed'))}
+  try{
+    setAuthStatus('⏳ Creating your BerOpp account…');
+    await beroppAuth.createUserWithEmailAndPassword(email,password);
+  }catch(e){
+    console.error(e);
+    setAuthStatus('❌ Account creation: '+(e.code||'error')+' — '+(e.message||'Account creation failed'));
+  }
 }
 async function signInBerOpp(){
   if(!firebaseReady()){setAuthStatus('⚙️ Email login is not activated yet. Add the Firebase web config to BerOpp.');return}
   const email=($('authEmail')?.value||'').trim(),password=$('authPassword')?.value||'';
   if(!email||!password){setAuthStatus('Enter your email and password.');return}
-  try{await beroppAuth.signInWithEmailAndPassword(email,password)}catch(e){setAuthStatus('❌ '+(e.message||'Sign-in failed'))}
+  try{
+    setAuthStatus('⏳ Signing you in…');
+    await beroppAuth.signInWithEmailAndPassword(email,password);
+  }catch(e){
+    console.error(e);
+    setAuthStatus('❌ Email login: '+(e.code||'error')+' — '+(e.message||'Sign-in failed'));
+  }
 }
 function signOutBerOpp(){if(beroppAuth)beroppAuth.signOut();else{beroppUser=null;show('home')}}
 function show(id){document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));$(id).classList.remove('hidden');scrollTo(0,0)}function profileData(){return Object.fromEntries(['Name','Location','Email','Phone','German','Goal','Skills','Certs','Education','Experience','Languages'].map(x=>[x.toLowerCase(),$('profile'+x)?.value||'']))}function saveProfile(){localStorage.setItem('ns_profile',JSON.stringify(profileData()));alert('Saved!')}function loadProfile(){const p=JSON.parse(localStorage.getItem('ns_profile')||'{}');['name','location','email','phone','german','goal','skills','certs','education','experience','languages'].forEach(k=>{if($('profile'+k.charAt(0).toUpperCase()+k.slice(1)))$('profile'+k.charAt(0).toUpperCase()+k.slice(1)).value=p[k]||''})}function goToMatches(){const home=$('home'),matches=$('matches');if(home)home.classList.add('hidden');if(matches)matches.classList.remove('hidden');findMatches();window.scrollTo(0,0)}function openMatches(){goToMatches()}function getMatch(o){const p=JSON.parse(localStorage.getItem('ns_profile')||'{}'),text=((p.goal||'')+' '+(p.skills||'')+' '+(p.certs||'')).toLowerCase();return Math.min(99,o.match+o.skills.filter(s=>text.includes(s)).length*4)}function buildBAUrl(query,city){
