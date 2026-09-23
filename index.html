@@ -195,7 +195,7 @@ header button:hover{background:rgba(255,255,255,.25)!important}
 <div class="nsHeroActions">
 <button onclick="requireAuth('matches')">💼 Find Jobs</button>
 <button onclick="requireAuth('ausbildung')" class="alt">🎓 Find Ausbildung</button>
-</div><div class="nsInternationalButtons"><a href="international-ausbildung.html">🌍 International Ausbildung</a><a href="international-jobs.html">✈️ Jobs from Abroad</a></div>
+</div><div class="nsInternationalButtons"><a href="international-ausbildung.html" onclick="return openInternationalPage('international-ausbildung.html')">🌍 International Ausbildung</a><a href="international-jobs.html" onclick="return openInternationalPage('international-jobs.html')">✈️ Jobs from Abroad</a></div>
 </div>
 <div class="nsProfessor">
 <div class="nsProfessorTop"><div class="nsAvatar">🤖</div><div><strong>NextStep AI Assistant</strong><small>Personal career guidance</small></div></div>
@@ -438,7 +438,7 @@ function setLanguage(lang){
   document.documentElement.lang=safe==='rw'?'rw':safe;
 }
 const BEROPP_FIREBASE_CONFIG={apiKey:'AIzaSyBKJ7KGeMg7ATm6rSJmhfBPgp9c3cOTMaI',authDomain:'beropp.firebaseapp.com',projectId:'beropp',storageBucket:'beropp.firebasestorage.app',messagingSenderId:'175693628880',appId:'1:175693628880:web:a6e377b0deb5a73b66a5d5'};
-let beroppAuth=null,beroppUser=null,beroppPendingTarget='';
+let beroppAuth=null,beroppUser=null,beroppPendingTarget='',beroppPendingInternational='';
 function setAuthStatus(msg){if($('authStatus'))$('authStatus').textContent=msg}
 function firebaseReady(){return !!(BEROPP_FIREBASE_CONFIG.apiKey&&BEROPP_FIREBASE_CONFIG.authDomain&&BEROPP_FIREBASE_CONFIG.projectId&&BEROPP_FIREBASE_CONFIG.appId)}
 function initBerOppAuth(){
@@ -450,7 +450,7 @@ function initBerOppAuth(){
       beroppUser=user||null;
       if(user){
         setAuthStatus('✅ Signed in as '+(user.email||user.displayName||'BerOpp user'));
-        if(beroppPendingTarget){const t=beroppPendingTarget;beroppPendingTarget='';show(t);if(t==='matches')findMatches();if(t==='ausbildung')renderBerufe();if(t==='applications')renderApps()}
+        if(beroppPendingTarget){const t=beroppPendingTarget;beroppPendingTarget='';show(t);if(t==='matches')findMatches();if(t==='ausbildung')renderBerufe();if(t==='applications')renderApps()} if(beroppPendingInternational){const u=beroppPendingInternational;beroppPendingInternational='';location.href=u;}
       }else setAuthStatus('Please sign in to continue.');
     });
   }catch(e){console.error(e);setAuthStatus('⚠️ Firebase configuration could not be initialized.')}
@@ -470,6 +470,7 @@ function openFeature(target){
   if(target==='ai') window.scrollTo({top:0,behavior:'smooth'});
   return true;
 }
+function openInternationalPage(url){if(beroppUser){location.href=url;return false}beroppPendingInternational=url;show('auth');return false}
 function requireAuth(target){
   if(beroppUser){show(target);if(target==='matches')findMatches();if(target==='ausbildung')renderBerufe();if(target==='applications')renderApps();return true}
   beroppPendingTarget=target;
