@@ -88,8 +88,7 @@ body.dark-mode a{color:#67e8f9}
 <div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="openFeature('applications')" onkeydown="if(event.key==='Enter'||event.key===' ')openFeature('applications')" title="Open Application Helper">✉️<b>Application Helper</b><span>Create and improve German application documents.</span><small>Prepare application →</small></div>
 <div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="openFeature('ai')" onkeydown="if(event.key==='Enter'||event.key===' ')openFeature('ai')" title="Open AI Career Assistant">🤖<b>AI Career Assistant</b><span>Get guidance for your next career step.</span><small>Open AI Assistant →</small></div>
 </div>
-<div class="card" style="background:#fff;border:1px solid #dbeafe">
-<div class="nsHomePreviewGrid">
+<div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid">
   <div class="nsPreviewPanel">
     <div class="nsPreviewHead"><div><span class="nsPreviewKicker">🎓 AUSBILDUNG</span><h3>Ausbildung für deinen nächsten Schritt</h3></div><button class="secondary" onclick="requireAuth('ausbildung')">Alle Ausbildung →</button></div>
     <div id="homeAusbildungPreview" class="nsPreviewList"></div>
@@ -98,7 +97,8 @@ body.dark-mode a{color:#67e8f9}
     <div class="nsPreviewHead"><div><span class="nsPreviewKicker">💼 JOBS</span><h3>Aktuelle Jobs entdecken</h3></div><button class="secondary" onclick="requireAuth('matches')">Alle Jobs →</button></div>
     <div id="homeJobsPreview" class="nsPreviewList"></div>
   </div>
-</div>
+</div></div>
+<div class="card" style="background:#fff;border:1px solid #dbeafe">
 <h3 id="aiHomeTitle">🤖 AI Career & CV Assistant</h3>
 <p id="aiHomeText">BerOpp helps you improve your CV, create a professional German Lebenslauf and prepare your application.</p>
 <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
