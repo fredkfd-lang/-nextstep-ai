@@ -89,6 +89,16 @@ body.dark-mode a{color:#67e8f9}
 <div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="openFeature('ai')" onkeydown="if(event.key==='Enter'||event.key===' ')openFeature('ai')" title="Open AI Career Assistant">🤖<b>AI Career Assistant</b><span>Get guidance for your next career step.</span><small>Open AI Assistant →</small></div>
 </div>
 <div class="card" style="background:#fff;border:1px solid #dbeafe">
+<div class="nsHomePreviewGrid">
+  <div class="nsPreviewPanel">
+    <div class="nsPreviewHead"><div><span class="nsPreviewKicker">🎓 AUSBILDUNG</span><h3>Ausbildung für deinen nächsten Schritt</h3></div><button class="secondary" onclick="requireAuth('ausbildung')">Alle Ausbildung →</button></div>
+    <div id="homeAusbildungPreview" class="nsPreviewList"></div>
+  </div>
+  <div class="nsPreviewPanel">
+    <div class="nsPreviewHead"><div><span class="nsPreviewKicker">💼 JOBS</span><h3>Aktuelle Jobs entdecken</h3></div><button class="secondary" onclick="requireAuth('matches')">Alle Jobs →</button></div>
+    <div id="homeJobsPreview" class="nsPreviewList"></div>
+  </div>
+</div>
 <h3 id="aiHomeTitle">🤖 AI Career & CV Assistant</h3>
 <p id="aiHomeText">BerOpp helps you improve your CV, create a professional German Lebenslauf and prepare your application.</p>
 <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
@@ -258,6 +268,12 @@ function initBerOppAuth(){
       }else setAuthStatus('Please sign in to continue.');
     });
   }catch(e){console.error(e);setAuthStatus('⚠️ Firebase configuration could not be initialized.')}
+}
+function renderHomePreviews(){
+  const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');
+  if(!a||!j||typeof opps==='undefined'||typeof jobOpps==='undefined')return;
+  a.innerHTML=opps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\'ausbildung\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\'ausbildung\')">View Ausbildung →</button></div>').join('');
+  j.innerHTML=jobOpps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\'matches\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 💶 '+esc(o.salary)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\'matches\')">View Job →</button></div>').join('');
 }
 function openFeature(target){
   show(target);
@@ -522,4 +538,5 @@ function restoreCVDraft(){
   if(photo&&$('aiPhotoPreview'))$('aiPhotoPreview').innerHTML='<img src="'+photo+'" alt="CV photo" style="width:105px;height:125px;object-fit:cover;border-radius:8px;border:1px solid #cbd5e1">';
 }
 function loadProfileIntoCV(){const p=window.nsProfile||{};$('cvTitle').value=p.goal||'';$('cvAbout').value='Motivated candidate ready for the next career opportunity.';$('cvEducation').value=p.education||'';$('cvExperience').value=p.experience||'';$('cvSkills').value=p.skills||'';$('cvCerts').value=p.certs||'';$('cvLanguages').value='German '+(p.german||'')+', '+(p.languages||'')}function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function generateCV(){saveCVDraft();const p=window.nsProfile||{};const photo=localStorage.getItem('ns_cv_photo')||'';$('cvPreview').innerHTML='<div class="cvHeader"><div class="cvPhoto">'+(photo?'<img src="'+photo+'" alt="CV photo">':'Photo')+'</div><div><h1>'+esc(p.name||'Your Name')+'</h1><p><strong>'+esc($('cvTitle').value||p.goal||'Professional')+'</strong></p><p>'+esc(p.location||'')+' · '+esc(p.email||'')+' · '+esc(p.phone||'')+'</p></div></div><div class="cvSection"><h2>Profile</h2><p>'+esc($('cvAbout').value)+'</p></div><div class="cvSection"><h2>Work Experience</h2><p>'+esc($('cvExperience').value||p.experience)+'</p></div><div class="cvSection"><h2>Education</h2><p>'+esc($('cvEducation').value||p.education)+'</p></div><div class="cvSection"><h2>Skills</h2><p>'+esc($('cvSkills').value||p.skills)+'</p></div><div class="cvSection"><h2>Certificates</h2><p>'+esc($('cvCerts').value||p.certs)+'</p></div><div class="cvSection"><h2>Languages</h2><p>'+esc($('cvLanguages').value||p.languages)+'</p></div>'}loadProfile();restoreCVDraft();setLanguage(localStorage.getItem('ns_lang')||'en');show('home');initBerOppAuth();renderBerufe();function toggleTheme(){document.body.classList.toggle('dark-mode');const dark=document.body.classList.contains('dark-mode');localStorage.setItem('beropp_theme',dark?'dark':'light');const b=document.getElementById('themeToggle');if(b)b.textContent=dark?'☀️ Light':'🌙 Dark'}function loadTheme(){const dark=localStorage.getItem('beropp_theme')==='dark';document.body.classList.toggle('dark-mode',dark);const b=document.getElementById('themeToggle');if(b)b.textContent=dark?'☀️ Light':'🌙 Dark'}
-loadTheme();</script></body></html>
+loadTheme();
+renderHomePreviews();</script></body></html>
