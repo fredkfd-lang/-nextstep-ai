@@ -22,9 +22,11 @@ const schema = {
     title: { type: "string" },
     profile: { type: "string" },
     suggestions: { type: "array", items: { type: "string" } },
-    application: { type: "string" }
+    application: { type: "string" },
+    answer: { type: "string" },
+    action: { type: "string", enum: ["cv", "matches", "ausbildung", "applications", "ai"] }
   },
-  required: ["title", "profile", "suggestions", "application"]
+  required: ["title", "profile", "suggestions", "application", "answer", "action"]
 };
 
 export default {
@@ -42,6 +44,7 @@ export default {
     try {
       const body = await request.json();
       const prompt = String(body.prompt || "").slice(0, 6000);
+      const mode = body.mode === "chat" ? "chat" : "cv";
       const profile = body.profile || {};
       const cv = body.cv || {};
       const photo = typeof body.photo === "string" && body.photo.startsWith("data:image/")
@@ -74,7 +77,7 @@ export default {
         {
           type: "input_text",
           text:
-            "User request:\n" + prompt +
+            "MODE: " + mode + "\n\nUser request:\n" + prompt +
             "\n\nPROFILE:\n" + profileText +
             "\n\nCV:\n" + cvText +
             "\n\nCreate professional German career/CV help. Preserve facts exactly: never invent employers, dates, certificates, qualifications, language levels or experience. If something is missing, suggest adding it instead of making it up. Return concise, useful text for an Ausbildung/job application in Germany."
