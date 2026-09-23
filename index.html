@@ -83,10 +83,10 @@ body.dark-mode a{color:#67e8f9}
 </div>
 </div>
 <div class="nsMiniFeatures">
-<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="requireAuth('cv')" onkeydown="if(event.key==='Enter'||event.key===' ')requireAuth('cv')" title="Open CV Builder">📄<b>CV Builder</b><span>Upload your CV PDF and build a professional Lebenslauf.</span><small>Open CV Builder →</small></div>
-<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="requireAuth('matches')" onkeydown="if(event.key==='Enter'||event.key===' ')requireAuth('matches')" title="Open Smart Matching">🎯<b>Smart Matching</b><span>Find Ausbildung and jobs that fit your skills.</span><small>Find opportunities →</small></div>
-<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="requireAuth('cv')" onkeydown="if(event.key==='Enter'||event.key===' ')requireAuth('cv')" title="Open Application Helper">✉️<b>Application Helper</b><span>Create and improve German application documents.</span><small>Prepare application →</small></div>
-<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="requireAuth('cv')" onkeydown="if(event.key==='Enter'||event.key===' ')requireAuth('cv')" title="Open AI Career Assistant">🤖<b>AI Career Assistant</b><span>Get guidance for your next career step.</span><small>Open AI Assistant →</small></div>
+<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="openFeature('cv')" onkeydown="if(event.key==='Enter'||event.key===' ')openFeature('cv')" title="Open CV Builder">📄<b>CV Builder</b><span>Upload your CV PDF and build a professional Lebenslauf.</span><small>Open CV Builder →</small></div>
+<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="openFeature('matches')" onkeydown="if(event.key==='Enter'||event.key===' ')openFeature('matches')" title="Open Smart Matching">🎯<b>Smart Matching</b><span>Find Ausbildung and jobs that fit your skills.</span><small>Find opportunities →</small></div>
+<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="openFeature('applications')" onkeydown="if(event.key==='Enter'||event.key===' ')openFeature('applications')" title="Open Application Helper">✉️<b>Application Helper</b><span>Create and improve German application documents.</span><small>Prepare application →</small></div>
+<div class="nsMiniFeature nsFeatureButton" role="button" tabindex="0" onclick="openFeature('ai')" onkeydown="if(event.key==='Enter'||event.key===' ')openFeature('ai')" title="Open AI Career Assistant">🤖<b>AI Career Assistant</b><span>Get guidance for your next career step.</span><small>Open AI Assistant →</small></div>
 </div>
 <div class="card" style="background:#fff;border:1px solid #dbeafe">
 <h3 id="aiHomeTitle">🤖 AI Career & CV Assistant</h3>
@@ -258,6 +258,15 @@ function initBerOppAuth(){
       }else setAuthStatus('Please sign in to continue.');
     });
   }catch(e){console.error(e);setAuthStatus('⚠️ Firebase configuration could not be initialized.')}
+}
+function openFeature(target){
+  show(target);
+  if(target==='matches') findMatches();
+  if(target==='ausbildung' && typeof renderBerufe==='function') renderBerufe();
+  if(target==='applications' && typeof renderApps==='function') renderApps();
+  if(target==='cv' && typeof loadProfileIntoCV==='function') loadProfileIntoCV();
+  if(target==='ai') window.scrollTo({top:0,behavior:'smooth'});
+  return true;
 }
 function requireAuth(target){
   if(beroppUser){show(target);if(target==='matches')findMatches();if(target==='ausbildung')renderBerufe();if(target==='applications')renderApps();return true}
