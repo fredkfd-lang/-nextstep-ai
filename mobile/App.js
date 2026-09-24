@@ -32,7 +32,10 @@ export default function App() {
   const [authLoading, setAuthLoading] = useState(true);
 
   React.useEffect(() => {
-    if (!auth) return;
+    if (!auth) {
+      setAuthLoading(false);
+      return;
+    }
     return onAuthStateChanged(auth, async current => {
       try {
         setUser(current);
@@ -153,8 +156,9 @@ export default function App() {
   const saveProfile = async () => {
     if (!user || !db) return;
     try {
+      const { role: _role, email: _email, ...profile } = profileForm;
       await setDoc(doc(db, "users", user.uid), {
-        email: user.email || "", role: accountType, ...profileForm, updatedAt: new Date().toISOString()
+        email: user.email || "", role: accountType, ...profile, updatedAt: new Date().toISOString()
       }, { merge: true });
       Alert.alert("Profil gespeichert", "Deine Angaben wurden gespeichert.");
     } catch (error) {
