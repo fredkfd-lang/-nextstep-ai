@@ -238,17 +238,17 @@ body.dark-mode .nsRemoteIntro{background:#172554;border-color:#334155;color:#cbd
   <div class="nsPreviewPanel">
     <div class="nsPreviewHead"><div><span class="nsPreviewKicker">🎓 AUSBILDUNG</span><h3>Ausbildung für deinen nächsten Schritt</h3></div><button class="secondary" onclick="requireAuth('ausbildung')">Alle Ausbildung →</button></div>
     <div id="homeAusbildungPreview" class="nsPreviewList">
-<div class="nsPreviewItem" onclick="requireAuth('ausbildung')"><strong>Ausbildung Fachkraft für Lagerlogistik 2027</strong><div class="nsPreviewMeta">🏢 RCL Rade GmbH (Rhenus) · 📍 Neu Wulmstorf · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();requireAuth('ausbildung')">View Ausbildung →</button></div>
-<div class="nsPreviewItem" onclick="requireAuth('ausbildung')"><strong>Auszubildenden zur Fachkraft für Lagerlogistik 2027</strong><div class="nsPreviewMeta">🏢 BMI Deutschland GmbH · 📍 Regesbostel · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();requireAuth('ausbildung')">View Ausbildung →</button></div>
-<div class="nsPreviewItem" onclick="requireAuth('ausbildung')"><strong>Auszubildenden zum Fachlagerist 2027</strong><div class="nsPreviewMeta">🏢 BMI Deutschland GmbH · 📍 Regesbostel · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();requireAuth('ausbildung')">View Ausbildung →</button></div>
+<div class="nsPreviewItem" onclick="openHomeOpportunity(1,'ausbildung')"><strong>Ausbildung Fachkraft für Lagerlogistik 2027</strong><div class="nsPreviewMeta">🏢 RCL Rade GmbH (Rhenus) · 📍 Neu Wulmstorf · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(1,'ausbildung')">View Ausbildung →</button></div>
+<div class="nsPreviewItem" onclick="openHomeOpportunity(2,'ausbildung')"><strong>Auszubildenden zur Fachkraft für Lagerlogistik 2027</strong><div class="nsPreviewMeta">🏢 BMI Deutschland GmbH · 📍 Regesbostel · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();requireAuth('ausbildung')">View Ausbildung →</button></div>
+<div class="nsPreviewItem" onclick="openHomeOpportunity(3,'ausbildung')"><strong>Auszubildenden zum Fachlagerist 2027</strong><div class="nsPreviewMeta">🏢 BMI Deutschland GmbH · 📍 Regesbostel · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();requireAuth('ausbildung')">View Ausbildung →</button></div>
 </div>
   </div>
   <div class="nsPreviewPanel">
     <div class="nsPreviewHead"><div><span class="nsPreviewKicker">💼 JOBS</span><h3>Aktuelle Jobs entdecken</h3></div><button class="secondary" onclick="requireAuth('matches')">Alle Jobs →</button></div>
     <div id="homeJobsPreview" class="nsPreviewList">
-<div class="nsPreviewItem" onclick="requireAuth('matches')"><strong>Versand-/Lagermitarbeiter (m/w/d)</strong><div class="nsPreviewMeta">🏢 Amazon Logistik Hamburg · 📍 Hamburg · 💶 16,43 € / Std.</div><button class="secondary" onclick="event.stopPropagation();requireAuth('matches')">View Job →</button></div>
-<div class="nsPreviewItem" onclick="requireAuth('matches')"><strong>Lagerhelfer (m/w/d) – ab 15 €/h</strong><div class="nsPreviewMeta">🏢 Queens Service Personal GmbH · 📍 Hamburg · 💶 15 € / Std.</div><button class="secondary" onclick="event.stopPropagation();requireAuth('matches')">View Job →</button></div>
-<div class="nsPreviewItem" onclick="requireAuth('matches')"><strong>Lagerhelfer/in (gn) – Quereinsteiger</strong><div class="nsPreviewMeta">🏢 A & H Zeitarbeit GmbH · 📍 Nottensdorf · 💶 15,33 € / Std.</div><button class="secondary" onclick="event.stopPropagation();requireAuth('matches')">View Job →</button></div>
+<div class="nsPreviewItem" onclick="openHomeOpportunity(101,'job')"><strong>Versand-/Lagermitarbeiter (m/w)</strong><div class="nsPreviewMeta">🏢 Amazon Logistik Hamburg · 📍 Hamburg · 💶 16,43 € / Std.</div><button class="secondary" onclick="event.stopPropagation();requireAuth('matches')">View Job →</button></div>
+<div class="nsPreviewItem" onclick="openHomeOpportunity(102,'job')"><strong>Lagerhelfer (m/w/d) – ab 15 €/h</strong><div class="nsPreviewMeta">🏢 Queens Service Personal GmbH · 📍 Hamburg · 💶 15 € / Std.</div><button class="secondary" onclick="event.stopPropagation();requireAuth('matches')">View Job →</button></div>
+<div class="nsPreviewItem" onclick="openHomeOpportunity(103,'job')"><strong>Lagerhelfer/in (gn) – Quereinsteiger</strong><div class="nsPreviewMeta">🏢 A & H Zeitarbeit GmbH · 📍 Nottensdorf · 💶 15,33 € / Std.</div><button class="secondary" onclick="event.stopPropagation();requireAuth('matches')">View Job →</button></div>
 </div>
   </div>
 </div></div>
@@ -456,7 +456,7 @@ function setLanguage(lang){
   document.documentElement.lang=safe==='rw'?'rw':safe;
 }
 const BEROPP_FIREBASE_CONFIG={apiKey:'AIzaSyBKJ7KGeMg7ATm6rSJmhfBPgp9c3cOTMaI',authDomain:'beropp.firebaseapp.com',projectId:'beropp',storageBucket:'beropp.firebasestorage.app',messagingSenderId:'175693628880',appId:'1:175693628880:web:a6e377b0deb5a73b66a5d5'};
-let beroppAuth=null,beroppUser=null,beroppPendingTarget='',beroppPendingInternational='';
+let beroppAuth=null,beroppUser=null,beroppPendingTarget='',beroppPendingInternational='',beroppPendingOpportunityId=null,beroppPendingOpportunityType='';
 function setAuthStatus(msg){if($('authStatus'))$('authStatus').textContent=msg}
 function firebaseReady(){return !!(BEROPP_FIREBASE_CONFIG.apiKey&&BEROPP_FIREBASE_CONFIG.authDomain&&BEROPP_FIREBASE_CONFIG.projectId&&BEROPP_FIREBASE_CONFIG.appId)}
 function initBerOppAuth(){
@@ -468,16 +468,17 @@ function initBerOppAuth(){
       beroppUser=user||null;
       if(user){
         setAuthStatus('✅ Signed in as '+(user.email||user.displayName||'BerOpp user'));
-        const nextInternational=new URLSearchParams(location.search).get('requireAccount'); if(nextInternational&&!user){show('auth');} if(nextInternational&&user){location.href=nextInternational;return;} if(beroppPendingTarget){const t=beroppPendingTarget;beroppPendingTarget='';show(t);if(t==='matches')findMatches();if(t==='ausbildung')renderBerufe();if(t==='applications')renderApps()} if(beroppPendingInternational){const u=beroppPendingInternational;beroppPendingInternational='';location.href=u;}
+        const nextInternational=new URLSearchParams(location.search).get('requireAccount'); if(nextInternational&&!user){show('auth');} if(nextInternational&&user){location.href=nextInternational;return;} if(beroppPendingTarget){const t=beroppPendingTarget;beroppPendingTarget='';if(t==='homeOpportunity'){const id=beroppPendingOpportunityId,type=beroppPendingOpportunityType;beroppPendingOpportunityId=null;beroppPendingOpportunityType='';if(type==='job')viewJobOpp(id);else viewOpp(id)}else{show(t);if(t==='matches')findMatches();if(t==='ausbildung')renderBerufe();if(t==='applications')renderApps()}} if(beroppPendingInternational){const u=beroppPendingInternational;beroppPendingInternational='';location.href=u;}
       }else setAuthStatus('Please sign in to continue.');
     });
   }catch(e){console.error(e);setAuthStatus('⚠️ Firebase configuration could not be initialized.')}
 }
+function openHomeOpportunity(id,type){if(!beroppUser){beroppPendingTarget='homeOpportunity';beroppPendingOpportunityId=id;beroppPendingOpportunityType=type;show('auth');return false}return type==='job'?viewJobOpp(id):viewOpp(id)}
 function renderHomePreviews(){
   const r=$('homeRemotePreview');if(r&&typeof remoteInternationalJobs!=='undefined')r.innerHTML=remoteInternationalJobs.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\\'remoteInternational\\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🌍 '+esc(o.region)+' · 💼 '+esc(o.category)+' · '+esc(o.type)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\\'remoteInternational\\')">View Remote →</button></div>').join('');  const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');
   if(!a||!j||typeof opps==='undefined'||typeof jobOpps==='undefined')return;
-  a.innerHTML=opps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\'ausbildung\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\'ausbildung\')">View Ausbildung →</button></div>').join('');
-  j.innerHTML=jobOpps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\'matches\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 💶 '+esc(o.salary)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\'matches\')">View Job →</button></div>').join('');
+  a.innerHTML=opps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="openHomeOpportunity('+o.id+',\'ausbildung\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+'</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity('+o.id+',\'ausbildung\')">View Ausbildung →</button></div>').join('');
+  j.innerHTML=jobOpps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="openHomeOpportunity('+o.id+',\'job\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 💶 '+esc(o.salary)+'</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity('+o.id+',\'job\')">View Job →</button></div>').join('');
 }
 function openFeature(target){
   show(target);
