@@ -109,21 +109,37 @@ export default function App() {
     const job = jobsData.find(j => j.id === id);
     if (!job) return;
     try {
-      if (!applicationsData.some(a => a.jobId === id)) {
+      const alreadyApplied = applicationsData.some(a => a.jobId === id);
+      if (!alreadyApplied) {
         await addDoc(collection(db, "users", user.uid, "applications"), {
           employerId: job.employerId || "", applicantId: user.uid, jobId: id,
           title: job.title, company: job.company, location: job.location, type: job.type,
           status: "Gesendet", appliedAt: new Date().toISOString()
         });
       }
+
       if (job.employerId) {
-        await addDoc(collection(db, "applications"), {
-          applicantId: user.uid, employerId: job.employerId, jobId: id,
-          title: job.title, company: job.company, location: job.location, type: job.type,
-          status: "Neu", createdAt: new Date().toISOString()
-        });
+        const employerApps = await getDocs(
+          firestoreQuery(
+            collection(db, "applications"),
+            where("applicantId", "==", user.uid),
+            where("jobId", "==", id)
+          )
+        );
+
+        if (employerApps.empty) {
+          await addDoc(collection(db, "applications"), {
+            applicantId: user.uid, employerId: job.employerId, jobId: id,
+            title: job.title, company: job.company, location: job.location, type: job.type,
+            status: "Neu", createdAt: new Date().toISOString()
+          });
+        }
       }
-      Alert.alert("Bewerbung", "Die Bewerbung wurde in deinem BerOpp-Konto gespeichert.");
+
+      Alert.alert(
+        "Bewerbung",
+        alreadyApplied ? "Du hast dich bereits auf diese Stelle beworben." : "Die Bewerbung wurde in deinem BerOpp-Konto gespeichert."
+      );
     } catch (error) {
       Alert.alert("Bewerbung", error?.message || "Die Bewerbung konnte gerade nicht gespeichert werden.");
     }
@@ -161,7 +177,14 @@ export default function App() {
       }
       setScreen(accountType === "employer" ? "employer" : "profile");
     } catch (error) {
-      Alert.alert("Anmeldung fehlgeschlagen", error?.message || "Bitte prüfe E-Mail und Passwort.");
+      const messages = {
+        "auth/invalid-credential": "E-Mail oder Passwort ist nicht korrekt.",
+        "auth/email-already-in-use": "Diese E-Mail-Adresse wird bereits verwendet.",
+        "auth/invalid-email": "Bitte gib eine gültige E-Mail-Adresse ein.",
+        "auth/weak-password": "Das Passwort muss mindestens 6 Zeichen haben.",
+        "auth/network-request-failed": "Keine Internetverbindung. Bitte versuche es erneut."
+      };
+      Alert.alert("Anmeldung fehlgeschlagen", messages[error?.code] || "Bitte prüfe E-Mail und Passwort.");
     }
   };
 
