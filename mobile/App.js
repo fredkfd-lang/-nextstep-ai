@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, onSnapshot, query as firestoreQuery, setDoc, where, deleteDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage, firebaseConfigured } from "./firebase";
 import * as DocumentPicker from "expo-document-picker";
@@ -24,16 +24,41 @@ export default function App() {
   const [saved, setSaved] = useState([]);
   const [applied, setApplied] = useState([]);
   const [cv, setCv] = useState(null);
+  const [jobsData, setJobsData] = useState(JOBS);
+  const [savedData, setSavedData] = useState([]);
+  const [applicationsData, setApplicationsData] = useState([]);
 
   React.useEffect(() => {
     if (!auth) return;
     return onAuthStateChanged(auth, setUser);
   }, []);
 
+  React.useEffect(() => {
+    if (!db) return;
+    const q = firestoreQuery(collection(db, "jobs"));
+    return onSnapshot(q, snapshot => {
+      const remote = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      setJobsData(remote.length ? remote : JOBS);
+    }, () => setJobsData(JOBS));
+  }, []);
+
+  React.useEffect(() => {
+    if (!db || !user) {
+      setSavedData([]);
+      setApplicationsData([]);
+      return;
+    }
+    const savedQ = firestoreQuery(collection(db, "users", user.uid, "savedJobs"));
+    const appsQ = firestoreQuery(collection(db, "users", user.uid, "applications"));
+    const unsubSaved = onSnapshot(savedQ, snap => setSavedData(snap.docs.map(d => d.id)));
+    const unsubApps = onSnapshot(appsQ, snap => setApplicationsData(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
+    return () => { unsubSaved(); unsubApps(); };
+  }, [user]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return JOBS;
-    return JOBS.filter(j => [j.title, j.company, j.location, j.type, ...j.tags].join(" ").toLowerCase().includes(q));
+    if (!q) return jobsData;
+    return jobsData.filter(j => [j.title, j.company, j.location, j.type, ...j.tags].join(" ").toLowerCase().includes(q));
   }, [query]);
 
   const openLogin = () => setScreen("login");
@@ -47,13 +72,41 @@ export default function App() {
     action();
   };
 
-  const toggleSave = (id) => requireLogin(() => {
-    setSaved(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id]);
+  const toggleSave = (id) => requireLogin(async () => {
+    if (!db || !user) return;
+    try {
+      const refDoc = doc(db, "users", user.uid, "savedJobs", id);
+      if (savedData.includes(id)) {
+        await deleteDoc(refDoc);
+      } else {
+        await setDoc(refDoc, { jobId: id, savedAt: new Date().toISOString() });
+      }
+    } catch (error) {
+      Alert.alert("Speichern", "Die Stelle konnte gerade nicht gespeichert werden.");
+    }
   });
 
-  const apply = (id) => requireLogin(() => {
-    if (!applied.includes(id)) setApplied(a => [...a, id]);
-    Alert.alert("Bewerbung", "Die Bewerbung wurde in deinem BerOpp-Konto gespeichert.");
+  const apply = (id) => requireLogin(async () => {
+    if (!db || !user) return;
+    const job = jobsData.find(j => j.id === id);
+    if (!job) return;
+    try {
+      const existing = applicationsData.some(a => a.jobId === id);
+      if (!existing) {
+        await addDoc(collection(db, "users", user.uid, "applications"), {
+          jobId: id,
+          title: job.title,
+          company: job.company,
+          location: job.location,
+          type: job.type,
+          status: "Gesendet",
+          appliedAt: new Date().toISOString()
+        });
+      }
+      Alert.alert("Bewerbung", "Die Bewerbung wurde in deinem BerOpp-Konto gespeichert.");
+    } catch (error) {
+      Alert.alert("Bewerbung", "Die Bewerbung konnte gerade nicht gespeichert werden.");
+    }
   });
 
   const saveProfile = async () => {
@@ -99,6 +152,8 @@ export default function App() {
   };
 
   const jobs = screen === "ausbildung" ? filtered.filter(j => j.type === "Ausbildung") : filtered;
+  const savedIds = savedData;
+  const applications = applicationsData;
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -124,7 +179,7 @@ export default function App() {
             </View>
             <Action title="International" secondary onPress={() => Alert.alert("International", "Internationale Chancen werden als nächster Bereich ergänzt.")} />
             <SectionTitle title="Aktuelle Möglichkeiten" />
-            {filtered.slice(0, 3).map(job => <JobCard key={job.id} job={job} saved={saved.includes(job.id)} applied={applied.includes(job.id)} onSave={() => toggleSave(job.id)} onApply={() => apply(job.id)} />)}
+            {filtered.slice(0, 3).map(job => <JobCard key={job.id} job={job} saved={savedIds.includes(job.id)} applied={applications.some(a => a.jobId === job.id)} onSave={() => toggleSave(job.id)} onApply={() => apply(job.id)} />)}
           </>
         )}
 
@@ -139,22 +194,22 @@ export default function App() {
         {screen === "saved" && (
           <>
             <Text style={styles.pageTitle}>Gespeichert</Text>
-            {JOBS.filter(j => saved.includes(j.id)).map(job => <JobCard key={job.id} job={job} saved applied={applied.includes(job.id)} onSave={() => toggleSave(job.id)} onApply={() => apply(job.id)} />)}
-            {!saved.length && <Empty text="Noch keine Stellen gespeichert." />}
+            {jobsData.filter(j => savedIds.includes(j.id)).map(job => <JobCard key={job.id} job={job} saved applied={applied.includes(job.id)} onSave={() => toggleSave(job.id)} onApply={() => apply(job.id)} />)}
+            {!savedIds.length && <Empty text="Noch keine Stellen gespeichert." />}
           </>
         )}
 
         {screen === "applications" && (
           <>
             <Text style={styles.pageTitle}>Meine Bewerbungen</Text>
-            {JOBS.filter(j => applied.includes(j.id)).map(job => (
+            {applications.map(job => (
               <View style={styles.card} key={job.id}>
                 <Text style={styles.cardTitle}>{job.title}</Text>
                 <Text style={styles.muted}>{job.company} · {job.location}</Text>
-                <Text style={styles.status}>Gesendet</Text>
+                <Text style={styles.status}>{job.status || "Gesendet"}</Text>
               </View>
             ))}
-            {!applied.length && <Empty text="Noch keine Bewerbungen." />}
+            {!applications.length && <Empty text="Noch keine Bewerbungen." />}
           </>
         )}
 
