@@ -32,8 +32,9 @@ service cloud.firestore {
       }
 
       match /applications/{applicationId} {
-        allow read, create: if isOwner(uid)
-          && (request.method == 'read' || request.resource.data.applicantId == uid);
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid)
+          && request.resource.data.applicantId == uid;
 
         allow update: if isOwner(uid)
           && request.resource.data.applicantId == resource.data.applicantId
