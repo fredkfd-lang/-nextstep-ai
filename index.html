@@ -471,7 +471,6 @@ function initBerOppAuth(){
 }
 function renderHomePreviews(){
   const r=$('homeRemotePreview');if(r&&typeof remoteInternationalJobs!=='undefined')r.innerHTML=remoteInternationalJobs.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\\'remoteInternational\\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🌍 '+esc(o.region)+' · 💼 '+esc(o.category)+' · '+esc(o.type)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\\'remoteInternational\\')">View Remote →</button></div>').join('');  const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');
-  const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');
   if(!a||!j||typeof opps==='undefined'||typeof jobOpps==='undefined')return;
   a.innerHTML=opps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\'ausbildung\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\'ausbildung\')">View Ausbildung →</button></div>').join('');
   j.innerHTML=jobOpps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\'matches\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 💶 '+esc(o.salary)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\'matches\')">View Job →</button></div>').join('');
@@ -480,6 +479,7 @@ function openFeature(target){
   show(target);
   if(target==='matches') findMatches();
   if(target==='ausbildung' && typeof renderBerufe==='function') renderBerufe();
+  if(target==='remoteInternational' && typeof renderRemoteJobs==='function') renderRemoteJobs();
   if(target==='applications' && typeof renderApps==='function') renderApps();
   if(target==='cv' && typeof loadProfileIntoCV==='function') loadProfileIntoCV();
   if(target==='ai') window.scrollTo({top:0,behavior:'smooth'});
@@ -487,7 +487,7 @@ function openFeature(target){
 }
 function openInternationalPage(url){if(beroppUser){location.href=url;return false}beroppPendingInternational=url;show('auth');return false}
 function requireAuth(target){
-  if(beroppUser){show(target);if(target==='matches')findMatches();if(target==='ausbildung')renderBerufe();if(target==='applications')renderApps();return true}
+  if(beroppUser){show(target);if(target==='matches')findMatches();if(target==='ausbildung')renderBerufe();if(target==='remoteInternational'&&typeof renderRemoteJobs==='function')renderRemoteJobs();if(target==='applications')renderApps();return true}
   beroppPendingTarget=target;
   show('auth');
   if(!firebaseReady())setAuthStatus('⚙️ First connect BerOpp to a Firebase project to activate Google and email accounts.');
