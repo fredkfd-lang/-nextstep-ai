@@ -56,11 +56,7 @@ body.dark-mode #profile label{color:#cbd5e1}
 body.dark-mode a{color:#67e8f9}
 
 /* Profile / privacy / mobile form */
-#profile .card h2{margin-top:0}
-#profile input[type="checkbox"]{width:18px;height:18px}
-#profile label{font-weight:600;font-size:13px;color:#334155}
-#profile .status{margin-bottom:10px}
-@media(max-width:680px){#profile [style*="grid-template-columns:repeat(2"]{grid-template-columns:1fr!important}}
+.nsProfileIntro{color:#64748b;margin-top:0}.nsProfileCompleteness{padding:14px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:16px;margin:14px 0}.nsProfileCompleteness>div:first-child{display:flex;justify-content:space-between;gap:10px;font-size:13px}.nsProfileCompleteness span{font-weight:800;color:#2563eb}.nsProgressTrack{height:8px;background:#dbeafe;border-radius:99px;overflow:hidden;margin:8px 0}.nsProgressTrack span{display:block;height:100%;width:0;background:#2563eb;border-radius:99px;transition:width .25s}.nsProfileMissing{font-size:12px;color:#64748b}.nsProfilePrivacy{background:#f8fafc;border:1px solid #cbd5e1}.nsProfilePrivacy p{font-size:12px;line-height:1.45;color:#64748b}.nsCheck{display:flex!important;gap:9px;align-items:flex-start}.nsCheck input{width:18px!important;margin-top:2px!important}.nsProfileSection{margin-top:16px}.nsProfileSection h3{margin-bottom:3px}.nsProfileHint{font-size:12px;color:#64748b}.nsProfileGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.nsProfileGrid label{display:block;margin-bottom:5px}.nsProfileFull{grid-column:1/-1}.nsProfileGrid textarea{min-height:74px}.nsProfileOptional{margin-top:12px;border:1px solid #e2e8f0;border-radius:14px;padding:11px 13px;background:#f8fafc}.nsProfileOptional summary,.nsProfileOptionalDoc summary{cursor:pointer;font-weight:700;color:#334155}.nsProfileDocs{margin-top:14px;background:#f8faff;border:1px solid #c7d2fe}.nsProfileOptionalDoc{margin-top:8px}.nsProfileActions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.nsProfileActions button{margin:0}.nsProfileSaveStatus{margin-top:10px}.nsProfileDataActions{display:flex;gap:7px;margin-top:8px}.nsProfileDataActions button{margin:0;font-size:12px;padding:8px 10px}@media(max-width:680px){.nsProfileGrid{grid-template-columns:1fr}.nsProfileFull{grid-column:auto}.nsProfileActions{flex-direction:column}.nsProfileActions button{width:100%}}body.dark-mode .nsProfileIntro,body.dark-mode .nsProfileHint,body.dark-mode .nsProfileMissing{color:#94a3b8}body.dark-mode .nsProfileCompleteness{background:#172554;border-color:#334155}body.dark-mode .nsProfilePrivacy,body.dark-mode .nsProfileOptional,body.dark-mode .nsProfileDocs{background:#111827;border-color:#334155}body.dark-mode .nsProfileOptional summary,body.dark-mode .nsProfileOptionalDoc summary{color:#cbd5e1}
 
 .quickCopy{margin-top:12px;padding:12px;border:1px solid #dbeafe;background:#f8fafc;border-radius:14px}.quickCopyTitle{font-weight:700;font-size:13px;color:#334155;margin-bottom:7px}.quickCopyGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.quickCopy button{margin:0;padding:9px 8px;background:#eef2ff;color:#3730a3;font-size:12px}.quickCopy button.copied{background:#dcfce7;color:#166534}@media(max-width:600px){.quickCopyGrid{grid-template-columns:1fr 1fr}.quickCopy button{min-height:42px}}
 .nsAiChatCard{border:1px solid #bae6fd;background:linear-gradient(135deg,#ffffff,#f0f9ff)}
@@ -309,52 +305,80 @@ div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid"><div class="nsPrevi
 </section>
 
 <section id="profile" class="hidden">
-<div class="card">
-<h2 id="profileTitle">👤 My Ausbildung Profile</h2>
-<p style="color:#475569">Save your application information once. Later, BerOpp can use it for Quick Copy and the browser extension.</p>
-<div id="profileConsentBox" class="card" style="background:#f8fafc;border:1px solid #cbd5e1">
-<strong>🔐 Privacy first</strong>
-<p style="font-size:13px;line-height:1.5">Your profile is stored locally in encrypted form on this device in this first version. Nothing is submitted to an external application website. You can export or delete your data at any time.</p>
-<label style="display:flex;gap:10px;align-items:flex-start"><input id="profileConsent" type="checkbox" style="width:auto;margin-top:3px"><span>I agree that BerOpp stores the information I enter here for the career and application features.</span></label>
-<p style="font-size:12px;color:#64748b;margin-bottom:0">Simple Datenschutz: BerOpp uses your profile only for the features you choose. We do not automatically submit applications. You can edit, export or delete your data. For the production version, the final DSGVO information and server storage rules will be provided before cloud synchronization is enabled.</p>
+<div class="card nsProfileCard">
+<h2 id="profileTitle">👤 My Profile</h2>
+<p class="nsProfileIntro">Fill in the important information once. BerOpp will reuse it for CVs and applications.</p>
+
+<div id="profileCompleteness" class="nsProfileCompleteness">
+  <div><strong>Profile progress</strong><span id="profileProgressText">0% complete</span></div>
+  <div class="nsProgressTrack"><span id="profileProgressBar"></span></div>
+  <div id="profileMissing" class="nsProfileMissing">Start with the required fields below.</div>
 </div>
-<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
-<div><label>Anrede</label><select id="profileSalutation"><option value="">Bitte wählen</option><option>Herr</option><option>Frau</option><option>Keine Angabe</option></select></div>
-<div><label>Vorname</label><input id="profileFirstName" autocomplete="given-name"></div>
-<div><label>Nachname</label><input id="profileLastName" autocomplete="family-name"></div>
+
+<div id="profileConsentBox" class="card nsProfilePrivacy">
+<strong>🔐 Privacy first</strong>
+<p>Your profile is stored locally in encrypted form on this device. Nothing is submitted automatically.</p>
+<label class="nsCheck"><input id="profileConsent" type="checkbox"><span>I agree that BerOpp stores the information I enter for career features.</span></label>
+</div>
+
+<div class="nsProfileSection">
+<h3>⭐ Required for applications</h3>
+<p class="nsProfileHint">Only the information BerOpp needs to prepare your application.</p>
+<div class="nsProfileGrid">
+<div><label>First name *</label><input id="profileFirstName" autocomplete="given-name" data-profile-required="true"></div>
+<div><label>Last name *</label><input id="profileLastName" autocomplete="family-name" data-profile-required="true"></div>
+<div><label>E-Mail *</label><input id="profileEmail" type="email" autocomplete="email" data-profile-required="true"></div>
+<div><label>Phone *</label><input id="profilePhone" type="tel" autocomplete="tel" data-profile-required="true"></div>
+<div><label>City *</label><input id="profileCity" autocomplete="address-level2" data-profile-required="true" placeholder="z. B. Neu Wulmstorf"></div>
+<div><label>German level *</label><select id="profileGerman" data-profile-required="true"><option value="">Please choose</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></select></div>
+<div class="nsProfileFull"><label>Career goal *</label><input id="profileGoal" data-profile-required="true" placeholder="z. B. Fachlagerist / Elektriker"></div>
+<div class="nsProfileFull"><label>Work experience *</label><textarea id="profileExperience" data-profile-required="true" placeholder="Kurz: Beruf, Firma, Aufgaben, Zeitraum"></textarea></div>
+<div class="nsProfileFull"><label>Education / school *</label><textarea id="profileEducation" data-profile-required="true" placeholder="Schule, Ausbildung, Abschluss"></textarea></div>
+<div class="nsProfileFull"><label>Skills *</label><textarea id="profileSkills" data-profile-required="true" placeholder="z. B. Gabelstaplerschein, Be- und Entladen"></textarea></div>
+</div>
+</div>
+
+<details class="nsProfileOptional">
+<summary>➕ Optional information</summary>
+<div class="nsProfileGrid" style="margin-top:12px">
+<div><label>Anrede</label><select id="profileSalutation"><option value="">Please choose</option><option>Herr</option><option>Frau</option><option>Keine Angabe</option></select></div>
 <div><label>Geburtsdatum</label><input id="profileBirthDate" type="date"></div>
 <div><label>Straße + Hausnummer</label><input id="profileStreet" autocomplete="street-address"></div>
 <div><label>PLZ</label><input id="profilePostalCode" inputmode="numeric" autocomplete="postal-code"></div>
-<div><label>Ort</label><input id="profileCity" autocomplete="address-level2"></div>
-<div><label>Telefon</label><input id="profilePhone" type="tel" autocomplete="tel"></div>
-<div><label>E-Mail</label><input id="profileEmail" type="email" autocomplete="email"></div>
-<div><label>Sprachkenntnisse</label><select id="profileGerman" autocomplete="language"><option value="">Bitte wählen</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></select></div>
-<div><label>Schulabschluss</label><input id="profileSchoolLeaving"></div>
-<div><label>Schule + Abschlussjahr</label><input id="profileSchool" placeholder="z. B. Kigali School, 2012"></div>
-<div><label>Führerschein</label><input id="profileDriving" placeholder="z. B. Klasse B, kein Führerschein"></div>
+<div><label>Führerschein</label><input id="profileDriving" placeholder="z. B. Klasse B"></div>
 <div><label>Gewünschter Ausbildungsbeginn</label><input id="profileStartDate" type="month"></div>
+<div class="nsProfileFull"><label>Praktika</label><textarea id="profileInternships" placeholder="Firma, Bereich, Zeitraum, Aufgaben"></textarea></div>
+<div class="nsProfileFull"><label>Schule + Abschlussjahr</label><input id="profileSchool" placeholder="z. B. Kigali School, 2012"></div>
+<div class="nsProfileFull"><label>Schulabschluss</label><input id="profileSchoolLeaving"></div>
 </div>
-<label>Praktika</label><textarea id="profileInternships" placeholder="Firma, Bereich, Zeitraum, Aufgaben"></textarea>
-<div class="card" style="background:#f8faff;border:1px solid #c7d2fe">
-<h3>📎 Dokumente</h3>
-<p style="font-size:13px;color:#475569">PDF files are recommended. Files are encrypted before local storage.</p>
-<label>Lebenslauf</label><input id="profileCVFile" type="file" accept=".pdf,application/pdf" onchange="handleProfileFile(event,'cv')">
-<div id="profileCVFileStatus" class="status">Noch keine Datei</div>
+</details>
+
+<div class="card nsProfileDocs">
+<h3>📎 Documents</h3>
+<p class="nsProfileHint">Your CV is the most useful document for direct applications. Other documents are optional.</p>
+<label>Lebenslauf (PDF)</label>
+<input id="profileCVFile" type="file" accept=".pdf,application/pdf" onchange="handleProfileFile(event,'cv')">
+<div id="profileCVFileStatus" class="status">No CV uploaded</div>
+<details class="nsProfileOptionalDoc"><summary>More documents (optional)</summary>
 <label>Anschreiben</label><input id="profileCoverFile" type="file" accept=".pdf,application/pdf,.doc,.docx" onchange="handleProfileFile(event,'cover')">
-<div id="profileCoverFileStatus" class="status">Noch keine Datei</div>
+<div id="profileCoverFileStatus" class="status">No cover letter</div>
 <label>Zeugnisse</label><input id="profileCertificatesFile" type="file" accept=".pdf,application/pdf,image/*" multiple onchange="handleProfileFile(event,'certificates')">
-<div id="profileCertificatesFileStatus" class="status">Noch keine Dateien</div>
+<div id="profileCertificatesFileStatus" class="status">No certificates</div>
+</details>
 </div>
-<div style="display:flex;flex-wrap:wrap;gap:6px">
+
+<div class="nsProfileActions">
 <button onclick="saveProfile()">🔐 Save Profile</button>
-<button class="secondary" onclick="exportProfileData()">⬇️ Export My Data</button>
+<button class="secondary" onclick="goToMatches()">💼 Find Jobs & Apply</button>
 <button class="secondary" onclick="requireAuth('cv')">📄 Build My CV</button>
-<button style="background:#b91c1c" onclick="deleteAllProfileData()">🗑️ Delete My Data</button>
 </div>
-<div id="profileSaveStatus" class="status" style="margin-top:10px">Your profile is not saved yet.</div>
+<div id="profileSaveStatus" class="status nsProfileSaveStatus">Your profile is not saved yet.</div>
+<div class="nsProfileDataActions">
+<button class="secondary" onclick="exportProfileData()">⬇️ Export</button>
+<button class="secondary" onclick="deleteAllProfileData()">🗑️ Delete My Data</button>
 </div>
-</section>
-<section id="ausbildung" class="hidden"><div class="card"><div class="nsPageHead"><div><h2 id="ausbildungTitle">🎓 Ausbildungsberufe A–Z</h2><p id="ausbildungText">Explore recognized Ausbildung professions by category or search by profession.</p></div><span class="nsMoreBadge">＋ More · weitere Berufe</span></div><input id="berufSearch" oninput="renderBerufe()" placeholder="🔎 Search Ausbildung profession"><select id="berufCategory" onchange="renderBerufe()"><option value="">All categories</option><option>Elektro & Technik</option><option>IT & Digital</option><option>Lager & Logistik</option><option>Handel & Büro</option><option>Gesundheit & Pflege</option><option>Bau & Handwerk</option><option>Gastronomie & Tourismus</option><option>Industrie & Produktion</option><option>Medien & Design</option><option>Natur & Umwelt</option><option>Verkehr & Fahrzeuge</option><option>Dienstleistung & Sicherheit</option></select><div id="berufeCount" class="status"></div><div id="berufeList"></div><div id="berufDetail" class="card hidden" style="background:#f8faff;border:1px solid #c7d2fe"></div><p style="font-size:13px;color:#64748b">BerOpp shows a structured profile for each profession. Vacancy matching and company-direct applications are handled inside BerOpp whenever a direct employer connection is available.</p></div></section><section id="matches" class="hidden"><div class="card"><div class="nsPageHead"><div><h2 id="matchesTitle">💼 Find Jobs</h2><p id="matchesText">Find current job opportunities separately from Ausbildung.</p></div><span class="nsMoreBadge">＋ More · weitere Jobs</span></div><input id="oppSearch" oninput="findMatches()" placeholder="🔎 Search job, company or city"><select id="oppField" onchange="findMatches()"><option value="">All fields</option><option value="lager">Lager / Logistik</option><option value="elektrik">Elektrotechnik</option><option value="produktion">Produktion</option><option value="reinigung">Reinigung</option><option value="handel">Handel / Verkauf</option><option value="buero">Büro / Service</option><option value="fahrer">Fahrer / Lieferung</option></select><input id="oppCity" oninput="findMatches()" placeholder="📍 City / location"><select id="oppGerman" onchange="findMatches()"><option value="">German level</option><option value="A2">A2 or lower</option><option value="B1">B1 or lower</option><option value="B2">B2 or lower</option><option value="ANY">Not specified</option></select><div id="results"></div><div class="card" style="margin-top:12px;background:#f0f9ff;border:1px solid #bae6fd"><strong>⚡ BerOpp Direct Application</strong><p style="margin:6px 0">BerOpp prioritizes vacancies with a direct company application connection. External job boards are not used as the main application path.</p></div></div></section><section id="details" class="hidden"><div class="card"><h2 id="detailTitle">Opportunity Details</h2><p id="detailInfo"></p><p id="detailMatch"></p><h3 id="requirementsTitle">📋 Requirements</h3><ul id="detailRequirements"></ul><h3 id="tasksTitle">🛠️ Tasks</h3><ul id="detailTasks"></ul><h3 id="conditionsTitle">📌 Conditions</h3><ul id="detailConditions"></ul><p id="detailDescription"></p><h3 id="nextTitle">🚀 Next Steps</h3><ol><li>Save this opportunity.</li><li>Add it to Applications.</li><li>Prepare your CV.</li><li>Prepare a motivation letter.</li></ol><button onclick="openMatches()" id="backBtn">← Back</button><button onclick="saveCurrent()" id="saveOppBtn">⭐ Save Opportunity</button><a class="secondary" href="#" target="_blank" rel="noopener" id="quickApplyBtn" style="display:none;text-decoration:none">⚡ Apply Now</a><a class="secondary" href="#" target="_blank" rel="noopener" id="applyLinkBtn" style="display:none;text-decoration:none">🔗 Open Company Application</a></div></section>
+</div>
+</section><section id="ausbildung" class="hidden"><div class="card"><div class="nsPageHead"><div><h2 id="ausbildungTitle">🎓 Ausbildungsberufe A–Z</h2><p id="ausbildungText">Explore recognized Ausbildung professions by category or search by profession.</p></div><span class="nsMoreBadge">＋ More · weitere Berufe</span></div><input id="berufSearch" oninput="renderBerufe()" placeholder="🔎 Search Ausbildung profession"><select id="berufCategory" onchange="renderBerufe()"><option value="">All categories</option><option>Elektro & Technik</option><option>IT & Digital</option><option>Lager & Logistik</option><option>Handel & Büro</option><option>Gesundheit & Pflege</option><option>Bau & Handwerk</option><option>Gastronomie & Tourismus</option><option>Industrie & Produktion</option><option>Medien & Design</option><option>Natur & Umwelt</option><option>Verkehr & Fahrzeuge</option><option>Dienstleistung & Sicherheit</option></select><div id="berufeCount" class="status"></div><div id="berufeList"></div><div id="berufDetail" class="card hidden" style="background:#f8faff;border:1px solid #c7d2fe"></div><p style="font-size:13px;color:#64748b">BerOpp shows a structured profile for each profession. Vacancy matching and company-direct applications are handled inside BerOpp whenever a direct employer connection is available.</p></div></section><section id="matches" class="hidden"><div class="card"><div class="nsPageHead"><div><h2 id="matchesTitle">💼 Find Jobs</h2><p id="matchesText">Find current job opportunities separately from Ausbildung.</p></div><span class="nsMoreBadge">＋ More · weitere Jobs</span></div><input id="oppSearch" oninput="findMatches()" placeholder="🔎 Search job, company or city"><select id="oppField" onchange="findMatches()"><option value="">All fields</option><option value="lager">Lager / Logistik</option><option value="elektrik">Elektrotechnik</option><option value="produktion">Produktion</option><option value="reinigung">Reinigung</option><option value="handel">Handel / Verkauf</option><option value="buero">Büro / Service</option><option value="fahrer">Fahrer / Lieferung</option></select><input id="oppCity" oninput="findMatches()" placeholder="📍 City / location"><select id="oppGerman" onchange="findMatches()"><option value="">German level</option><option value="A2">A2 or lower</option><option value="B1">B1 or lower</option><option value="B2">B2 or lower</option><option value="ANY">Not specified</option></select><div id="results"></div><div class="card" style="margin-top:12px;background:#f0f9ff;border:1px solid #bae6fd"><strong>⚡ BerOpp Direct Application</strong><p style="margin:6px 0">BerOpp prioritizes vacancies with a direct company application connection. External job boards are not used as the main application path.</p></div></div></section><section id="details" class="hidden"><div class="card"><h2 id="detailTitle">Opportunity Details</h2><p id="detailInfo"></p><p id="detailMatch"></p><h3 id="requirementsTitle">📋 Requirements</h3><ul id="detailRequirements"></ul><h3 id="tasksTitle">🛠️ Tasks</h3><ul id="detailTasks"></ul><h3 id="conditionsTitle">📌 Conditions</h3><ul id="detailConditions"></ul><p id="detailDescription"></p><h3 id="nextTitle">🚀 Next Steps</h3><ol><li>Save this opportunity.</li><li>Add it to Applications.</li><li>Prepare your CV.</li><li>Prepare a motivation letter.</li></ol><button onclick="openMatches()" id="backBtn">← Back</button><button onclick="saveCurrent()" id="saveOppBtn">⭐ Save Opportunity</button><a class="secondary" href="#" target="_blank" rel="noopener" id="quickApplyBtn" style="display:none;text-decoration:none">⚡ Apply Now</a><a class="secondary" href="#" target="_blank" rel="noopener" id="applyLinkBtn" style="display:none;text-decoration:none">🔗 Open Company Application</a></div></section>
 <section id="remoteInternational" class="hidden"><div class="card nsRemotePage"><div class="nsPageHead"><div><h2>🌐 International Remote Jobs</h2><p>Remote opportunities from around the world — outside the normal Germany/EU job search.</p></div><span class="nsMoreBadge">＋ Worldwide · Global</span></div><div class="nsRemoteIntro">🌍 <strong>Work from anywhere:</strong> BerOpp groups remote roles by profession and region. Always check the employer's country, timezone, contract and work-authorization requirements before applying.</div><div class="nsRemoteFilters"><input id="remoteSearch" oninput="renderRemoteJobs()" placeholder="🔎 Search remote job, skill or category"><select id="remoteRegion" onchange="renderRemoteJobs()"><option value="">🌍 All regions</option><option value="worldwide">Worldwide</option><option value="europe">Europe / EU</option><option value="americas">Americas</option><option value="africa">Africa</option><option value="asia">Asia / Pacific</option></select><select id="remoteType" onchange="renderRemoteJobs()"><option value="">All job types</option><option value="full-time">Full-time</option><option value="part-time">Part-time</option><option value="contract">Contract / Freelance</option></select></div><div id="remoteCount" class="status"></div><div id="remoteJobsList"></div><div class="card nsRemoteSources"><h3>🔎 More international remote sources</h3><p>BerOpp can also send you to remote-job sources. These are external listings, so BerOpp does not claim that an application was submitted.</p><div class="nsRemoteSourceGrid"><a href="https://www.weworkremotely.com/" target="_blank" rel="noopener">🌎 We Work Remotely</a><a href="https://himalayas.app/" target="_blank" rel="noopener">🏔️ Himalayas</a><a href="https://remotive.com/" target="_blank" rel="noopener">🚀 Remotive</a><a href="https://remoteok.com/" target="_blank" rel="noopener">💻 Remote OK</a><a href="https://www.workingnomads.com/" target="_blank" rel="noopener">🧭 Working Nomads</a><a href="https://wellfound.com/jobs" target="_blank" rel="noopener">🌱 Wellfound</a></div></div></div></section><section id="saved" class="hidden"><div class="card"><h2 id="savedTitle">⭐ Saved Opportunities</h2><div id="savedList"></div></div></section><section id="applications" class="hidden"><div class="card"><h2 id="appsTitle">📋 Applications</h2><div id="appList"></div></div></section>
 <section id="ai" class="hidden">
 <div class="card nsAiChatCard">
@@ -647,17 +671,33 @@ function openProfileDB(){return new Promise((resolve,reject)=>{const r=indexedDB
 async function getCryptoKey(){const db=await openProfileDB();const existing=await new Promise((resolve,reject)=>{const tx=db.transaction('meta','readonly');const r=tx.objectStore('meta').get('key');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});if(existing)return existing;const key=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);await new Promise((resolve,reject)=>{const tx=db.transaction('meta','readwrite');tx.objectStore('meta').put(key,'key');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});return key}
 async function encryptText(text){const key=await getCryptoKey();const iv=crypto.getRandomValues(new Uint8Array(12));const data=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(text));return {iv:Array.from(iv),data:Array.from(new Uint8Array(data))}}
 async function decryptText(packet){const key=await getCryptoKey();const data=await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(packet.iv)},key,new Uint8Array(packet.data));return new TextDecoder().decode(data)}
-function profileFields(){return ['Salutation','FirstName','LastName','BirthDate','Street','PostalCode','City','Phone','Email','German','SchoolLeaving','School','Driving','StartDate','Internships']}
+function profileFields(){return ['Salutation','FirstName','LastName','BirthDate','Street','PostalCode','City','Phone','Email','German','SchoolLeaving','School','Driving','StartDate','Internships','Goal','Experience','Education','Skills']}
 function profileData(){const p={};profileFields().forEach(k=>p[k.charAt(0).toLowerCase()+k.slice(1)]=$('profile'+k)?.value||'');return p}
+function getRequiredProfileFields(){return [{id:'profileFirstName',label:'First name'},{id:'profileLastName',label:'Last name'},{id:'profileEmail',label:'E-Mail'},{id:'profilePhone',label:'Phone'},{id:'profileCity',label:'City'},{id:'profileGerman',label:'German level'},{id:'profileGoal',label:'Career goal'},{id:'profileExperience',label:'Work experience'},{id:'profileEducation',label:'Education'},{id:'profileSkills',label:'Skills'}]}
+function updateProfileCompleteness(){
+ const fields=getRequiredProfileFields(),missing=fields.filter(x=>!String($(x.id)?.value||'').trim()),pct=Math.round(((fields.length-missing.length)/fields.length)*100);
+ const bar=$('profileProgressBar'),txt=$('profileProgressText'),miss=$('profileMissing');
+ if(bar)bar.style.width=pct+'%';if(txt)txt.textContent=pct+'% complete';
+ if(miss)miss.innerHTML=missing.length?'⚠️ Missing: '+missing.map(x=>'<strong>'+esc(x.label)+'</strong>').join(', '):'✅ Your required profile information is complete. You can apply now.';
+ fields.forEach(x=>{const el=$(x.id);if(el){el.style.borderColor=missing.some(m=>m.id===x.id)?'#f59e0b':'';el.oninput=updateProfileCompleteness;el.onchange=updateProfileCompleteness}});
+ return {missing,pct};
+}
 async function saveProfile(){
- const consent=$('profileConsent');if(!consent?.checked){$('profileSaveStatus').textContent='⚠️ Please agree to the privacy consent before saving your profile.';return}
- const p=profileData();p.savedAt=new Date().toISOString();p.files=window.profileFiles||{};
- try{const packet=await encryptText(JSON.stringify(p));localStorage.setItem('beropp_profile_encrypted',JSON.stringify(packet));nsProfile=p;window.nsProfile=p;$('profileSaveStatus').textContent='✅ Profile saved in encrypted local storage on this device.';alert('Profile saved securely on this device.');}
- catch(e){console.error(e);$('profileSaveStatus').textContent='❌ Could not save the profile on this device.'}
+ const consent=$('profileConsent'),status=$('profileSaveStatus');if(!consent?.checked){if(status)status.textContent='⚠️ Please agree to the privacy consent before saving.';return}
+ const check=updateProfileCompleteness();
+ if(check.missing.length){if(status)status.innerHTML='⚠️ Please complete: '+check.missing.map(x=>'<strong>'+esc(x.label)+'</strong>').join(', ');const first=$(check.missing[0].id);first?.scrollIntoView({behavior:'smooth',block:'center'});first?.focus();return}
+ const p=profileData();p.name=[p.firstName,p.lastName].filter(Boolean).join(' ');p.savedAt=new Date().toISOString();p.files=window.profileFiles||{};
+ try{
+  const packet=await encryptText(JSON.stringify(p));localStorage.setItem('beropp_profile_encrypted',JSON.stringify(packet));nsProfile=p;window.nsProfile=p;
+  if(status)status.innerHTML='✅ <strong>Profile saved.</strong> You can apply now.';
+  updateProfileCompleteness();
+  if(confirm('Profile saved. Do you want to find an opportunity and apply now?'))goToMatches();
+ }catch(e){console.error(e);if(status)status.textContent='❌ Could not save the profile on this device.'}
 }
 async function loadProfile(){
  try{const raw=localStorage.getItem('beropp_profile_encrypted');if(!raw)return;const p=JSON.parse(await decryptText(JSON.parse(raw)));nsProfile=p;window.nsProfile=p;profileFields().forEach(k=>{const el=$('profile'+k);if(el)el.value=p[k.charAt(0).toLowerCase()+k.slice(1)]||''});window.profileFiles=p.files||{};$('profileConsent').checked=true;renderProfileFileStatus();$('profileSaveStatus').textContent='✅ Saved profile loaded from this device.'}
  catch(e){console.warn('Profile could not be decrypted',e)}
+ updateProfileCompleteness();
 }
 async function handleProfileFile(e,type){
  const files=[...(e.target.files||[])];if(!files.length)return;
