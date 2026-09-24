@@ -217,7 +217,7 @@ body.dark-mode .nsRemoteIntro{background:#172554;border-color:#334155;color:#cbd
 </div>
 </div>
 </div>
-<div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid"><div class="nsPreviewPanel nsRemoteHomePreview"><div class="nsPreviewHead"><div><span class="nsPreviewKicker">🌐 INTERNATIONAL REMOTE</span><h3>Remote jobs from around the world</h3></div><button class="secondary" onclick="requireAuth('remoteInternational')">All Remote Jobs →</button></div><div id="homeRemotePreview" class="nsPreviewList"></div></div><div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid">
+<div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid"><div class="nsPreviewPanel nsRemoteHomePreview"><div class="nsPreviewHead"><div><span class="nsPreviewKicker">🌐 INTERNATIONAL REMOTE</span><h3>Remote jobs from around the world</h3></div><button class="secondary" onclick="requireAuth('remoteInternational')">All Remote Jobs →</button></div><div id="homeRemotePreview" class="nsPreviewList"></div></div></div></div><div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid">
   <div class="nsPreviewPanel">
     <div class="nsPreviewHead"><div><span class="nsPreviewKicker">🎓 AUSBILDUNG</span><h3>Ausbildung für deinen nächsten Schritt</h3></div><button class="secondary" onclick="requireAuth('ausbildung')">Alle Ausbildung →</button></div>
     <div id="homeAusbildungPreview" class="nsPreviewList"></div>
@@ -857,6 +857,7 @@ function renderRemoteJobs(){
  $('remoteCount').textContent=list.length+' international remote opportunities';
  box.innerHTML=list.length?list.map(o=>'<div class="nsRemoteCard"><h3>'+esc(o.title)+'</h3><div class="nsRemoteMeta">🏢 '+esc(o.company)+' · 🌍 '+esc(o.region)+' · '+esc(o.type)+'</div><div class="nsRemoteTags">'+o.tags.map(t=>'<span class="nsRemoteTag">'+esc(t)+'</span>').join('')+'</div><p>'+esc(o.desc)+'</p><a class="secondary" href="'+esc(o.url)+'" target="_blank" rel="noopener">🔗 View remote opportunities</a></div>').join(''):'<div class="card"><h3>🔎 No matching remote opportunities</h3><p>Try another keyword, region or job type.</p></div>';
 }
+renderHomePreviews();
 </script><script>
 function beroppGetProfile(){return window.nsProfile||{}}
 function beroppIsExternal(url){if(!url)return true;try{return /indeed\.|arbeitsagentur\.|azubi\.|ausbildung\./.test(new URL(url,location.href).hostname.toLowerCase())}catch(e){return true}}
