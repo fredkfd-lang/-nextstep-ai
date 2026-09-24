@@ -1,0 +1,76 @@
+name: Repair BerOpp homepage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/repair-homepage.yml'
+      - 'index.html'
+      - 'beropp-hero.css'
+      - 'beropp-hero-visual.svg'
+
+permissions:
+  contents: write
+
+jobs:
+  repair-homepage:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Repair homepage markup and connect professional hero assets
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+          original = html
+
+          # Connect the external professional hero stylesheet exactly once.
+          if 'href="/beropp-hero.css"' not in html:
+              html = html.replace('</head>', '  <link rel="stylesheet" href="/beropp-hero.css">\n</head>', 1)
+
+          # Repair the accidental broken opening tag before the Home Preview.
+          html = html.replace('\n<\ndiv class="nsHomePreviewWrap"', '\n<div class="nsHomePreviewWrap"')
+
+          # Add the professional BerOpp visual card if it is not already present.
+          if 'id="beroppProfessionalVisual"' not in html:
+              marker = '\n<div class="nsHomePreviewWrap"'
+              visual = '''
+<div class="nsProfessor" id="beroppProfessionalVisual" style="margin-top:18px">
+  <div class="nsProfessorTop">
+    <div class="nsAvatar" aria-hidden="true">🎓</div>
+    <div>
+      <strong>BerOpp Career Assistant</strong>
+      <small>Ausbildung · Jobs · CV · Bewerbung</small>
+    </div>
+  </div>
+  <div class="nsProfessorMsg">
+    Find opportunities, upload your CV, prepare your application and plan your next career step in one professional workspace.
+  </div>
+  <img src="/beropp-hero-visual.svg" alt="BerOpp career platform illustration" style="display:block;width:100%;max-width:430px;margin:16px auto 0;border-radius:16px" loading="lazy">
+</div>
+'''
+              if marker in html:
+                  html = html.replace(marker, visual + marker, 1)
+
+          if html != original:
+              path.write_text(html, encoding='utf-8')
+          else:
+              print('No homepage repair was needed.')
+
+      - name: Commit homepage repair
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Repair professional BerOpp homepage hero [skip ci]"
+          git push
