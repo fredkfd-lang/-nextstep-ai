@@ -1060,6 +1060,9 @@ a[href*="indeed.com"],a[href*="arbeitsagentur.de"]{display:none!important}
 })();
 </script><script id="beropp-home-autocomplete">
 const beroppHomeSuggestionTimer={career:null,location:null};
+function homeSuggestionButton(kind,value){
+ return '<button type="button" class="nsSearchSuggestion" role="option" onclick="homePickSearch('+JSON.stringify(kind)+','+JSON.stringify(value)+')">🔎 <span>'+esc(value)+'</span></button>';
+}
 function homeSearchSuggest(kind){
  const input=$(kind==='career'?'homeCareerSearch':'homeCareerLocation'),box=$(kind==='career'?'homeCareerSuggestions':'homeLocationSuggestions');
  if(!input||!box)return;
@@ -1078,7 +1081,7 @@ function homeSearchSuggest(kind){
  const values=kind==='career'?careerValues:locationValues;
  const norm=s=>normalizeLocation(s);
  const matches=values.filter(v=>norm(v).startsWith(q)||norm(v).split(/\s+/).some(w=>w.startsWith(q))).slice(0,8);
- box.innerHTML=matches.map(v=>'<button type="button" class="nsSearchSuggestion" role="option" onclick="homePickSearch(\\''+kind+'\\',\\''+esc(v).replace(/'/g,"\\\\'")+ '\\')">🔎 <span>'+esc(v)+'</span></button>').join('');
+ box.innerHTML=matches.map(v=>homeSuggestionButton(kind,v)).join('');
  box.classList.toggle('open',matches.length>0);
  clearTimeout(beroppHomeSuggestionTimer[kind]);
  if(q.length>=2){
@@ -1088,7 +1091,7 @@ function homeSearchSuggest(kind){
        const live=await fetchLiveCareerSources(input.value,($('homeCareerLocation')?.value||''),$('homeCareerType')?.value||'all');
        const liveValues=[...new Set((live||[]).flatMap(o=>[o.title,o.company,o.category].filter(Boolean)))];
        const merged=[...new Set(matches.concat(liveValues))].filter(v=>norm(v).includes(q)).slice(0,10);
-       box.innerHTML=merged.map(v=>'<button type="button" class="nsSearchSuggestion" role="option" onclick="homePickSearch(\\''+kind+'\\',\\''+esc(v).replace(/'/g,"\\\\'")+ '\\')">🔎 <span>'+esc(v)+'</span></button>').join('');
+       box.innerHTML=merged.map(v=>homeSuggestionButton(kind,v)).join('');
        box.classList.toggle('open',merged.length>0);
      }catch(e){}
    },350);
