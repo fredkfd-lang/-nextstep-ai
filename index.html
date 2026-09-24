@@ -716,7 +716,7 @@ async function encryptText(text){const key=await getCryptoKey();const iv=crypto.
 async function decryptText(packet){const key=await getCryptoKey();const data=await crypto.subtle.decrypt({name:'AES-GCM',iv:new Uint8Array(packet.iv)},key,new Uint8Array(packet.data));return new TextDecoder().decode(data)}
 function profileFields(){return ['Salutation','FirstName','LastName','BirthDate','Street','PostalCode','City','Phone','Email','German','SchoolLeaving','School','Driving','StartDate','Internships','Goal','Experience','Education','Skills']}
 function profileData(){const p={};profileFields().forEach(k=>p[k.charAt(0).toLowerCase()+k.slice(1)]=$('profile'+k)?.value||'');return p}
-function getRequiredProfileFields(){return [{id:'profileFirstName',label:'First name'},{id:'profileLastName',label:'Last name'},{id:'profileEmail',label:'E-Mail'},{id:'profilePhone',label:'Phone'},{id:'profileCity',label:'City'},{id:'profileGerman',label:'German level'},{id:'profileGoal',label:'Career goal'},{id:'profileExperience',label:'Work experience'},{id:'profileEducation',label:'Education'},{id:'profileSkills',label:'Skills'}]}
+function getRequiredProfileFields(){return [{id:'profileFirstName',label:'First name'},{id:'profileLastName',label:'Last name'},{id:'profileEmail',label:'E-Mail'}]}
 function updateProfileCompleteness(){
  const fields=getRequiredProfileFields(),missing=fields.filter(x=>!String($(x.id)?.value||'').trim()),pct=Math.round(((fields.length-missing.length)/fields.length)*100);
  const bar=$('profileProgressBar'),txt=$('profileProgressText'),miss=$('profileMissing');
