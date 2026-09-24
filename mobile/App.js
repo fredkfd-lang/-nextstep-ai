@@ -175,12 +175,17 @@ export default function App() {
       const result = authMode === "login"
         ? await signInWithEmailAndPassword(auth, email.trim(), password)
         : await createUserWithEmailAndPassword(auth, email.trim(), password);
+      let role = accountType;
       if (authMode === "register" && db) {
         await setDoc(doc(db, "users", result.user.uid), {
           email: result.user.email, role: accountType, createdAt: new Date().toISOString()
         }, { merge: true });
+      } else if (db) {
+        const snap = await getDoc(doc(db, "users", result.user.uid));
+        role = snap.exists() && snap.data().role === "employer" ? "employer" : "candidate";
       }
-      setScreen(accountType === "employer" ? "employer" : "profile");
+      setAccountType(role);
+      setScreen(role === "employer" ? "employer" : "profile");
     } catch (error) {
       const messages = {
         "auth/invalid-credential": "E-Mail oder Passwort ist nicht korrekt.",
