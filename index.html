@@ -397,76 +397,29 @@ div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid"><div class="nsPrevi
 <section id="profile" class="hidden">
 <div class="card nsProfileCard">
 <h2 id="profileTitle">👤 My Profile</h2>
-<p class="nsProfileIntro">Fill in the important information once. BerOpp will reuse it for CVs and applications.</p>
-
-<div id="profileCompleteness" class="nsProfileCompleteness">
-  <div><strong>Profile progress</strong><span id="profileProgressText">0% complete</span></div>
-  <div class="nsProgressTrack"><span id="profileProgressBar"></span></div>
-  <div id="profileMissing" class="nsProfileMissing">Start with the required fields below.</div>
-</div>
+<p class="nsProfileIntro">Create your basic BerOpp profile. You only need a few details to get started.</p>
 
 <div id="profileConsentBox" class="card nsProfilePrivacy">
-<strong>🔐 Privacy first</strong>
-<p>Your profile is stored locally in encrypted form on this device. Nothing is submitted automatically.</p>
-<label class="nsCheck"><input id="profileConsent" type="checkbox"><span>I agree that BerOpp stores the information I enter for career features.</span></label>
+<strong>🔐 Quick registration</strong>
+<p>Your basic profile is saved securely on this device and is used when you prepare applications.</p>
+<label class="nsCheck"><input id="profileConsent" type="checkbox"><span>I agree to save my profile information.</span></label>
 </div>
 
 <div class="nsProfileSection">
-<h3>⭐ Required for applications</h3>
-<p class="nsProfileHint">Only the information BerOpp needs to prepare your application.</p>
+<h3>📝 Basic information</h3>
 <div class="nsProfileGrid">
-<div><label>First name *</label><input id="profileFirstName" autocomplete="given-name" data-profile-required="true"></div>
-<div><label>Last name *</label><input id="profileLastName" autocomplete="family-name" data-profile-required="true"></div>
-<div><label>E-Mail *</label><input id="profileEmail" type="email" autocomplete="email" data-profile-required="true"></div>
-<div><label>Phone *</label><input id="profilePhone" type="tel" autocomplete="tel" data-profile-required="true"></div>
-<div><label>City *</label><input id="profileCity" autocomplete="address-level2" data-profile-required="true" placeholder="z. B. Neu Wulmstorf"></div>
-<div><label>German level *</label><select id="profileGerman" data-profile-required="true"><option value="">Please choose</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></select></div>
-<div class="nsProfileFull"><label>Career goal *</label><input id="profileGoal" data-profile-required="true" placeholder="z. B. Fachlagerist / Elektriker"></div>
-<div class="nsProfileFull"><label>Work experience *</label><textarea id="profileExperience" data-profile-required="true" placeholder="Kurz: Beruf, Firma, Aufgaben, Zeitraum"></textarea></div>
-<div class="nsProfileFull"><label>Education / school *</label><textarea id="profileEducation" data-profile-required="true" placeholder="Schule, Ausbildung, Abschluss"></textarea></div>
-<div class="nsProfileFull"><label>Skills *</label><textarea id="profileSkills" data-profile-required="true" placeholder="z. B. Gabelstaplerschein, Be- und Entladen"></textarea></div>
+<div><label>First name *</label><input id="profileFirstName" autocomplete="given-name"></div>
+<div><label>Last name *</label><input id="profileLastName" autocomplete="family-name"></div>
+<div><label>E-Mail *</label><input id="profileEmail" type="email" autocomplete="email"></div>
+<div><label>Phone</label><input id="profilePhone" type="tel" autocomplete="tel"></div>
 </div>
-</div>
-
-<details class="nsProfileOptional">
-<summary>➕ Optional information</summary>
-<div class="nsProfileGrid" style="margin-top:12px">
-<div><label>Anrede</label><select id="profileSalutation"><option value="">Please choose</option><option>Herr</option><option>Frau</option><option>Keine Angabe</option></select></div>
-<div><label>Geburtsdatum</label><input id="profileBirthDate" type="date"></div>
-<div><label>Straße + Hausnummer</label><input id="profileStreet" autocomplete="street-address"></div>
-<div><label>PLZ</label><input id="profilePostalCode" inputmode="numeric" autocomplete="postal-code"></div>
-<div><label>Führerschein</label><input id="profileDriving" placeholder="z. B. Klasse B"></div>
-<div><label>Gewünschter Ausbildungsbeginn</label><input id="profileStartDate" type="month"></div>
-<div class="nsProfileFull"><label>Praktika</label><textarea id="profileInternships" placeholder="Firma, Bereich, Zeitraum, Aufgaben"></textarea></div>
-<div class="nsProfileFull"><label>Schule + Abschlussjahr</label><input id="profileSchool" placeholder="z. B. Kigali School, 2012"></div>
-<div class="nsProfileFull"><label>Schulabschluss</label><input id="profileSchoolLeaving"></div>
-</div>
-</details>
-
-<div class="card nsProfileDocs">
-<h3>📎 Documents</h3>
-<p class="nsProfileHint">Your CV is the most useful document for direct applications. Other documents are optional.</p>
-<label>Lebenslauf (PDF)</label>
-<input id="profileCVFile" type="file" accept=".pdf,application/pdf" onchange="handleProfileFile(event,'cv')">
-<div id="profileCVFileStatus" class="status">No CV uploaded</div>
-<details class="nsProfileOptionalDoc"><summary>More documents (optional)</summary>
-<label>Anschreiben</label><input id="profileCoverFile" type="file" accept=".pdf,application/pdf,.doc,.docx" onchange="handleProfileFile(event,'cover')">
-<div id="profileCoverFileStatus" class="status">No cover letter</div>
-<label>Zeugnisse</label><input id="profileCertificatesFile" type="file" accept=".pdf,application/pdf,image/*" multiple onchange="handleProfileFile(event,'certificates')">
-<div id="profileCertificatesFileStatus" class="status">No certificates</div>
-</details>
 </div>
 
 <div class="nsProfileActions">
 <button onclick="saveProfile()">🔐 Save Profile</button>
-<button class="secondary" onclick="goToMatches()">💼 Find Jobs & Apply</button>
 <button class="secondary" onclick="requireAuth('cv')">📄 Build My CV</button>
 </div>
 <div id="profileSaveStatus" class="status nsProfileSaveStatus">Your profile is not saved yet.</div>
-<div class="nsProfileDataActions">
-<button class="secondary" onclick="exportProfileData()">⬇️ Export</button>
-<button class="secondary" onclick="deleteAllProfileData()">🗑️ Delete My Data</button>
-</div>
 </div>
 </section><section id="ausbildung" class="hidden"><div class="card"><div class="nsPageHead"><div><h2 id="ausbildungTitle">🎓 Ausbildungsberufe A–Z</h2><p id="ausbildungText">Explore recognized Ausbildung professions by category or search by profession.</p></div><span class="nsMoreBadge">＋ More · weitere Berufe</span></div><input id="berufSearch" oninput="renderBerufe()" placeholder="🔎 Search Ausbildung profession"><select id="berufCategory" onchange="renderBerufe()"><option value="">All categories</option><option>Elektro & Technik</option><option>IT & Digital</option><option>Lager & Logistik</option><option>Handel & Büro</option><option>Gesundheit & Pflege</option><option>Bau & Handwerk</option><option>Gastronomie & Tourismus</option><option>Industrie & Produktion</option><option>Medien & Design</option><option>Natur & Umwelt</option><option>Verkehr & Fahrzeuge</option><option>Dienstleistung & Sicherheit</option></select><div id="berufeCount" class="status"></div><div id="berufeList"></div><div id="berufDetail" class="card hidden" style="background:#f8faff;border:1px solid #c7d2fe"></div><p style="font-size:13px;color:#64748b">BerOpp shows a structured profile for each profession. Vacancy matching and company-direct applications are handled inside BerOpp whenever a direct employer connection is available.</p></div></section><section id="matches" class="hidden"><div class="card"><div class="nsPageHead"><div><h2 id="matchesTitle">💼 Find Jobs</h2><p id="matchesText">Find current job opportunities separately from Ausbildung.</p></div><span class="nsMoreBadge">＋ More · weitere Jobs</span></div><input id="oppSearch" oninput="findMatches()" placeholder="🔎 Search job, company or city"><select id="oppField" onchange="findMatches()"><option value="">All fields</option><option value="lager">Lager / Logistik</option><option value="elektrik">Elektrotechnik</option><option value="produktion">Produktion</option><option value="reinigung">Reinigung</option><option value="handel">Handel / Verkauf</option><option value="buero">Büro / Service</option><option value="fahrer">Fahrer / Lieferung</option></select><input id="oppCity" oninput="findMatches()" placeholder="📍 City / location"><select id="oppGerman" onchange="findMatches()"><option value="">German level</option><option value="A2">A2 or lower</option><option value="B1">B1 or lower</option><option value="B2">B2 or lower</option><option value="ANY">Not specified</option></select><div id="results"></div><div class="card" style="margin-top:12px;background:#f0f9ff;border:1px solid #bae6fd"><strong>⚡ BerOpp Direct Application</strong><p style="margin:6px 0">BerOpp prioritizes vacancies with a direct company application connection. External job boards are not used as the main application path.</p></div></div></section><section id="details" class="hidden"><div class="card"><div class="nsDetailNav"><button class="secondary" onclick="goHomeFromDetails()">⌂ Home</button><button class="secondary" onclick="goBackFromDetails()">← Back</button></div><h2 id="detailTitle">Opportunity Details</h2><p id="detailInfo"></p><p id="detailMatch"></p><h3 id="requirementsTitle">📋 Requirements</h3><ul id="detailRequirements"></ul><h3 id="tasksTitle">🛠️ Tasks</h3><ul id="detailTasks"></ul><h3 id="conditionsTitle">📌 Conditions</h3><ul id="detailConditions"></ul><p id="detailDescription"></p><h3 id="nextTitle">🚀 Next Steps</h3><ol><li>Save this opportunity.</li><li>Add it to Applications.</li><li>Prepare your CV.</li><li>Prepare a motivation letter.</li></ol><div class="nsDetailBottomNav"><button onclick="goBackFromDetails()" id="backBtn" class="secondary">← Back</button><button onclick="goHomeFromDetails()" class="secondary">⌂ Home</button></div><button onclick="saveCurrent()" id="saveOppBtn">⭐ Save Opportunity</button><a class="secondary" href="#" target="_blank" rel="noopener" id="quickApplyBtn" style="display:none;text-decoration:none">⚡ Apply Now</a><a class="secondary" href="#" target="_blank" rel="noopener" id="applyLinkBtn" style="display:none;text-decoration:none">🔗 Open Company Application</a></div></section>
 <section id="remoteInternational" class="hidden"><div class="card nsRemotePage"><div class="nsPageHead"><div><h2>🌐 International Remote Jobs</h2><p>Remote opportunities from around the world — outside the normal Germany/EU job search.</p></div><span class="nsMoreBadge">＋ Worldwide · Global</span></div><div class="nsRemoteIntro">🌍 <strong>Work from anywhere:</strong> BerOpp groups remote roles by profession and region. Always check the employer's country, timezone, contract and work-authorization requirements before applying.</div><div class="nsRemoteFilters"><input id="remoteSearch" oninput="renderRemoteJobs()" placeholder="🔎 Search remote job, skill or category"><select id="remoteRegion" onchange="renderRemoteJobs()"><option value="">🌍 All regions</option><option value="worldwide">Worldwide</option><option value="europe">Europe / EU</option><option value="americas">Americas</option><option value="africa">Africa</option><option value="asia">Asia / Pacific</option></select><select id="remoteType" onchange="renderRemoteJobs()"><option value="">All job types</option><option value="full-time">Full-time</option><option value="part-time">Part-time</option><option value="contract">Contract / Freelance</option></select></div><div id="remoteCount" class="status"></div><div id="remoteJobsList"></div><div class="card nsRemoteSources"><h3>🔎 More international remote sources</h3><p>BerOpp can also send you to remote-job sources. These are external listings, so BerOpp does not claim that an application was submitted.</p><div class="nsRemoteSourceGrid"><a href="https://www.weworkremotely.com/" target="_blank" rel="noopener">🌎 We Work Remotely</a><a href="https://himalayas.app/" target="_blank" rel="noopener">🏔️ Himalayas</a><a href="https://remotive.com/" target="_blank" rel="noopener">🚀 Remotive</a><a href="https://remoteok.com/" target="_blank" rel="noopener">💻 Remote OK</a><a href="https://www.workingnomads.com/" target="_blank" rel="noopener">🧭 Working Nomads</a><a href="https://wellfound.com/jobs" target="_blank" rel="noopener">🌱 Wellfound</a></div></div></div></section><section id="saved" class="hidden"><div class="card"><h2 id="savedTitle">⭐ Saved Opportunities</h2><div id="savedList"></div></div></section><section id="applications" class="hidden"><div class="card"><h2 id="appsTitle">📋 Applications</h2><div id="appList"></div></div></section>
