@@ -27,6 +27,7 @@ export default function App() {
   const [jobsData, setJobsData] = useState(JOBS);
   const [savedData, setSavedData] = useState([]);
   const [applicationsData, setApplicationsData] = useState([]);
+  const [employerApplications, setEmployerApplications] = useState([]);
   const [accountType, setAccountType] = useState("candidate");
   const [employerJobs, setEmployerJobs] = useState([]);
   const [jobForm, setJobForm] = useState({ title: "", company: "", location: "", type: "Job", tags: "" });
@@ -65,6 +66,15 @@ export default function App() {
     }
     const q = firestoreQuery(collection(db, "jobs"), where("employerId", "==", user.uid));
     return onSnapshot(q, snap => setEmployerJobs(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
+  }, [user, accountType]);
+
+  React.useEffect(() => {
+    if (!db || !user || accountType !== "employer") {
+      setEmployerApplications([]);
+      return;
+    }
+    const q = firestoreQuery(collection(db, "applications"), where("employerId", "==", user.uid));
+    return onSnapshot(q, snap => setEmployerApplications(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
   }, [user, accountType]);
 
   const filtered = useMemo(() => {
@@ -106,6 +116,8 @@ export default function App() {
       const existing = applicationsData.some(a => a.jobId === id);
       if (!existing) {
         await addDoc(collection(db, "users", user.uid, "applications"), {
+          employerId: job.employerId || "",
+          applicantId: user.uid,
           jobId: id,
           title: job.title,
           company: job.company,
@@ -113,6 +125,20 @@ export default function App() {
           type: job.type,
           status: "Gesendet",
           appliedAt: new Date().toISOString()
+        });
+      }
+      const employerId = job.employerId;
+      if (employerId) {
+        await addDoc(collection(db, "applications"), {
+          applicantId: user.uid,
+          employerId,
+          jobId: id,
+          title: job.title,
+          company: job.company,
+          location: job.location,
+          type: job.type,
+          status: "Neu",
+          createdAt: new Date().toISOString()
         });
       }
       Alert.alert("Bewerbung", "Die Bewerbung wurde in deinem BerOpp-Konto gespeichert.");
@@ -142,6 +168,23 @@ export default function App() {
       Alert.alert("Veröffentlicht", "Die Stelle wurde zu BerOpp hinzugefügt.");
     } catch (error) {
       Alert.alert("Fehler", "Die Stelle konnte nicht veröffentlicht werden.");
+    }
+  };
+
+  const updateApplicationStatus = async (applicationId, status) => {
+    if (!db) return;
+    try {
+      await setDoc(doc(db, "applications", applicationId), { status, updatedAt: new Date().toISOString() }, { merge: true });
+      const app = employerApplications.find(x => x.id === applicationId);
+      if (app?.applicantId) {
+        const userApps = await (async () => {
+          const snap = await import("firebase/firestore").then(m => m.getDocs(firestoreQuery(collection(db, "users", app.applicantId, "applications"), where("jobId", "==", app.jobId))));
+          return snap;
+        })();
+        for (const d of userApps.docs) await setDoc(d.ref, { status }, { merge: true });
+      }
+    } catch {
+      Alert.alert("Status", "Der Status konnte nicht aktualisiert werden.");
     }
   };
 
@@ -278,6 +321,18 @@ export default function App() {
               <Action title="Stelle löschen" secondary onPress={() => deleteEmployerJob(job.id)} />
             </View>)}
             {!employerJobs.length && <Empty text="Du hast noch keine Stellen veröffentlicht." />}
+            <SectionTitle title="Bewerbungen" />
+            {employerApplications.map(app => <View style={styles.card} key={app.id}>
+              <Text style={styles.cardTitle}>{app.title}</Text>
+              <Text style={styles.muted}>Bewerber-ID: {app.applicantId}</Text>
+              <Text style={styles.status}>Status: {app.status || "Neu"}</Text>
+              <View style={styles.row}>
+                <Action title="Angesehen" secondary onPress={() => updateApplicationStatus(app.id, "Angesehen")} />
+                <Action title="Eingeladen" onPress={() => updateApplicationStatus(app.id, "Eingeladen")} />
+              </View>
+              <Action title="Abgelehnt" secondary onPress={() => updateApplicationStatus(app.id, "Abgelehnt")} />
+            </View>)}
+            {!employerApplications.length && <Empty text="Noch keine Bewerbungen." />
           </>
         )}
 
