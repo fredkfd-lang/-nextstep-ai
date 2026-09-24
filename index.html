@@ -244,20 +244,20 @@ body.dark-mode .nsSearchSuggestion:hover,body.dark-mode .nsSearchSuggestion:focu
 </div>
 </div>
 <
-<div class="nsProfessor nsProfessorHomeBottom">
-<div class="nsProfessorTop"><div class="nsAvatar">🤖</div><div><strong>NextStep AI Assistant</strong><small>Personal career guidance</small></div></div>
-<div class="nsProfessorMsg">“Tell me your skills, upload your CV, and I’ll help you turn your experience into your next opportunity.”</div>
-</div>
 <div class="nsHomeSearch" id="homeSearchLocation">
   <div class="nsHomeSearchHead"><div><h3>🔎 Find your next opportunity</h3><p>Search by job, Ausbildung, skill or location — directly from the Home page.</p></div><span class="nsHomeSearchBadge">Search + Location</span></div>
   <div class="nsHomeSearchGrid">
-    <div class="nsHomeSearchField"><label for="homeCareerSearch">What are you looking for?</label><input id="homeCareerSearch" type="search" autocomplete="off" aria-autocomplete="list" aria-controls="homeCareerSuggestions" placeholder="e.g. Lager, Elektriker, Ausbildung" oninput="homeSearchSuggest('career')" onkeydown="if(event.key==='Enter')runHomeCareerSearch()"></div>
-    <div class="nsHomeSearchField"><label for="homeCareerLocation">📍 Location</label><input id="homeCareerLocation" type="search" autocomplete="off" aria-autocomplete="list" aria-controls="homeLocationSuggestions" placeholder="e.g. Hamburg, Neu Wulmstorf" oninput="homeSearchSuggest('location')" onkeydown="if(event.key==='Enter')runHomeCareerSearch()"></div>
+    <div class="nsHomeSearchField"><label for="homeCareerSearch">What are you looking for?</label><input id="homeCareerSearch" type="search" autocomplete="off" aria-autocomplete="list" aria-controls="homeCareerSuggestions" placeholder="e.g. Lager, Elektriker, Ausbildung" oninput="homeSearchSuggest('career')" onkeydown="if(event.key==='Enter')runHomeCareerSearch()"><div id="homeCareerSuggestions" class="nsSearchSuggestions" role="listbox" aria-label="Career suggestions"></div></div>
+    <div class="nsHomeSearchField"><label for="homeCareerLocation">📍 Location</label><input id="homeCareerLocation" type="search" autocomplete="off" aria-autocomplete="list" aria-controls="homeLocationSuggestions" placeholder="e.g. Hamburg, Neu Wulmstorf" oninput="homeSearchSuggest('location')" onkeydown="if(event.key==='Enter')runHomeCareerSearch()"><div id="homeLocationSuggestions" class="nsSearchSuggestions" role="listbox" aria-label="Location suggestions"></div></div>
     <div class="nsHomeSearchField"><label for="homeCareerType">Type</label><select id="homeCareerType" onchange="runHomeCareerSearch()"><option value="all">Jobs + Ausbildung</option><option value="job">Jobs</option><option value="ausbildung">Ausbildung</option></select></div>
     <div class="nsHomeSearchActions"><button onclick="runHomeCareerSearch()">🔎 Search</button><button class="nsLocationButton" onclick="useMyHomeLocation()" title="Use my current location">📍 My location</button></div>
   </div>
   <div id="homeSearchStatus" class="nsHomeSearchStatus">Tip: use “My location” to detect your city, then search nearby opportunities.</div>
   <div id="homeSearchResults" class="nsHomeSearchResults"></div>
+</div>
+<div class="nsProfessor nsProfessorHomeBottom">
+<div class="nsProfessorTop"><div class="nsAvatar">🤖</div><div><strong>NextStep AI Assistant</strong><small>Personal career guidance</small></div></div>
+<div class="nsProfessorMsg">“Tell me your skills, upload your CV, and I’ll help you turn your experience into your next opportunity.”</div>
 </div>
 div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid"><div class="nsPreviewPanel nsRemoteHomePreview"><div class="nsPreviewHead"><div><span class="nsPreviewKicker">🌐 INTERNATIONAL REMOTE</span><h3>Remote jobs from around the world</h3></div><button class="secondary" onclick="requireAuth('remoteInternational')">All Remote Jobs →</button></div><div id="homeRemotePreview" class="nsPreviewList">
 <div class="nsPreviewItem" onclick="requireAuth('remoteInternational')"><strong>Customer Support Specialist</strong><div class="nsPreviewMeta">🌍 worldwide · 💼 Customer Support · full-time</div><button class="secondary" onclick="event.stopPropagation();requireAuth('remoteInternational')">View Remote →</button></div>
@@ -1059,19 +1059,40 @@ a[href*="indeed.com"],a[href*="arbeitsagentur.de"]{display:none!important}
   new MutationObserver(removeExternalJobBoardLinks).observe(document.body,{childList:true,subtree:true});
 })();
 </script><script id="beropp-home-autocomplete">
+const beroppHomeSuggestionTimer={career:null,location:null};
 function homeSearchSuggest(kind){
  const input=$(kind==='career'?'homeCareerSearch':'homeCareerLocation'),box=$(kind==='career'?'homeCareerSuggestions':'homeLocationSuggestions');
  if(!input||!box)return;
  const q=normalizeLocation(input.value||'');
  if(!q){box.innerHTML='';box.classList.remove('open');return}
- const all=opps.concat(jobOpps);
- const values=kind==='career'
-   ? [...new Set(all.flatMap(o=>[o.title,o.company,o.place,o.type,...(o.tags||[])].filter(Boolean)))]
-   : [...new Set(all.map(o=>o.place).filter(Boolean))];
+ const internal=opps.concat(jobOpps);
+ const remote=typeof remoteInternationalJobs!=='undefined'?remoteInternationalJobs:[];
+ const careerValues=[...new Set(
+   internal.flatMap(o=>[o.title,o.company,o.place,o.type,...(o.tags||[])].filter(Boolean))
+   .concat(remote.flatMap(o=>[o.title,o.company,o.category,...(o.tags||[])].filter(Boolean)))
+ )];
+ const locationValues=[...new Set(
+   internal.map(o=>o.place).filter(Boolean)
+   .concat(['Hamburg','Neu Wulmstorf','Winsen','Harburg','Hannover','Bremen','Berlin','München','Frankfurt','Köln','Stuttgart','Amsterdam','London','Paris','Toronto','New York','Remote','Worldwide'])
+ )];
+ const values=kind==='career'?careerValues:locationValues;
  const norm=s=>normalizeLocation(s);
- const matches=values.filter(v=>norm(v).startsWith(q)||norm(v).split(/\s+/).some(w=>w.startsWith(q))).slice(0,7);
- box.innerHTML=matches.map(v=>'<button type="button" class="nsSearchSuggestion" role="option" onclick="homePickSearch(\''+kind+'\',\''+esc(v).replace(/'/g,"\\'")+'\')">🔎 <span>'+esc(v)+'</span></button>').join('');
+ const matches=values.filter(v=>norm(v).startsWith(q)||norm(v).split(/\s+/).some(w=>w.startsWith(q))).slice(0,8);
+ box.innerHTML=matches.map(v=>'<button type="button" class="nsSearchSuggestion" role="option" onclick="homePickSearch(\\''+kind+'\\',\\''+esc(v).replace(/'/g,"\\\\'")+ '\\')">🔎 <span>'+esc(v)+'</span></button>').join('');
  box.classList.toggle('open',matches.length>0);
+ clearTimeout(beroppHomeSuggestionTimer[kind]);
+ if(q.length>=2){
+   beroppHomeSuggestionTimer[kind]=setTimeout(async()=>{
+     try{
+       if(kind!=='career'||typeof fetchLiveCareerSources!=='function')return;
+       const live=await fetchLiveCareerSources(input.value,($('homeCareerLocation')?.value||''),$('homeCareerType')?.value||'all');
+       const liveValues=[...new Set((live||[]).flatMap(o=>[o.title,o.company,o.category].filter(Boolean)))];
+       const merged=[...new Set(matches.concat(liveValues))].filter(v=>norm(v).includes(q)).slice(0,10);
+       box.innerHTML=merged.map(v=>'<button type="button" class="nsSearchSuggestion" role="option" onclick="homePickSearch(\\''+kind+'\\',\\''+esc(v).replace(/'/g,"\\\\'")+ '\\')">🔎 <span>'+esc(v)+'</span></button>').join('');
+       box.classList.toggle('open',merged.length>0);
+     }catch(e){}
+   },350);
+ }
 }
 function homePickSearch(kind,value){
  const input=$(kind==='career'?'homeCareerSearch':'homeCareerLocation');
