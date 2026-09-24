@@ -384,7 +384,7 @@ function findByBeruf(name){
   if(!beroppUser){beroppPendingTarget='ausbildung';show('auth');return false}
   show('matches');
   $('oppSearch').value=name;
-  $('oppType').value='';
+  if($('oppType'))$('oppType').value='';
   $('oppField').value='';
   $('oppGerman').value='';
   findMatches();
