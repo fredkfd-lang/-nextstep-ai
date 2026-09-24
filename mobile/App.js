@@ -27,6 +27,9 @@ export default function App() {
   const [jobsData, setJobsData] = useState(JOBS);
   const [savedData, setSavedData] = useState([]);
   const [applicationsData, setApplicationsData] = useState([]);
+  const [accountType, setAccountType] = useState("candidate");
+  const [employerJobs, setEmployerJobs] = useState([]);
+  const [jobForm, setJobForm] = useState({ title: "", company: "", location: "", type: "Job", tags: "" });
 
   React.useEffect(() => {
     if (!auth) return;
@@ -54,6 +57,15 @@ export default function App() {
     const unsubApps = onSnapshot(appsQ, snap => setApplicationsData(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
     return () => { unsubSaved(); unsubApps(); };
   }, [user]);
+
+  React.useEffect(() => {
+    if (!db || !user || accountType !== "employer") {
+      setEmployerJobs([]);
+      return;
+    }
+    const q = firestoreQuery(collection(db, "jobs"), where("employerId", "==", user.uid));
+    return onSnapshot(q, snap => setEmployerJobs(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
+  }, [user, accountType]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -109,6 +121,39 @@ export default function App() {
     }
   });
 
+  const createJob = async () => {
+    if (!user || !db) return;
+    if (!jobForm.title.trim() || !jobForm.company.trim() || !jobForm.location.trim()) {
+      Alert.alert("Fehlende Angaben", "Bitte Titel, Unternehmen und Ort ausfüllen.");
+      return;
+    }
+    try {
+      await addDoc(collection(db, "jobs"), {
+        title: jobForm.title.trim(),
+        company: jobForm.company.trim(),
+        location: jobForm.location.trim(),
+        type: jobForm.type,
+        tags: jobForm.tags.split(",").map(x => x.trim()).filter(Boolean),
+        employerId: user.uid,
+        createdAt: new Date().toISOString(),
+        status: "published"
+      });
+      setJobForm({ title: "", company: "", location: "", type: "Job", tags: "" });
+      Alert.alert("Veröffentlicht", "Die Stelle wurde zu BerOpp hinzugefügt.");
+    } catch (error) {
+      Alert.alert("Fehler", "Die Stelle konnte nicht veröffentlicht werden.");
+    }
+  };
+
+  const deleteEmployerJob = async (id) => {
+    if (!db) return;
+    try {
+      await deleteDoc(doc(db, "jobs", id));
+    } catch {
+      Alert.alert("Fehler", "Die Stelle konnte nicht gelöscht werden.");
+    }
+  };
+
   const saveProfile = async () => {
     if (!user || !db) return;
     await setDoc(doc(db, "users", user.uid), { email: user.email || "", updatedAt: new Date().toISOString() }, { merge: true });
@@ -162,7 +207,7 @@ export default function App() {
           <Text style={styles.logo}>BerOpp</Text>
           <Text style={styles.tagline}>Find your next opportunity</Text>
         </View>
-        <TouchableOpacity style={styles.accountBtn} onPress={() => setScreen(loggedIn ? "profile" : "login")}>
+        <TouchableOpacity style={styles.accountBtn} onPress={() => setScreen(loggedIn ? (accountType === "employer" ? "employer" : "profile") : "login")}>
           <Text style={styles.accountText}>{loggedIn ? "Profil" : "Login"}</Text>
         </TouchableOpacity>
       </View>
@@ -187,7 +232,7 @@ export default function App() {
           <>
             <Text style={styles.pageTitle}>{screen === "jobs" ? "Jobs" : "Ausbildung"}</Text>
             <TextInput value={query} onChangeText={setQuery} placeholder="Suchen..." style={styles.search} />
-            {jobs.map(job => <JobCard key={job.id} job={job} saved={saved.includes(job.id)} applied={applied.includes(job.id)} onSave={() => toggleSave(job.id)} onApply={() => apply(job.id)} />)}
+            {jobs.map(job => <JobCard key={job.id} job={job} saved={savedIds.includes(job.id)} applied={applications.some(a => a.jobId === job.id)} onSave={() => toggleSave(job.id)} onApply={() => apply(job.id)} />)}
           </>
         )}
 
@@ -213,12 +258,36 @@ export default function App() {
           </>
         )}
 
+        {screen === "employer" && (
+          <>
+            <Text style={styles.pageTitle}>Unternehmen</Text>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Neue Stelle veröffentlichen</Text>
+              <TextInput value={jobForm.title} onChangeText={v => setJobForm(x => ({...x, title:v}))} placeholder="Job-/Ausbildungsname" style={styles.input} />
+              <TextInput value={jobForm.company} onChangeText={v => setJobForm(x => ({...x, company:v}))} placeholder="Unternehmen" style={styles.input} />
+              <TextInput value={jobForm.location} onChangeText={v => setJobForm(x => ({...x, location:v}))} placeholder="Ort" style={styles.input} />
+              <TextInput value={jobForm.type} onChangeText={v => setJobForm(x => ({...x, type:v}))} placeholder="Typ: Job oder Ausbildung" style={styles.input} />
+              <TextInput value={jobForm.tags} onChangeText={v => setJobForm(x => ({...x, tags:v}))} placeholder="Tags, z.B. Lager, Vollzeit, 2027" style={styles.input} />
+              <Action title="Stelle veröffentlichen" onPress={createJob} />
+            </View>
+            <SectionTitle title="Meine Veröffentlichungen" />
+            {employerJobs.map(job => <View style={styles.card} key={job.id}>
+              <Text style={styles.cardTitle}>{job.title}</Text>
+              <Text style={styles.muted}>{job.company} · {job.location}</Text>
+              <Text style={styles.status}>Online</Text>
+              <Action title="Stelle löschen" secondary onPress={() => deleteEmployerJob(job.id)} />
+            </View>)}
+            {!employerJobs.length && <Empty text="Du hast noch keine Stellen veröffentlicht." />}
+          </>
+        )}
+
         {screen === "profile" && (
           <>
             <Text style={styles.pageTitle}>Mein Profil</Text>
             <View style={styles.card}>
               <Text style={styles.cardTitle}>{loggedIn ? "BerOpp Konto" : "Noch nicht angemeldet"}</Text>
               <Text style={styles.muted}>{loggedIn ? "Dein Profil und CV werden hier verwaltet." : "Melde dich an, um Bewerbungen und CV zu speichern."}</Text>
+              {loggedIn && <Action title="Unternehmen / Arbeitgeber" secondary onPress={() => { setAccountType("employer"); setScreen("employer"); }} />}
               {!loggedIn && <Action title="Anmelden / Registrieren" onPress={openLogin} />}
             </View>
             {loggedIn && <View style={styles.card}>
@@ -237,6 +306,7 @@ export default function App() {
             <TextInput value={email} onChangeText={setEmail} placeholder="E-Mail" keyboardType="email-address" autoCapitalize="none" style={styles.input} />
             <TextInput value={password} onChangeText={setPassword} placeholder="Passwort" secureTextEntry style={styles.input} />
             <Action title={authMode === "login" ? "Einloggen" : "Konto erstellen"} onPress={submitAuth} />
+            <Action title={accountType === "candidate" ? "Ich bin ein Unternehmen" : "Ich suche Arbeit"} secondary onPress={() => setAccountType(accountType === "candidate" ? "employer" : "candidate")} />
             <Action title={authMode === "login" ? "Neu bei BerOpp? Registrieren" : "Ich habe bereits ein Konto"} secondary onPress={() => setAuthMode(authMode === "login" ? "register" : "login")} />
             <Text style={styles.muted}>{firebaseConfigured ? "Firebase ist verbunden." : "Firebase-Konfiguration fehlt noch in der mobilen Entwicklungsumgebung."}</Text>
           </View>
@@ -248,7 +318,7 @@ export default function App() {
         <Nav title="Jobs" active={screen === "jobs"} onPress={() => setScreen("jobs")} />
         <Nav title="Gespeichert" active={screen === "saved"} onPress={() => setScreen("saved")} />
         <Nav title="Bewerbungen" active={screen === "applications"} onPress={() => setScreen("applications")} />
-        <Nav title="Profil" active={screen === "profile"} onPress={() => setScreen("profile")} />
+        <Nav title={accountType === "employer" ? "Firma" : "Profil"} active={screen === "profile" || screen === "employer"} onPress={() => setScreen(loggedIn ? (accountType === "employer" ? "employer" : "profile") : "login")} />
       </View>
     </SafeAreaView>
   );
