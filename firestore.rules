@@ -1,28 +1,87 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() { return request.auth != null; }
-    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isParticipant(data) {
+      return signedIn() &&
+        (data.applicantId == request.auth.uid || data.employerId == request.auth.uid);
+    }
 
     match /users/{uid} {
-      allow read, write: if isOwner(uid);
-      match /savedJobs/{jobId} { allow read, write: if isOwner(uid); }
+      allow create: if isOwner(uid)
+        && request.resource.data.role in ['candidate', 'employer']
+        && request.resource.data.email == request.auth.token.email;
+
+      allow read: if isOwner(uid);
+
+      allow update: if isOwner(uid)
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.email == resource.data.email;
+
+      allow delete: if isOwner(uid);
+
+      match /savedJobs/{jobId} {
+        allow read, write: if isOwner(uid);
+      }
+
       match /applications/{applicationId} {
-        allow read, create: if isOwner(uid);
-        allow update: if isOwner(uid) || (signedIn() && get(/databases/$(database)/documents/applications/$(applicationId)).data.employerId == request.auth.uid);
+        allow read, create: if isOwner(uid)
+          && (request.method == 'read' || request.resource.data.applicantId == uid);
+
+        allow update: if isOwner(uid)
+          && request.resource.data.applicantId == resource.data.applicantId
+          && request.resource.data.employerId == resource.data.employerId
+          && request.resource.data.jobId == resource.data.jobId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt']);
+
+        allow update: if signedIn()
+          && resource.data.employerId == request.auth.uid
+          && request.resource.data.applicantId == resource.data.applicantId
+          && request.resource.data.employerId == resource.data.employerId
+          && request.resource.data.jobId == resource.data.jobId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt']);
+
+        allow delete: if isOwner(uid);
       }
     }
 
     match /jobs/{jobId} {
       allow read: if true;
-      allow create: if signedIn() && request.resource.data.employerId == request.auth.uid;
-      allow update, delete: if signedIn() && resource.data.employerId == request.auth.uid;
+
+      allow create: if signedIn()
+        && request.resource.data.employerId == request.auth.uid;
+
+      allow update: if signedIn()
+        && resource.data.employerId == request.auth.uid
+        && request.resource.data.employerId == resource.data.employerId
+        && request.resource.data.createdAt == resource.data.createdAt;
+
+      allow delete: if signedIn()
+        && resource.data.employerId == request.auth.uid;
     }
 
     match /applications/{applicationId} {
-      allow create: if signedIn() && request.resource.data.applicantId == request.auth.uid;
-      allow read, update, delete: if signedIn() &&
-        (resource.data.applicantId == request.auth.uid || resource.data.employerId == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.applicantId == request.auth.uid
+        && request.resource.data.employerId is string
+        && request.resource.data.jobId is string;
+
+      allow read: if isParticipant(resource.data);
+
+      allow update: if isParticipant(resource.data)
+        && request.resource.data.applicantId == resource.data.applicantId
+        && request.resource.data.employerId == resource.data.employerId
+        && request.resource.data.jobId == resource.data.jobId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt']);
+
+      allow delete: if isParticipant(resource.data);
     }
   }
 }
