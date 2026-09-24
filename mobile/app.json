@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "BerOpp",
+    "slug": "beropp",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "beropp",
+    "android": {
+      "package": "de.beropp.app"
+    },
+    "ios": {
+      "bundleIdentifier": "de.beropp.app"
+    }
+  }
+}
