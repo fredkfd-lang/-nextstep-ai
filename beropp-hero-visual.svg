@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 560" role="img" aria-labelledby="title desc">
+  <title id="title">BEROPP career opportunities illustration</title>
+  <desc id="desc">An abstract professional career scene with a person, city skyline and cards for Ausbildung, Jobs and CV.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#dbeafe"/>
+      <stop offset="0.52" stop-color="#93c5fd"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="coat" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#172554"/>
+      <stop offset="1" stop-color="#1e40af"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.94"/>
+      <stop offset="1" stop-color="#eff6ff" stop-opacity="0.70"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#1e3a8a" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="720" height="560" rx="38" fill="url(#sky)"/>
+  <circle cx="575" cy="100" r="92" fill="#fff" opacity="0.30"/>
+  <circle cx="120" cy="450" r="160" fill="#fff" opacity="0.16"/>
+  <g opacity="0.45" fill="#1e40af">
+    <rect x="35" y="300" width="48" height="180" rx="5"/>
+    <rect x="95" y="245" width="62" height="235" rx="5"/>
+    <rect x="170" y="330" width="52" height="150" rx="5"/>
+    <rect x="235" y="275" width="70" height="205" rx="5"/>
+    <rect x="520" y="285" width="62" height="195" rx="5"/>
+    <rect x="595" y="230" width="76" height="250" rx="5"/>
+    <rect x="680" y="320" width="25" height="160" rx="5"/>
+  </g>
+  <g fill="#dbeafe" opacity="0.85">
+    <path d="M110 270h32v9h-32zm0 26h32v9h-32zm132 7h35v10h-35zm0 27h35v10h-35zm292-18h32v10h-32zm78-34h42v10h-42zm0 28h42v10h-42z"/>
+  </g>
+  <path d="M0 500 Q180 450 360 500 T720 500 V560 H0Z" fill="#172554" opacity="0.84"/>
+  <g filter="url(#shadow)">
+    <path d="M255 560c10-106 18-190 70-248 26-30 68-40 103-15 44 31 70 118 92 263Z" fill="url(#coat)"/>
+    <path d="M340 302c-17-34-13-86 17-111 36-30 94-16 113 23 13 27 6 76-13 103l-28 41-66-8Z" fill="#7c4a36"/>
+    <path d="M335 228c-5-48 31-85 77-89 52-4 83 30 85 72-24-16-39-35-55-47-20 28-61 42-107 64Z" fill="#111827"/>
+    <path d="M353 304l36 35 52-17 15 35-42 54-63-30-25-47Z" fill="#e2e8f0"/>
+    <path d="M372 354l26 24-39 72-32-18Z" fill="#0f172a"/>
+    <path d="M439 348l-28 34 43 69 32-20Z" fill="#0f172a"/>
+    <path d="M370 272c17 18 43 21 63 7" fill="none" stroke="#5b3427" stroke-width="5" stroke-linecap="round"/>
+    <path d="M366 241c12-11 25-12 36-5m30-6c13-7 26-4 35 7" fill="none" stroke="#111827" stroke-width="6" stroke-linecap="round"/>
+    <path d="M319 340l-50 73 35 25 60-64Z" fill="#1e3a8a"/>
+    <path d="M493 345l53 74-34 24-62-65Z" fill="#1e3a8a"/>
+    <path d="M303 398l-40 90 48 20 37-104Z" fill="#0f172a"/>
+    <path d="M515 402l45 86-45 21-42-102Z" fill="#0f172a"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="38" y="45" width="255" height="110" rx="20" fill="url(#glass)" stroke="#fff" stroke-opacity="0.8"/>
+    <circle cx="75" cy="82" r="18" fill="#4f46e5"/>
+    <path d="M65 82h20M75 72v20" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+    <text x="108" y="78" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#172554">Ausbildung</text>
+    <text x="108" y="101" font-family="Arial, sans-serif" font-size="13" fill="#334155">Find your next learning path</text>
+    <path d="M258 118l10 10 10-10" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="450" y="178" width="230" height="98" rx="20" fill="url(#glass)" stroke="#fff" stroke-opacity="0.8"/>
+    <circle cx="486" cy="213" r="17" fill="#0891b2"/>
+    <path d="M478 207h16v12h-16zM475 204h22" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="514" y="209" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#172554">Jobs</text>
+    <text x="514" y="231" font-family="Arial, sans-serif" font-size="12" fill="#334155">Discover new opportunities</text>
+    <path d="M644 240l10 10 10-10" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="462" y="302" width="220" height="108" rx="20" fill="url(#glass)" stroke="#fff" stroke-opacity="0.8"/>
+    <circle cx="498" cy="339" r="17" fill="#7c3aed"/>
+    <path d="M490 329h16v20h-16zM493 335h10m-10 6h10" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round"/>
+    <text x="526" y="335" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#172554">CV & Bewerbung</text>
+    <text x="526" y="357" font-family="Arial, sans-serif" font-size="12" fill="#334155">Build your professional profile</text>
+    <path d="M646 377l10 10 10-10" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g fill="#fff" opacity="0.8">
+    <circle cx="60" cy="200" r="5"/><circle cx="85" cy="225" r="3"/><circle cx="630" cy="80" r="5"/><circle cx="655" cy="112" r="3"/>
+  </g>
+</svg>
