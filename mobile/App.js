@@ -1,5 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { auth, db, storage, firebaseConfigured } from "./firebase";
 import * as DocumentPicker from "expo-document-picker";
 
 const JOBS = [
@@ -12,10 +16,19 @@ const JOBS = [
 export default function App() {
   const [screen, setScreen] = useState("home");
   const [query, setQuery] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [authMode, setAuthMode] = useState("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const loggedIn = !!user;
   const [saved, setSaved] = useState([]);
   const [applied, setApplied] = useState([]);
   const [cv, setCv] = useState(null);
+
+  React.useEffect(() => {
+    if (!auth) return;
+    return onAuthStateChanged(auth, setUser);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -43,10 +56,46 @@ export default function App() {
     Alert.alert("Bewerbung", "Die Bewerbung wurde in deinem BerOpp-Konto gespeichert.");
   });
 
+  const saveProfile = async () => {
+    if (!user || !db) return;
+    await setDoc(doc(db, "users", user.uid), { email: user.email || "", updatedAt: new Date().toISOString() }, { merge: true });
+  };
+
+  const submitAuth = async () => {
+    if (!firebaseConfigured) {
+      Alert.alert("Firebase noch nicht verbunden", "Die App-Struktur ist bereit. Firebase-Werte müssen noch in mobile/.env eingetragen werden.");
+      return;
+    }
+    try {
+      const result = authMode === "login"
+        ? await signInWithEmailAndPassword(auth, email.trim(), password)
+        : await createUserWithEmailAndPassword(auth, email.trim(), password);
+      if (authMode === "register" && db) await setDoc(doc(db, "users", result.user.uid), { email: result.user.email, createdAt: new Date().toISOString() }, { merge: true });
+      setScreen("profile");
+    } catch (error) {
+      Alert.alert("Anmeldung fehlgeschlagen", error?.message || "Bitte prüfe E-Mail und Passwort.");
+    }
+  };
+
   const pickCV = async () => {
     if (!loggedIn) return openLogin();
     const result = await DocumentPicker.getDocumentAsync({ type: "application/pdf", copyToCacheDirectory: true });
-    if (!result.canceled) setCv(result.assets[0]);
+    if (!result.canceled) {
+      const asset = result.assets[0];
+      setCv(asset);
+      if (firebaseConfigured && user && storage) {
+        try {
+          const blob = await (await fetch(asset.uri)).blob();
+          const fileRef = ref(storage, `users/${user.uid}/cv/${asset.name || "cv.pdf"}`);
+          await uploadBytes(fileRef, blob, { contentType: "application/pdf" });
+          const url = await getDownloadURL(fileRef);
+          if (db) await setDoc(doc(db, "users", user.uid), { cvName: asset.name || "cv.pdf", cvUrl: url, updatedAt: new Date().toISOString() }, { merge: true });
+          Alert.alert("CV gespeichert", "Dein CV wurde in deinem BerOpp-Konto gespeichert.");
+        } catch (error) {
+          Alert.alert("CV Upload", "Die Datei wurde lokal ausgewählt, aber der Firebase-Upload ist noch nicht vollständig konfiguriert.");
+        }
+      }
+    }
   };
 
   const jobs = screen === "ausbildung" ? filtered.filter(j => j.type === "Ausbildung") : filtered;
@@ -121,6 +170,7 @@ export default function App() {
               <Text style={styles.cardTitle}>Lebenslauf (PDF)</Text>
               <Text style={styles.muted}>{cv ? cv.name : "Noch kein CV hochgeladen."}</Text>
               <Action title={cv ? "CV ändern" : "CV hochladen"} onPress={pickCV} />
+              <Action title="Abmelden" secondary onPress={() => auth && signOut(auth)} />
             </View>}
           </>
         )}
@@ -129,10 +179,11 @@ export default function App() {
           <View style={styles.login}>
             <Text style={styles.pageTitle}>BerOpp Konto</Text>
             <Text style={styles.muted}>Kostenlos anmelden und Jobs, Bewerbungen und CV an einem Ort speichern.</Text>
-            <TextInput placeholder="E-Mail" keyboardType="email-address" style={styles.input} />
-            <TextInput placeholder="Passwort" secureTextEntry style={styles.input} />
-            <Action title="Einloggen" onPress={() => { setLoggedIn(true); setScreen("profile"); }} />
-            <Action title="Google Login" secondary onPress={() => { setLoggedIn(true); setScreen("profile"); }} />
+            <TextInput value={email} onChangeText={setEmail} placeholder="E-Mail" keyboardType="email-address" autoCapitalize="none" style={styles.input} />
+            <TextInput value={password} onChangeText={setPassword} placeholder="Passwort" secureTextEntry style={styles.input} />
+            <Action title={authMode === "login" ? "Einloggen" : "Konto erstellen"} onPress={submitAuth} />
+            <Action title={authMode === "login" ? "Neu bei BerOpp? Registrieren" : "Ich habe bereits ein Konto"} secondary onPress={() => setAuthMode(authMode === "login" ? "register" : "login")} />
+            <Text style={styles.muted}>{firebaseConfigured ? "Firebase ist verbunden." : "Firebase-Konfiguration fehlt noch in der mobilen Entwicklungsumgebung."}</Text>
           </View>
         )}
       </ScrollView>
