@@ -1114,4 +1114,47 @@ function homePickSearch(kind,value){
  if(input)input.value=value;if(box){box.innerHTML='';box.classList.remove('open')}runHomeCareerSearch();
 }
 document.addEventListener('click',function(e){if(!e.target.closest('.nsHomeSearchField')&&!e.target.closest('.nsSearchSuggestions'))['homeCareerSuggestions','homeLocationSuggestions'].forEach(id=>$(id)?.classList.remove('open'));});
+</script><style id="beropp-global-home-link">
+.beropp-home-link{cursor:pointer;color:inherit;text-decoration:none}
+.beropp-home-link:hover{text-decoration:underline;text-underline-offset:3px}
+</style>
+<script id="beropp-global-home-link-script">
+function beroppGoHome(){
+  show('home');
+  if(typeof renderHomePreviews==='function')renderHomePreviews();
+  window.scrollTo(0,0);
+}
+function makeBerOppEverywhereHomeLink(root=document.body){
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  const nodes=[];
+  let node;
+  while(node=walker.nextNode()){
+    const p=node.parentElement;
+    if(!p||p.closest('script,style,textarea,input,select,option,button,.beropp-home-link'))continue;
+    if(!/BerOpp/i.test(node.nodeValue||''))continue;
+    nodes.push(node);
+  }
+  nodes.forEach(node=>{
+    const text=node.nodeValue||'', re=/BerOpp/gi;
+    let last=0,m;
+    const frag=document.createDocumentFragment();
+    while((m=re.exec(text))){
+      if(m.index>last)frag.appendChild(document.createTextNode(text.slice(last,m.index)));
+      const span=document.createElement('span');
+      span.className='beropp-home-link';
+      span.textContent=m[0];
+      span.title='Go to Home';
+      span.setAttribute('role','link');
+      span.tabIndex=0;
+      span.addEventListener('click',beroppGoHome);
+      span.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();beroppGoHome()}});
+      frag.appendChild(span);
+      last=m.index+m[0].length;
+    }
+    if(last<text.length)frag.appendChild(document.createTextNode(text.slice(last)));
+    node.parentNode.replaceChild(frag,node);
+  });
+}
+window.addEventListener('load',()=>makeBerOppEverywhereHomeLink());
+new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{childList:true,subtree:true});
 </script></body></html>
