@@ -1,0 +1,89 @@
+/* BEROPP professional hero layer
+   Link this file after the existing styles in index.html. */
+
+.nsHero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.98), rgba(239,246,255,.94) 48%, rgba(219,234,254,.94)),
+    url('/beropp-hero-visual.svg') right center / min(58%, 520px) auto no-repeat;
+  border: 1px solid #bfdbfe;
+  box-shadow: 0 18px 46px rgba(37,99,235,.13);
+}
+
+.nsHero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 84% 18%, rgba(59,130,246,.20), transparent 22%),
+    linear-gradient(125deg, transparent 0 58%, rgba(147,197,253,.16) 58.3% 58.8%, transparent 59.1%);
+  pointer-events: none;
+}
+
+.nsHeroGrid {
+  grid-template-columns: minmax(0, 1.12fr) minmax(260px, .88fr);
+  gap: 28px;
+}
+
+.nsHero h2 {
+  max-width: 680px;
+  color: #102f59;
+  text-wrap: balance;
+}
+
+.nsHero p {
+  max-width: 590px;
+  color: #475569;
+}
+
+.nsHeroActions button {
+  min-height: 46px;
+  border-radius: 14px;
+}
+
+.nsProfessor {
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(147,197,253,.70);
+  backdrop-filter: blur(14px);
+}
+
+@media (max-width: 900px) {
+  .nsHero {
+    background-size: 46% auto;
+  }
+  .nsHeroGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, .75fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .nsHero {
+    background-image: linear-gradient(135deg, #ffffff, #eff6ff 55%, #dbeafe);
+    padding: 24px 18px;
+  }
+  .nsHeroGrid {
+    grid-template-columns: 1fr;
+  }
+  .nsHero h2 {
+    font-size: 34px;
+  }
+}
+
+body.dark-mode .nsHero {
+  background:
+    linear-gradient(135deg, rgba(15,23,42,.98), rgba(23,37,84,.97) 52%, rgba(30,64,175,.95)),
+    url('/beropp-hero-visual.svg') right center / min(58%, 520px) auto no-repeat;
+  border-color: #334155;
+}
+
+body.dark-mode .nsHero h2 { color: #eff6ff; }
+body.dark-mode .nsHero p { color: #cbd5e1; }
+
+@media (max-width: 680px) {
+  body.dark-mode .nsHero {
+    background-image: linear-gradient(135deg, #0f172a, #172554 55%, #1e3a8a);
+  }
+}
