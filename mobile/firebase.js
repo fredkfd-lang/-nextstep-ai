@@ -3,13 +3,15 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
+// BerOpp Firebase Web App configuration.
+// These Firebase client values are intended to be used by the mobile/web client.
 const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+  apiKey: "AIzaSyBKJ7KGeMg7ATm6rSJmhfBPgp9c3cOTMaI",
+  authDomain: "beropp.firebaseapp.com",
+  projectId: "beropp",
+  storageBucket: "beropp.firebasestorage.app",
+  messagingSenderId: "175693628880",
+  appId: "1:175693628880:web:3470c8746c1176c066a5d5",
 };
 
 export const firebaseConfigured = Object.values(firebaseConfig).every(Boolean);
