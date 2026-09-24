@@ -515,23 +515,57 @@ function buildExternalCareerSearches(query,city,type){
   links.push({name:'International search',icon:'🌍',url:'https://www.google.com/search?q='+encodeURIComponent(intent+(where?' near '+where:''))});
   return links;
 }
-function runHomeCareerSearch(){
+async function fetchLiveCareerSources(rawQ,rawCity,type){
+  const results=[];
+  const isGermany=!rawCity||/germany|deutschland|hamburg|berlin|munich|münchen|frankfurt|hannover|neu wulmstorf|winsen|harburg|niedersachsen|lower saxony/i.test(rawCity);
+  if(isGermany){
+    try{
+      const p=new URLSearchParams();p.set('was',rawQ);if(rawCity)p.set('wo',rawCity);p.set('page','1');p.set('size','12');p.set('veroeffentlichtseit','60');p.set('zeitarbeit','true');
+      if(type==='ausbildung')p.set('angebotsart','4');else if(type==='job')p.set('angebotsart','1');
+      const res=await fetch('https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs?'+p.toString(),{headers:{'X-API-Key':'jobboerse-jobsuche'}});
+      if(res.ok){
+        const data=await res.json(),items=Array.isArray(data?.stellenangebote)?data.stellenangebote:[];
+        items.slice(0,8).forEach(o=>{
+          const place=o.arbeitsort?.ort||o.arbeitsort?.region||'Deutschland',direct=o.externeUrl||'',ref=o.refnr||'';
+          const detail=ref?'https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobdetails/'+btoa(unescape(encodeURIComponent(ref))):'';
+          results.push({source:'Bundesagentur für Arbeit',sourceIcon:'🇩🇪',title:o.beruf||'Stellenangebot',company:o.arbeitgeber||'Arbeitgeber nicht angegeben',place,date:o.eintrittsdatum||o.aktuelleVeroeffentlichungsdatum||'',url:direct||detail,direct:!!direct,kind:type==='ausbildung'?'ausbildung':'job'});
+        });
+      }
+    }catch(e){console.warn('BA live search unavailable',e)}
+  }
+  if(type==='job'||type==='all'){
+    try{
+      const remote=await fetch('https://remoteok.com/api');
+      if(remote.ok){
+        const data=await remote.json(),rq=normalizeLocation(rawQ);
+        (Array.isArray(data)?data:[]).filter(o=>o&&o.position).filter(o=>!rq||normalizeLocation([o.position,o.company,o.description,o.tags].join(' ')).includes(rq)).slice(0,6).forEach(o=>results.push({source:'Remote OK',sourceIcon:'🌍',title:o.position,company:o.company||'Remote employer',place:o.location||'Remote',date:o.date||'',url:o.url||o.apply_url||'',direct:true,kind:'job'}));
+      }
+    }catch(e){console.warn('Remote OK live search unavailable',e)}
+  }
+  return results;
+}
+function renderLiveCareerResults(results){
+  if(!results.length)return '<div class="nsHomeSearchEmpty">No live external result was returned for this search. Try another keyword or location.</div>';
+  return '<div class="nsHomeLive"><div class="nsHomeLiveHead"><strong>⚡ Live opportunities</strong><span>Original application links are used when the source provides them.</span></div>'+results.map(o=>'<div class="nsHomeLiveItem"><strong>💼 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.source)+(o.date?' · '+esc(o.date):'')+'</div>'+(o.url?'<a class="nsHomeLiveApply" href="'+esc(o.url)+'" target="_blank" rel="noopener noreferrer">🏢 Apply / View original →</a>':'<span class="nsHomeLiveNoApply">Original application link unavailable</span>')+'</div>').join('')+'</div>';
+}
+async function runHomeCareerSearch(){
   const q=normalizeLocation($('homeCareerSearch')?.value||''),city=normalizeLocation($('homeCareerLocation')?.value||''),type=$('homeCareerType')?.value||'all',box=$('homeSearchResults'),status=$('homeSearchStatus');
   if(!box)return;
   const rawQ=($('homeCareerSearch')?.value||'').trim(),rawCity=($('homeCareerLocation')?.value||'').trim();
-  if(!rawQ){box.innerHTML='<div class="nsHomeSearchEmpty">🔎 Type what you are looking for first — for example “Lager”, “Elektriker”, “Ausbildung Pflege” or “Remote Developer”.</div>';if(status)status.textContent='Search across BerOpp and the wider job market.';return;}
+  if(!rawQ){box.innerHTML='<div class="nsHomeSearchEmpty">🔎 Type what you are looking for first — for example “Lager”, “Elektriker”, “Ausbildung Pflege” or “Remote Developer”.</div>';if(status)status.textContent='Search across BerOpp and live job sources.';return;}
+  if(status)status.textContent='⏳ Searching BerOpp + live job sources...';
   const jobs=(typeof jobOpps!=='undefined'?jobOpps:[]).filter(o=>(!q||normalizeLocation([o.title,o.company,o.place,(o.skills||[]).join(' ')].join(' ')).includes(q))&&(!city||jobLocationMatches(o,city)));
   const aus=(typeof opps!=='undefined'?opps:[]).filter(o=>(!q||normalizeLocation([o.title,o.company,o.place,(o.skills||[]).join(' ')].join(' ')).includes(q))&&(!city||jobLocationMatches(o,city)));
   let rows=[];
   if(type==='all'||type==='job')rows=rows.concat(jobs.slice(0,4).map(o=>'<div class="nsHomeSearchResult"><strong>💼 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.salary||'Job')+' · BerOpp</div><button class="secondary" onclick="openHomeOpportunity('+o.id+',\'job\')">View Job →</button></div>'));
   if(type==='all'||type==='ausbildung')rows=rows.concat(aus.slice(0,4).map(o=>'<div class="nsHomeSearchResult"><strong>🎓 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+' · BerOpp</div><button class="secondary" onclick="openHomeOpportunity('+o.id+',\'ausbildung\')">View Ausbildung →</button></div>'));
-  const external=buildExternalCareerSearches(rawQ,rawCity,type);
-  const extHtml='<div class="nsHomeExternal"><div class="nsHomeExternalHead"><div><strong>🌍 More opportunities outside BerOpp</strong><span>We also search the wider web so you can find opportunities not yet listed in our app.</span></div></div><div class="nsHomeExternalGrid">'+external.map(x=>'<a class="nsHomeExternalLink" href="'+x.url+'" target="_blank" rel="noopener noreferrer"><span>'+x.icon+'</span><span>'+esc(x.name)+'</span><span>↗</span></a>').join('')+'</div></div>';
-  box.innerHTML=(rows.length?rows.join(''):'<div class="nsHomeSearchEmpty">No matching opportunity is currently in BerOpp. We can continue the search outside BerOpp below.</div>')+extHtml;
-  const total=(type==='job'?jobs.length:type==='ausbildung'?aus.length:jobs.length+aus.length);
-  if(status)status.textContent=total+' BerOpp result'+(total===1?'':'s')+(rawCity?' near '+rawCity:'')+' + wider web search options.';
+  box.innerHTML=(rows.length?rows.join(''):'<div class="nsHomeSearchEmpty">No matching opportunity is currently in BerOpp.</div>');
+  try{
+    const live=await fetchLiveCareerSources(rawQ,rawCity,type);
+    box.innerHTML+=renderLiveCareerResults(live);
+    if(status)status.textContent=(jobs.length+aus.length)+' BerOpp result(s) + '+live.length+' live external result(s)'+(rawCity?' near '+rawCity:'')+'.';
+  }catch(e){console.error(e);if(status)status.textContent='BerOpp results shown. Live search could not be completed right now.';}
 }
-
 async function useMyHomeLocation(){
   const status=$('homeSearchStatus');
   if(!navigator.geolocation){if(status)status.textContent='📍 Location is not supported by this browser.';return}
