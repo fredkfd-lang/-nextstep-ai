@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { addDoc, collection, doc, onSnapshot, query as firestoreQuery, setDoc, where, deleteDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, onSnapshot, query as firestoreQuery, setDoc, where, deleteDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage, firebaseConfigured } from "./firebase";
 import * as DocumentPicker from "expo-document-picker";
@@ -31,10 +31,11 @@ export default function App() {
   const [accountType, setAccountType] = useState("candidate");
   const [employerJobs, setEmployerJobs] = useState([]);
   const [jobForm, setJobForm] = useState({ title: "", company: "", location: "", type: "Job", tags: "" });
+  const [profileForm, setProfileForm] = useState({ name: "", phone: "", city: "", companyName: "", website: "" });
 
   React.useEffect(() => {
     if (!auth) return;
-    return onAuthStateChanged(auth, setUser);
+    return onAuthStateChanged(auth, async current => { setUser(current); if (current && db) { const snap = await getDoc(doc(db, "users", current.uid)); const data = snap.exists() ? snap.data() : {}; if (data.role) setAccountType(data.role === "employer" ? "employer" : "candidate"); setProfileForm(x => ({ ...x, ...data })); } else { setAccountType("candidate"); } });
   }, []);
 
   React.useEffect(() => {
@@ -178,7 +179,7 @@ export default function App() {
       const app = employerApplications.find(x => x.id === applicationId);
       if (app?.applicantId) {
         const userApps = await (async () => {
-          const snap = await import("firebase/firestore").then(m => m.getDocs(firestoreQuery(collection(db, "users", app.applicantId, "applications"), where("jobId", "==", app.jobId))));
+          const snap = await getDocs(firestoreQuery(collection(db, "users", app.applicantId, "applications"), where("jobId", "==", app.jobId)));
           return snap;
         })();
         for (const d of userApps.docs) await setDoc(d.ref, { status }, { merge: true });
@@ -197,10 +198,7 @@ export default function App() {
     }
   };
 
-  const saveProfile = async () => {
-    if (!user || !db) return;
-    await setDoc(doc(db, "users", user.uid), { email: user.email || "", updatedAt: new Date().toISOString() }, { merge: true });
-  };
+  const saveProfile = async () => { if (!user || !db) return; await setDoc(doc(db, "users", user.uid), { email: user.email || "", role: accountType, ...profileForm, updatedAt: new Date().toISOString() }, { merge: true }); Alert.alert("Profil gespeichert", "Deine Angaben wurden gespeichert."); };
 
   const submitAuth = async () => {
     if (!firebaseConfigured) {
@@ -211,7 +209,7 @@ export default function App() {
       const result = authMode === "login"
         ? await signInWithEmailAndPassword(auth, email.trim(), password)
         : await createUserWithEmailAndPassword(auth, email.trim(), password);
-      if (authMode === "register" && db) await setDoc(doc(db, "users", result.user.uid), { email: result.user.email, createdAt: new Date().toISOString() }, { merge: true });
+      if (authMode === "register" && db) await setDoc(doc(db, "users", result.user.uid), { email: result.user.email, role: accountType, createdAt: new Date().toISOString() }, { merge: true });
       setScreen("profile");
     } catch (error) {
       Alert.alert("Anmeldung fehlgeschlagen", error?.message || "Bitte prüfe E-Mail und Passwort.");
