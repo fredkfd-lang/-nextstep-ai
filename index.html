@@ -216,6 +216,8 @@ body.dark-mode .nsRemoteIntro{background:#172554;border-color:#334155;color:#cbd
 .nsHomeSearch{margin:16px 0 18px;padding:18px;border:1px solid #bfdbfe;border-radius:22px;background:linear-gradient(135deg,#ffffff 0%,#eff6ff 100%);box-shadow:0 10px 28px rgba(37,99,235,.08)}
 .nsHomeSearchHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.nsHomeSearchHead h3{margin:0 0 4px;color:#123b62}.nsHomeSearchHead p{margin:0;color:#64748b;font-size:13px}.nsHomeSearchBadge{padding:7px 10px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:12px;font-weight:800;white-space:nowrap}
 .nsHomeSearchGrid{display:grid;grid-template-columns:1.4fr 1fr .8fr auto;gap:8px;align-items:end}.nsHomeSearchField label{display:block;font-size:12px;font-weight:700;color:#475569;margin:0 0 5px}.nsHomeSearchField input,.nsHomeSearchField select{margin:0}.nsHomeSearchActions{display:flex;gap:6px}.nsHomeSearchActions button{margin:0;min-height:45px}.nsLocationButton{background:#fff!important;color:#2563eb!important;border:1px solid #bfdbfe!important;box-shadow:none!important}.nsHomeSearchStatus{margin-top:9px;font-size:12px;color:#64748b;min-height:18px}.nsHomeSearchResults{margin-top:12px;display:grid;gap:8px}.nsHomeSearchResult{padding:12px;border:1px solid #dbeafe;background:#fff;border-radius:15px}.nsHomeSearchResult strong{display:block;color:#17324d}.nsHomeSearchResultMeta{font-size:12px;color:#64748b;margin-top:4px}.nsHomeSearchResult button{margin:8px 0 0}.nsHomeSearchEmpty{padding:12px;border-radius:14px;background:#f8fbff;border:1px dashed #bfdbfe;color:#64748b;font-size:13px}
+.nsHomeExternal{margin-top:4px;padding:14px;border-radius:16px;background:#f8fafc;border:1px solid #e2e8f0}.nsHomeExternalHead{margin-bottom:10px}.nsHomeExternalHead strong{display:block;color:#123b62}.nsHomeExternalHead span{display:block;color:#64748b;font-size:12px;margin-top:3px}.nsHomeExternalGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.nsHomeExternalLink{display:flex;align-items:center;gap:7px;padding:10px;background:#fff;border:1px solid #dbeafe;border-radius:12px;text-decoration:none;color:#1d4ed8;font-size:12px;font-weight:700}.nsHomeExternalLink span:nth-child(2){flex:1}.nsHomeExternalLink:hover{border-color:#60a5fa;transform:translateY(-1px)}body.dark-mode .nsHomeExternal{background:#0f172a;border-color:#334155}body.dark-mode .nsHomeExternalHead strong{color:#e0f2fe}body.dark-mode .nsHomeExternalHead span{color:#94a3b8}body.dark-mode .nsHomeExternalLink{background:#111827;border-color:#334155;color:#93c5fd}@media(max-width:700px){.nsHomeExternalGrid{grid-template-columns:1fr 1fr}}@media(max-width:450px){.nsHomeExternalGrid{grid-template-columns:1fr}}
+
 body.dark-mode .nsHomeSearch{background:linear-gradient(135deg,#0f172a,#172554);border-color:#334155}.nsHomeSearchHead h3{color:#e0f2fe}.nsHomeSearchHead p,.nsHomeSearchField label,.nsHomeSearchStatus{color:#94a3b8}.nsHomeSearchBadge{background:#1e3a8a;color:#bfdbfe}.nsHomeSearchResult{background:#111827;border-color:#334155}.nsHomeSearchResult strong{color:#e0e7ff}.nsHomeSearchResultMeta{color:#94a3b8}.nsHomeSearchEmpty{background:#0f172a;border-color:#334155;color:#94a3b8}.nsLocationButton{background:#111827!important;color:#93c5fd!important;border-color:#334155!important}
 @media(max-width:760px){.nsHomeSearchGrid{grid-template-columns:1fr 1fr}.nsHomeSearchActions{grid-column:1/-1}.nsHomeSearchActions button{flex:1}}@media(max-width:520px){.nsHomeSearchGrid{grid-template-columns:1fr}.nsHomeSearchActions{grid-column:auto;flex-direction:column}}
 </style>
@@ -494,17 +496,42 @@ function initBerOppAuth(){
   }catch(e){console.error(e);setAuthStatus('⚠️ Firebase configuration could not be initialized.')}
 }
 function openHomeOpportunity(id,type){if(!beroppUser){beroppPendingTarget='homeOpportunity';beroppPendingOpportunityId=id;beroppPendingOpportunityType=type;show('auth');return false}return type==='job'?viewJobOpp(id):viewOpp(id)}
+function buildExternalCareerSearches(query,city,type){
+  const q=String(query||'').trim()||'jobs';
+  const where=String(city||'').trim();
+  const intent=type==='ausbildung'?'Ausbildung '+q:q;
+  const full=(intent+' '+where).trim();
+  const enc=encodeURIComponent(full);
+  const encQ=encodeURIComponent(q);
+  const encW=encodeURIComponent(where);
+  const links=[];
+  links.push({name:'Google Jobs / Web',icon:'🔎',url:'https://www.google.com/search?q='+enc+'&ibp=htl;jobs'});
+  links.push({name:'Indeed',icon:'💼',url:'https://de.indeed.com/jobs?q='+encQ+(where?'&l='+encW:'')});
+  links.push({name:'LinkedIn Jobs',icon:'💼',url:'https://www.linkedin.com/jobs/search/?keywords='+encQ+(where?'&location='+encW:'')});
+  if(!where||/germany|deutschland|hamburg|berlin|munich|munchen|frankfurt|hannover|neu wulmstorf|winsen/i.test(where)){
+    links.push({name:'Bundesagentur für Arbeit',icon:'🇩🇪',url:'https://www.arbeitsagentur.de/jobsuche/suche?was='+encQ+(where?'&wo='+encW:'')});
+  }
+  links.push({name:'StepStone',icon:'📋',url:'https://www.stepstone.de/jobs/'+encodeURIComponent(q)+(where?'/in-'+encodeURIComponent(where):'')});
+  links.push({name:'International search',icon:'🌍',url:'https://www.google.com/search?q='+encodeURIComponent(intent+(where?' near '+where:''))});
+  return links;
+}
 function runHomeCareerSearch(){
   const q=normalizeLocation($('homeCareerSearch')?.value||''),city=normalizeLocation($('homeCareerLocation')?.value||''),type=$('homeCareerType')?.value||'all',box=$('homeSearchResults'),status=$('homeSearchStatus');
   if(!box)return;
+  const rawQ=($('homeCareerSearch')?.value||'').trim(),rawCity=($('homeCareerLocation')?.value||'').trim();
+  if(!rawQ){box.innerHTML='<div class="nsHomeSearchEmpty">🔎 Type what you are looking for first — for example “Lager”, “Elektriker”, “Ausbildung Pflege” or “Remote Developer”.</div>';if(status)status.textContent='Search across BerOpp and the wider job market.';return;}
   const jobs=(typeof jobOpps!=='undefined'?jobOpps:[]).filter(o=>(!q||normalizeLocation([o.title,o.company,o.place,(o.skills||[]).join(' ')].join(' ')).includes(q))&&(!city||jobLocationMatches(o,city)));
   const aus=(typeof opps!=='undefined'?opps:[]).filter(o=>(!q||normalizeLocation([o.title,o.company,o.place,(o.skills||[]).join(' ')].join(' ')).includes(q))&&(!city||jobLocationMatches(o,city)));
   let rows=[];
-  if(type==='all'||type==='job')rows=rows.concat(jobs.slice(0,4).map(o=>'<div class="nsHomeSearchResult"><strong>💼 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.salary||'Job')+'</div><button class="secondary" onclick="openHomeOpportunity('+o.id+',\'job\')">View Job →</button></div>'));
-  if(type==='all'||type==='ausbildung')rows=rows.concat(aus.slice(0,4).map(o=>'<div class="nsHomeSearchResult"><strong>🎓 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+'</div><button class="secondary" onclick="openHomeOpportunity('+o.id+',\'ausbildung\')">View Ausbildung →</button></div>'));
-  box.innerHTML=rows.length?rows.join(''):'<div class="nsHomeSearchEmpty">🔎 No matching opportunities found. Try another keyword or location.</div>';
-  const total=(type==='job'?jobs.length:type==='ausbildung'?aus.length:jobs.length+aus.length);status.textContent=total+' matching opportunit'+(total===1?'y':'ies')+(city?' near '+city:'')+'.';
+  if(type==='all'||type==='job')rows=rows.concat(jobs.slice(0,4).map(o=>'<div class="nsHomeSearchResult"><strong>💼 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.salary||'Job')+' · BerOpp</div><button class="secondary" onclick="openHomeOpportunity('+o.id+',\'job\')">View Job →</button></div>'));
+  if(type==='all'||type==='ausbildung')rows=rows.concat(aus.slice(0,4).map(o=>'<div class="nsHomeSearchResult"><strong>🎓 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+' · BerOpp</div><button class="secondary" onclick="openHomeOpportunity('+o.id+',\'ausbildung\')">View Ausbildung →</button></div>'));
+  const external=buildExternalCareerSearches(rawQ,rawCity,type);
+  const extHtml='<div class="nsHomeExternal"><div class="nsHomeExternalHead"><div><strong>🌍 More opportunities outside BerOpp</strong><span>We also search the wider web so you can find opportunities not yet listed in our app.</span></div></div><div class="nsHomeExternalGrid">'+external.map(x=>'<a class="nsHomeExternalLink" href="'+x.url+'" target="_blank" rel="noopener noreferrer"><span>'+x.icon+'</span><span>'+esc(x.name)+'</span><span>↗</span></a>').join('')+'</div></div>';
+  box.innerHTML=(rows.length?rows.join(''):'<div class="nsHomeSearchEmpty">No matching opportunity is currently in BerOpp. We can continue the search outside BerOpp below.</div>')+extHtml;
+  const total=(type==='job'?jobs.length:type==='ausbildung'?aus.length:jobs.length+aus.length);
+  if(status)status.textContent=total+' BerOpp result'+(total===1?'':'s')+(rawCity?' near '+rawCity:'')+' + wider web search options.';
 }
+
 async function useMyHomeLocation(){
   const status=$('homeSearchStatus');
   if(!navigator.geolocation){if(status)status.textContent='📍 Location is not supported by this browser.';return}
