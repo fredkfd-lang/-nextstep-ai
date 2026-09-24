@@ -1,6 +1,6 @@
 {
   "name": "beropp-mobile",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "main": "expo/AppEntry.js",
   "scripts": {
@@ -13,6 +13,7 @@
     "expo-document-picker": "~13.1.6",
     "react": "19.0.0",
     "react-native": "0.79.2",
-    "firebase": "^11.10.0"
+    "firebase": "^11.10.0",
+    "@react-native-async-storage/async-storage": "^2.1.2"
   }
 }
