@@ -557,19 +557,47 @@ function getMatch(o){const p=window.nsProfile||{};const text=((p.goal||'')+' '+(
   if(city)p.set('wo',city);
   return 'https://www.arbeitsagentur.de/jobsuche/suche?'+p.toString();
 }
+function normalizeLocation(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[.,/\\-]+/g,' ').replace(/\\s+/g,' ').trim()}
+function jobLocationMatches(o,city){
+  if(!city)return true;
+  const wanted=normalizeLocation(city),place=normalizeLocation(o.place),company=normalizeLocation(o.company);
+  return place.includes(wanted)||wanted.split(' ').every(part=>part.length<2||place.includes(part))||company.includes(wanted);
+}
+function viewJobOpp(id){
+  const o=jobOpps.find(x=>x.id===id); if(!o)return false;
+  currentOpportunity=o;
+  if(!$('detailTitle'))return false;
+  $('detailTitle').textContent=o.title;
+  $('detailInfo').innerHTML='🏢 '+esc(o.company)+'<br>📍 '+esc(o.place)+' · '+esc(o.type)+'<br>📅 Start: '+esc(o.start)+' · 💰 '+esc(o.salary);
+  $('detailDescription').textContent=o.description||'';
+  $('detailMatch').innerHTML='<span class="badge">'+getMatch(o)+'% Match</span>';
+  $('detailRequirements').innerHTML=(o.requirements||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
+  $('detailTasks').innerHTML=(o.tasks||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
+  $('detailConditions').innerHTML=(o.conditions||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
+  const qa=$('quickApplyBtn'),al=$('applyLinkBtn'),mode=beroppApplicationMode(o);
+  if(mode==='DIRECT_PORTAL'||mode==='DIRECT_EMAIL'){qa.textContent='⚡ Apply Now';qa.href=beroppGetApplicationUrl(o)||'#';qa.style.display='inline-block';qa.onclick=(e)=>{e.preventDefault();startBerOppApplication()};}else{qa.style.display='none';qa.onclick=null}
+  al.style.display='none';
+  show('details');setTimeout(beroppEnsureDirectApplyBox,0);return true;
+}
+function saveJobOpp(id){
+  const o=jobOpps.find(x=>x.id===id); if(!o)return false;
+  if(!beroppUser){beroppPendingTarget='matches';show('auth');return false}
+  if(!saved.includes('job:'+id)){saved.push('job:'+id);localStorage.setItem('ns_saved',JSON.stringify(saved));renderSaved();alert('Saved!')}else alert('Already saved.');
+  return true;
+}
 function findMatches(){
   if(!$('results'))return;
-  const q=($('oppSearch')?.value||'').toLowerCase().trim();
-  const field=$('oppField')?.value||'';
-  const city=($('oppCity')?.value||'').toLowerCase().trim();
+  const q=normalizeLocation($('oppSearch')?.value||'');
+  const field=($('oppField')?.value||'').toLowerCase();
+  const city=($('oppCity')?.value||'').trim();
   const german=$('oppGerman')?.value||'';
   const list=jobOpps.filter(o=>
-    (!q||[o.title,o.company,o.place].join(' ').toLowerCase().includes(q))&&
-    (!field||o.skills.includes(field))&&
-    (!city||o.place.toLowerCase().includes(city))&&
+    (!q||[o.title,o.company,o.place].some(v=>normalizeLocation(v).includes(q)))&&
+    (!field||((o.skills||[]).map(s=>String(s).toLowerCase()).includes(field)))&&
+    jobLocationMatches(o,city)&&
     (!german||german==='ANY'||!o.germanMin||({A2:1,B1:2,B2:3}[o.germanMin]||99)<=({A2:1,B1:2,B2:3}[german]||99))
   );
-  $('results').innerHTML=list.length?list.map(o=>'<div class="card"><h3>'+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+'<br>📍 '+esc(o.place)+' · Job · Start: '+esc(o.start)+'</p><span class="badge">'+getMatch(o)+'% Match</span><br><button onclick="viewOpp('+o.id+')">View Full Details</button><button class="secondary" onclick="saveOpp('+o.id+')">⭐ Save</button>'+quickCopyPanel(o.id)+'</div>').join(''):
+  $('results').innerHTML=list.length?list.map(o=>'<div class="card"><h3>'+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+'<br>📍 '+esc(o.place)+' · Job · Start: '+esc(o.start)+'</p><span class="badge">'+getMatch(o)+'% Match</span><br><button onclick="viewJobOpp('+o.id+')">View Full Details</button><button class="secondary" onclick="saveJobOpp('+o.id+')">⭐ Save</button>'+quickCopyPanel(o.id)+'</div>').join(''):
     '<div class="card"><h3>🔎 '+esc(q||'Jobs')+'</h3><p>No job matches these filters yet. Try another field or city.</p></div>';
 }
 function profileCopyValue(field){
