@@ -77,7 +77,7 @@ body.dark-mode .nsAiBubble.ai{background:#111827;border-color:#334155;color:#e5e
 @media(max-width:600px){.nsAiChatHead{flex-direction:column}.nsAiInputRow{grid-template-columns:1fr}.nsAiInputRow button{width:100%}}
 <style>
 .nsMiniFeaturesBottom{margin:28px 0 6px;padding-top:4px}
-</style></style><style>
+</style><style>
 /* More indicator for Jobs + Ausbildung */
 .nsPageHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.nsPageHead h2{margin:0 0 6px}.nsPageHead p{margin:0}.nsMoreBadge{display:inline-flex;align-items:center;white-space:nowrap;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:700}body.dark-mode .nsMoreBadge{background:#164e63;color:#a5f3fc;border-color:#155e75}@media(max-width:600px){.nsPageHead{flex-direction:column}.nsMoreBadge{align-self:flex-start}}
 /* Jobs + Ausbildung sky/white page theme */
@@ -193,7 +193,7 @@ header button:hover{background:rgba(255,255,255,.25)!important}
 body.dark-mode #remoteInternational{background:linear-gradient(180deg,#0f172a,#172554,#1e3a8a)}
 body.dark-mode .nsRemotePage,body.dark-mode .nsRemoteCard,body.dark-mode .nsRemoteSources,body.dark-mode .nsRemoteSourceGrid a{background:#111827;border-color:#334155}
 body.dark-mode .nsRemoteIntro{background:#172554;border-color:#334155;color:#cbd5e1}.nsRemoteMeta{color:#94a3b8}
-</style></style><style id="beropp-international-nav">
+</style><style id="beropp-international-nav">
 .nsInternationalButtons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
 .nsInternationalButtons a{display:block;text-decoration:none;padding:13px 14px;border-radius:14px;font-weight:800;border:1px solid #bfdbfe;background:#fff;color:#1d4ed8;box-shadow:0 6px 18px rgba(37,99,235,.08)}
 .nsInternationalButtons a:hover{background:#eff6ff}
@@ -878,7 +878,7 @@ window.renderApps=function(){renderBerOppApplicationTracker()};window.addEventLi
 </script><style id="beropp-apply-visibility">
 .beroppApplyBanner{margin:12px 0;padding:12px 14px;border-radius:14px;background:#eff6ff;border:1px solid #93c5fd;color:#1e3a8a;font-weight:700}
 .beroppApplyBanner small{display:block;margin-top:3px;font-weight:500;color:#475569}
-</style></body></html>
+</style>
 <style id="beropp-no-jobboard-links">
 /* BerOpp application policy: do not expose external job-board links as an application path. */
 a[href*="indeed.com"],a[href*="arbeitsagentur.de"]{display:none!important}
@@ -895,4 +895,4 @@ a[href*="indeed.com"],a[href*="arbeitsagentur.de"]{display:none!important}
   else removeExternalJobBoardLinks();
   new MutationObserver(removeExternalJobBoardLinks).observe(document.body,{childList:true,subtree:true});
 })();
-</script>
+</script></body></html>
