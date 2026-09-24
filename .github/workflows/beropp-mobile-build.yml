@@ -1,0 +1,53 @@
+name: Build BerOpp mobile
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Build platform"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - android
+          - ios
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: npm install
+
+      - name: Install EAS CLI
+        run: npm install --global eas-cli
+
+      - name: Configure EAS project
+        working-directory: mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas project:info
+
+      - name: Build Android
+        if: ${{ inputs.platform == 'all' || inputs.platform == 'android' }}
+        working-directory: mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas build --platform android --profile production --non-interactive
+
+      - name: Build iOS
+        if: ${{ inputs.platform == 'all' || inputs.platform == 'ios' }}
+        working-directory: mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas build --platform ios --profile production --non-interactive

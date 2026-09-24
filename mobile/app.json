@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "BerOpp",
+    "slug": "beropp",
+    "version": "0.3.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "beropp",
+    "android": {
+      "package": "de.beropp.app",
+      "versionCode": 2,
+      "permissions": []
+    },
+    "ios": {
+      "bundleIdentifier": "de.beropp.app",
+      "buildNumber": "2",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "BerOpp uses your selected files to let you attach a CV to your profile.",
+        "NSDocumentPickerUsageDescription": "BerOpp lets you choose a PDF CV for your profile."
+      }
+    },
+    "description": "BerOpp — Jobs, Ausbildung and opportunities in Germany and internationally.",
+    "plugins": [
+      "expo-document-picker"
+    ]
+  }
+}
