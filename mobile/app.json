@@ -22,9 +22,6 @@
     "description": "BerOpp — Jobs, Ausbildung and opportunities in Germany and internationally.",
     "plugins": [
       "expo-document-picker"
-    ],
-    "extra": {
-      "privacyPolicyUrl": "https://www.beropp.de/privacy"
-    }
+    ]
   }
 }
