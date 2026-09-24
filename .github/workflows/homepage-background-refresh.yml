@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   refresh:
-    if: !contains(github.event.head_commit.message, 'Apply BerOpp homepage background refresh')
+    if: ${{ !contains(github.event.head_commit.message, 'Apply BerOpp homepage background refresh') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
