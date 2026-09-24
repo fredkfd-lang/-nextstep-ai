@@ -29,19 +29,24 @@ export default function App() {
   const [accountType, setAccountType] = useState("candidate");
   const [employerJobs, setEmployerJobs] = useState([]);
   const [profileForm, setProfileForm] = useState({ name: "", phone: "", city: "", companyName: "", website: "" });
+  const [authLoading, setAuthLoading] = useState(true);
 
   React.useEffect(() => {
     if (!auth) return;
     return onAuthStateChanged(auth, async current => {
-      setUser(current);
-      if (current && db) {
-        const snap = await getDoc(doc(db, "users", current.uid));
-        const data = snap.exists() ? snap.data() : {};
-        setAccountType(data.role === "employer" ? "employer" : "candidate");
-        setProfileForm(x => ({ ...x, ...data }));
-      } else {
-        setAccountType("candidate");
-        setProfileForm({ name: "", phone: "", city: "", companyName: "", website: "" });
+      try {
+        setUser(current);
+        if (current && db) {
+          const snap = await getDoc(doc(db, "users", current.uid));
+          const data = snap.exists() ? snap.data() : {};
+          setAccountType(data.role === "employer" ? "employer" : "candidate");
+          setProfileForm(x => ({ ...x, ...data }));
+        } else {
+          setAccountType("candidate");
+          setProfileForm({ name: "", phone: "", city: "", companyName: "", website: "" });
+        }
+      } finally {
+        setAuthLoading(false);
       }
     });
   }, []);
@@ -241,8 +246,13 @@ export default function App() {
 
   const deleteEmployerJob = async id => {
     if (!db) return;
-    try { await deleteDoc(doc(db, "jobs", id)); }
-    catch (error) { Alert.alert("Fehler", error?.message || "Die Stelle konnte nicht gelöscht werden."); }
+    Alert.alert("Stelle löschen", "Möchtest du diese Veröffentlichung wirklich löschen?", [
+      { text: "Abbrechen", style: "cancel" },
+      { text: "Löschen", style: "destructive", onPress: async () => {
+        try { await deleteDoc(doc(db, "jobs", id)); }
+        catch (error) { Alert.alert("Fehler", error?.message || "Die Stelle konnte nicht gelöscht werden."); }
+      }}
+    ]);
   };
 
   const jobs = screen === "ausbildung" ? filtered.filter(j => j.type === "Ausbildung") : filtered;
@@ -256,12 +266,13 @@ export default function App() {
         <TouchableOpacity style={styles.accountBtn} onPress={() => setScreen(loggedIn ? (accountType === "employer" ? "employer" : "profile") : "login")}><Text style={styles.accountText}>{loggedIn ? "Profil" : "Login"}</Text></TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={styles.content}>
+        {authLoading ? <View style={styles.empty}><Text style={styles.cardTitle}>BerOpp wird geladen…</Text><Text style={styles.muted}>Bitte einen Moment warten.</Text></View> : <>
         {screen === "home" && <>
           <Text style={styles.heroTitle}>Deine nächste Chance beginnt hier.</Text>
           <Text style={styles.muted}>Jobs, Ausbildung und internationale Möglichkeiten an einem Ort.</Text>
           <TextInput value={query} onChangeText={setQuery} placeholder="Job, Ausbildung oder Ort suchen..." style={styles.search} />
           <View style={styles.row}><Action title="Jobs" onPress={() => setScreen("jobs")} /><Action title="Ausbildung" onPress={() => setScreen("ausbildung")} /></View>
-          <Action title="International" secondary onPress={() => Alert.alert("International", "Internationale Chancen werden als nächster Bereich ergänzt.")} />
+          <Action title="International" secondary onPress={() => setScreen("international")} />
           <SectionTitle title="Aktuelle Möglichkeiten" />
           {filtered.slice(0, 3).map(job => <JobCard key={job.id} job={job} saved={savedIds.includes(job.id)} applied={applications.some(a => a.jobId === job.id)} onSave={() => toggleSave(job.id)} onApply={() => apply(job.id)} />)}
         </>}
@@ -271,6 +282,13 @@ export default function App() {
           <TextInput value={query} onChangeText={setQuery} placeholder="Suchen..." style={styles.search} />
           {jobs.map(job => <JobCard key={job.id} job={job} saved={savedIds.includes(job.id)} applied={applications.some(a => a.jobId === job.id)} onSave={() => toggleSave(job.id)} onApply={() => apply(job.id)} />)}
           {!jobs.length && <Empty text="Keine passenden Möglichkeiten gefunden." />}
+        </>}
+
+        {screen === "international" && <>
+          <Text style={styles.pageTitle}>International</Text>
+          <Text style={styles.muted}>Chancen außerhalb Deutschlands – dieser Bereich ist vorbereitet und kann später mit echten Angeboten verbunden werden.</Text>
+          <View style={styles.card}><Text style={styles.cardTitle}>Ausbildung & Jobs international</Text><Text style={styles.muted}>Beispiele: Logistik, Technik, Pflege, Handwerk und weitere Berufe.</Text><Text style={styles.tag}>Demnächst mit echten Angeboten</Text></View>
+          <View style={styles.card}><Text style={styles.cardTitle}>Für internationale Bewerber</Text><Text style={styles.muted}>BerOpp soll Unternehmen und Bewerber auch über Ländergrenzen hinweg zusammenbringen.</Text></View>
         </>}
 
         {screen === "saved" && <>
@@ -301,7 +319,7 @@ export default function App() {
             <Text style={styles.cardTitle}>Lebenslauf (PDF)</Text>
             <Text style={styles.muted}>{cv?.name || profileForm.cvName || "Noch kein CV hochgeladen."}</Text>
             <Action title={cv || profileForm.cvName ? "CV ändern" : "CV hochladen"} onPress={pickCV} />
-            {accountType === "candidate" && <Action title="Unternehmen / Arbeitgeber" secondary onPress={() => { setAccountType("employer"); setScreen("employer"); }} />}
+            <Text style={styles.muted}>Kontotyp: {accountType === "employer" ? "Unternehmen" : "Bewerber"}</Text>
             <Action title="Abmelden" secondary onPress={() => auth && signOut(auth)} />
           </View>}
         </>}
@@ -316,6 +334,7 @@ export default function App() {
           <Action title={authMode === "login" ? "Neu bei BerOpp? Registrieren" : "Ich habe bereits ein Konto"} secondary onPress={() => setAuthMode(authMode === "login" ? "register" : "login")} />
           <Text style={styles.muted}>{firebaseConfigured ? "Firebase ist verbunden." : "Firebase-Konfiguration fehlt."}</Text>
         </View>}
+        </>}
       </ScrollView>
       <View style={styles.nav}>
         <Nav title="Home" active={screen === "home"} onPress={() => setScreen("home")} />
