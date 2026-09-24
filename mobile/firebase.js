@@ -16,13 +16,14 @@ const firebaseConfig = {
 };
 
 export const firebaseConfigured = Object.values(firebaseConfig).every(Boolean);
+const appAlreadyInitialized = getApps().length > 0;
 
 export const app = firebaseConfigured
-  ? (getApps().length ? getApp() : initializeApp(firebaseConfig))
+  ? (appAlreadyInitialized ? getApp() : initializeApp(firebaseConfig))
   : null;
 
 export const auth = app
-  ? (getApps().length
+  ? (appAlreadyInitialized
       ? getAuth(app)
       : initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) }))
   : null;
