@@ -1,0 +1,18 @@
+{
+  "name": "BerOpp — Find your next opportunity",
+  "short_name": "BerOpp",
+  "description": "BerOpp helps you discover Ausbildung and job opportunities, build your CV, and plan your next career step.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fbff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
