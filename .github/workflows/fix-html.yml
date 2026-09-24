@@ -1,0 +1,42 @@
+name: Fix BerOpp HTML structure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - '.github/workflows/fix-html.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-html:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix duplicate style tag and broken markup
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          original = html
+          html = html.replace('<style><style>', '<style>')
+          html = html.replace('\\n<\\ndiv class="nsHomePreviewWrap"', '\\n<div class="nsHomePreviewWrap"')
+          html = html.replace('\n<\ndiv class="nsHomePreviewWrap"', '\n<div class="nsHomePreviewWrap"')
+          if html != original:
+              p.write_text(html, encoding='utf-8')
+      - name: Commit fixes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No HTML changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Fix BerOpp HTML style structure [skip ci]"
+          git push
