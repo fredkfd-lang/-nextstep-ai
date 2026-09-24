@@ -217,7 +217,17 @@ body.dark-mode .nsRemoteIntro{background:#172554;border-color:#334155;color:#cbd
 body.dark-mode .nsHomeSearch{background:linear-gradient(135deg,#0f172a,#172554);border-color:#334155}.nsHomeSearchHead h3{color:#e0f2fe}.nsHomeSearchHead p,.nsHomeSearchField label,.nsHomeSearchStatus{color:#94a3b8}.nsHomeSearchBadge{background:#1e3a8a;color:#bfdbfe}.nsHomeSearchResult{background:#111827;border-color:#334155}.nsHomeSearchResult strong{color:#e0e7ff}.nsHomeSearchResultMeta{color:#94a3b8}.nsHomeSearchEmpty{background:#0f172a;border-color:#334155;color:#94a3b8}.nsLocationButton{background:#111827!important;color:#93c5fd!important;border-color:#334155!important}
 @media(max-width:760px){.nsHomeSearchGrid{grid-template-columns:1fr 1fr}.nsHomeSearchActions{grid-column:1/-1}.nsHomeSearchActions button{flex:1}}@media(max-width:520px){.nsHomeSearchGrid{grid-template-columns:1fr}.nsHomeSearchActions{grid-column:auto;flex-direction:column}}
 </style>
-</head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
+<style id="beropp-home-search-polish">
+.nsProfessorHomeBottom{margin:16px 0 18px;max-width:760px}
+.nsSearchSuggestions{position:relative;z-index:8;margin-top:-4px;margin-bottom:8px;display:none;background:#fff;border:1px solid #dbeafe;border-radius:14px;box-shadow:0 12px 28px #00000014;overflow:hidden}
+.nsSearchSuggestions.open{display:block}
+.nsSearchSuggestion{display:flex;align-items:center;gap:9px;width:100%;padding:11px 13px;background:#fff;color:#172033;border:0;border-bottom:1px solid #eef2f7;border-radius:0;text-align:left;margin:0;cursor:pointer}
+.nsSearchSuggestion:last-child{border-bottom:0}
+.nsSearchSuggestion:hover,.nsSearchSuggestion:focus{background:#eff6ff;outline:none}
+.nsSearchSuggestion small{display:block;color:#64748b;margin-top:2px}
+body.dark-mode .nsSearchSuggestions,body.dark-mode .nsSearchSuggestion{background:#111827;color:#e5e7eb;border-color:#334155}
+body.dark-mode .nsSearchSuggestion:hover,body.dark-mode .nsSearchSuggestion:focus{background:#172554}
+</style></head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
 <section id="auth" class="hidden"><div class="card" style="max-width:520px;margin:30px auto;background:linear-gradient(135deg,#eef2ff,#fff)"><div style="text-align:center"><div class="brandMark" style="margin:auto;width:72px;height:72px"><svg viewBox="0 0 64 64"><defs><linearGradient id="authG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#authG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><h2>🔐 Create your BerOpp account</h2><p>To use Find Jobs, Find Ausbildung, Berufe and Create My CV, please sign in first.</p></div><button id="googleAuthBtn" onclick="signInWithGoogle()" style="width:100%;background:#fff;color:#1f2937;border:1px solid #cbd5e1">🔵 Continue with Google</button><div style="text-align:center;margin:10px 0;color:#64748b">or</div><label>Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"><label>Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="At least 6 characters"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button onclick="createBerOppAccount()">Create account</button><button class="secondary" onclick="signInBerOpp()">I already have an account</button></div><p id="authStatus" class="status" style="margin-top:12px">Loading secure sign-in…</p><p style="font-size:12px;color:#64748b;margin-bottom:0">Your BerOpp account is separate from your Google email password when you use email/password sign-up.</p></div></section><section id="home">
 <div class="nsHero">
 <div class="nsHeroGrid">
@@ -230,18 +240,19 @@ body.dark-mode .nsHomeSearch{background:linear-gradient(135deg,#0f172a,#172554);
 <button onclick="requireAuth('ausbildung')" class="alt">🎓 Find Ausbildung</button>
 </div><div class="nsInternationalButtons"><a href="international-ausbildung.html" onclick="return openInternationalPage('international-ausbildung.html')">🌍 International Ausbildung</a><a href="international-jobs.html" onclick="return openInternationalPage('international-jobs.html')">✈️ Jobs from Abroad</a></div><div class="nsInternationalButtons"><a href="#remoteInternational" onclick="return requireAuth('remoteInternational')">🌐 International Remote Jobs</a></div>
 </div>
-<div class="nsProfessor">
-<div class="nsProfessorTop"><div class="nsAvatar">🤖</div><div><strong>NextStep AI Assistant</strong><small>Personal career guidance</small></div></div>
-<div class="nsProfessorMsg">“Tell me your skills, upload your CV, and I’ll help you turn your experience into your next opportunity.”</div>
-</div>
+
 </div>
 </div>
 <
+<div class="nsProfessor nsProfessorHomeBottom">
+<div class="nsProfessorTop"><div class="nsAvatar">🤖</div><div><strong>NextStep AI Assistant</strong><small>Personal career guidance</small></div></div>
+<div class="nsProfessorMsg">“Tell me your skills, upload your CV, and I’ll help you turn your experience into your next opportunity.”</div>
+</div>
 <div class="nsHomeSearch" id="homeSearchLocation">
   <div class="nsHomeSearchHead"><div><h3>🔎 Find your next opportunity</h3><p>Search by job, Ausbildung, skill or location — directly from the Home page.</p></div><span class="nsHomeSearchBadge">Search + Location</span></div>
   <div class="nsHomeSearchGrid">
-    <div class="nsHomeSearchField"><label for="homeCareerSearch">What are you looking for?</label><input id="homeCareerSearch" type="search" placeholder="e.g. Lager, Elektriker, Ausbildung" onkeydown="if(event.key==='Enter')runHomeCareerSearch()"></div>
-    <div class="nsHomeSearchField"><label for="homeCareerLocation">📍 Location</label><input id="homeCareerLocation" type="search" placeholder="e.g. Hamburg, Neu Wulmstorf" onkeydown="if(event.key==='Enter')runHomeCareerSearch()"></div>
+    <div class="nsHomeSearchField"><label for="homeCareerSearch">What are you looking for?</label><input id="homeCareerSearch" type="search" autocomplete="off" aria-autocomplete="list" aria-controls="homeCareerSuggestions" placeholder="e.g. Lager, Elektriker, Ausbildung" oninput="homeSearchSuggest('career')" onkeydown="if(event.key==='Enter')runHomeCareerSearch()"></div>
+    <div class="nsHomeSearchField"><label for="homeCareerLocation">📍 Location</label><input id="homeCareerLocation" type="search" autocomplete="off" aria-autocomplete="list" aria-controls="homeLocationSuggestions" placeholder="e.g. Hamburg, Neu Wulmstorf" oninput="homeSearchSuggest('location')" onkeydown="if(event.key==='Enter')runHomeCareerSearch()"></div>
     <div class="nsHomeSearchField"><label for="homeCareerType">Type</label><select id="homeCareerType" onchange="runHomeCareerSearch()"><option value="all">Jobs + Ausbildung</option><option value="job">Jobs</option><option value="ausbildung">Ausbildung</option></select></div>
     <div class="nsHomeSearchActions"><button onclick="runHomeCareerSearch()">🔎 Search</button><button class="nsLocationButton" onclick="useMyHomeLocation()" title="Use my current location">📍 My location</button></div>
   </div>
@@ -1047,4 +1058,31 @@ a[href*="indeed.com"],a[href*="arbeitsagentur.de"]{display:none!important}
   else removeExternalJobBoardLinks();
   new MutationObserver(removeExternalJobBoardLinks).observe(document.body,{childList:true,subtree:true});
 })();
+</script><script id="beropp-home-autocomplete">
+function homeSearchSuggest(kind){
+ const input=$(kind==='career'?'homeCareerSearch':'homeCareerLocation'),box=$(kind==='career'?'homeCareerSuggestions':'homeLocationSuggestions');
+ if(!input||!box)return;
+ const q=normalizeLocation(input.value||'');
+ if(!q){box.innerHTML='';box.classList.remove('open');return}
+ const all=opps.concat(jobOpps);
+ const values=kind==='career'
+   ? [...new Set(all.flatMap(o=>[o.title,o.company,o.place,o.type,...(o.tags||[])].filter(Boolean)))]
+   : [...new Set(all.map(o=>o.place).filter(Boolean))];
+ const norm=s=>normalizeLocation(s);
+ const matches=values.filter(v=>norm(v).startsWith(q)||norm(v).split(/\s+/).some(w=>w.startsWith(q))).slice(0,7);
+ box.innerHTML=matches.map(v=>'<button type="button" class="nsSearchSuggestion" role="option" onclick="homePickSearch(\''+kind+'\',\''+esc(v).replace(/'/g,"\\'")+'\')">🔎 <span>'+esc(v)+'</span></button>').join('');
+ box.classList.toggle('open',matches.length>0);
+}
+function homePickSearch(kind,value){
+ const input=$(kind==='career'?'homeCareerSearch':'homeCareerLocation');
+ const box=$(kind==='career'?'homeCareerSuggestions':'homeLocationSuggestions');
+ if(input)input.value=value;
+ if(box){box.innerHTML='';box.classList.remove('open')}
+ if(kind==='career')runHomeCareerSearch();
+}
+document.addEventListener('click',function(e){
+ if(!e.target.closest('.nsHomeSearchField')&&!e.target.closest('.nsSearchSuggestions')){
+  ['homeCareerSuggestions','homeLocationSuggestions'].forEach(id=>$(id)?.classList.remove('open'));
+ }
+});
 </script></body></html>
