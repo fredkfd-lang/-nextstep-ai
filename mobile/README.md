@@ -1,30 +1,35 @@
-# BerOpp Mobile MVP
+# BerOpp Mobile
 
-Expo/React Native mobile foundation for BerOpp.
+BerOpp mobile is the Expo/React Native app foundation for jobs, Ausbildung, applications and employer tools.
 
-## Firebase setup
+## Current functionality
 
-1. Create or open the BerOpp Firebase project.
-2. Enable **Authentication → Email/Password**.
-3. Create a **Cloud Firestore** database.
-4. Enable **Storage**.
-5. Add a Web App in Firebase Project Settings and copy its configuration.
-6. Copy `mobile/.env.example` to `mobile/.env` and fill the six `EXPO_PUBLIC_FIREBASE_*` values.
-7. Deploy `firestore.rules` and `storage.rules` from the Firebase project.
+- Firebase Email/Password authentication
+- Persistent mobile authentication
+- Candidate profile
+- Job/Ausbildung search and filtering
+- Save jobs
+- Apply to jobs
+- Candidate application tracking
+- Employer profile
+- Employer job/Ausbildung publishing
+- Employer application list and status updates
+- CV PDF picker and Firebase Storage upload code (Storage requires Firebase Blaze billing)
 
-The repository intentionally does **not** contain Firebase secrets/config values. They must come from the owner's Firebase project.
+## Firebase
 
-## Main flows
+The mobile client is connected to the BerOpp Firebase project.
 
-- Candidate: register/login → profile → CV PDF upload → search jobs → save → apply → track application status.
-- Employer: register/login → employer profile → publish Job/Ausbildung → view own postings → view applications → update status.
-- Jobs are stored in `jobs`.
-- Employer applications are stored in top-level `applications`.
-- Candidate copies are stored under `users/{uid}/applications`.
-- Candidate saved jobs are stored under `users/{uid}/savedJobs`.
-- CV files are stored under `users/{uid}/cv/`.
+Required Firebase services:
+1. Authentication → Email/Password enabled
+2. Firestore Database → Standard edition
+3. Storage → optional for CV uploads; Firebase currently requires Blaze for this project
 
-## Local run
+Firestore and Storage security rules are kept in the repository root.
+
+## Run locally
+
+From the repository root:
 
 ```bash
 cd mobile
@@ -32,8 +37,26 @@ npm install
 npx expo start
 ```
 
-Firebase must be configured before real authentication, Firestore, and Storage can work.
+Scan the QR code with Expo Go on a development phone.
+
+## Production build
+
+Install EAS CLI and sign in to Expo:
+
+```npm
+npm install -g eas-cli
+eas login
+```
+
+Then from `mobile/`:
+
+```bash
+eas build --platform android --profile production
+eas build --platform ios --profile production
+```
+
+Before store submission, the app still needs a real device test, production icons/splash assets, privacy-policy URL and store metadata, plus Apple/Google developer account configuration. Those cannot be safely marked complete until the builds have been tested.
 
 ## Important
 
-The existing BerOpp website on `main` is not replaced by this mobile branch.
+The existing BerOpp website is separate from this mobile branch and is not modified by the mobile work.
