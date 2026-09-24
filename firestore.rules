@@ -6,11 +6,10 @@ service cloud.firestore {
 
     match /users/{uid} {
       allow read, write: if isOwner(uid);
-      match /savedJobs/{jobId} {
-        allow read, write: if isOwner(uid);
-      }
+      match /savedJobs/{jobId} { allow read, write: if isOwner(uid); }
       match /applications/{applicationId} {
-        allow read, write: if isOwner(uid);
+        allow read, create: if isOwner(uid);
+        allow update: if isOwner(uid) || (signedIn() && get(/databases/$(database)/documents/applications/$(applicationId)).data.employerId == request.auth.uid);
       }
     }
 
@@ -22,11 +21,7 @@ service cloud.firestore {
 
     match /applications/{applicationId} {
       allow create: if signedIn() && request.resource.data.applicantId == request.auth.uid;
-      allow read: if signedIn() &&
-        (resource.data.applicantId == request.auth.uid || resource.data.employerId == request.auth.uid);
-      allow update: if signedIn() &&
-        (resource.data.employerId == request.auth.uid || resource.data.applicantId == request.auth.uid);
-      allow delete: if signedIn() &&
+      allow read, update, delete: if signedIn() &&
         (resource.data.applicantId == request.auth.uid || resource.data.employerId == request.auth.uid);
     }
   }
