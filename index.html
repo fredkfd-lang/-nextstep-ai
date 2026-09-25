@@ -817,7 +817,7 @@ async function signInWithGoogle(){
 function getAuthCredentials(){
   return {email:($('authEmail')?.value||'').trim().toLowerCase(),password:$('authPassword')?.value||''};
 }
-async async function createBerOppAccount(){
+async function createBerOppAccount(){
   if(!firebaseReady()||!beroppAuth){setAuthStatus('⚠️ Secure login is not ready yet. Please refresh the page.');return}
   const {email,password}=getAuthCredentials();
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setAuthStatus('Please enter a valid email address.');return}
@@ -831,7 +831,7 @@ async async function createBerOppAccount(){
     setAuthStatus('❌ '+(messages[e.code]||e.message||'Account creation failed.'));
   }
 }
-async async function signInBerOpp(){
+async function signInBerOpp(){
   if(!firebaseReady()||!beroppAuth){setAuthStatus('⚠️ Secure login is not ready yet. Please refresh the page.');return}
   const {email,password}=getAuthCredentials();
   if(!email||!password){setAuthStatus('Enter your email and password.');return}
