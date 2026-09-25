@@ -2246,27 +2246,26 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
 })();
 </script>
 
-<script id="beropp-ausbildung-az-direct-more-v3">
+<script id="beropp-ausbildung-az-direct-more-v4">
 (function(){
   function E(v){return typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
   function professionCard(b){
     const name=String(b[0]||''),cat=String(b[1]||'');
     const j=JSON.stringify(name).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
     const c=JSON.stringify(cat).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
-    return '<div class="card beroppAzCard" style="margin:8px 0;padding:14px"><strong>'+E(name)+'</strong><br><span class="badge">'+E(cat)+'</span><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px"><button class="secondary" type="button" onclick="showBerufDetail('+j+','+c+')">📖 Details</button><button class="secondary" type="button" onclick="beroppSearchAusbildungDirect('+j+');return false">⚡ Company Direct</button></div></div>';
+    return '<div class="card beroppAzCard" style="margin:8px 0;padding:14px"><strong>'+E(name)+'</strong><br><span class="badge">'+E(cat)+'</span><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px"><button class="secondary" type="button" onclick="showBerufDetail('+j+','+c+')">📖 Details</button><button class="secondary" type="button" onclick="beroppSearchAusbildungDirect('+j+');return false">⚡ Find Ausbildung + Apply Direct</button></div></div>';
   }
   function renderAZ(){
     const q=($('berufSearch')?.value||'').toLowerCase().trim(),cat=$('berufCategory')?.value||'';
     const list=(Array.isArray(window.berufe)?window.berufe:[]).filter(b=>(!q||String(b[0]).toLowerCase().includes(q))&&(!cat||b[1]===cat));
     const box=$('berufeList'); if(!box)return false;
     $('berufeCount').textContent=list.length+' Berufe in BerOpp';
-    const first=list.slice(0,3).map(professionCard).join('');
-    const rest=list.slice(3).map(professionCard).join('');
+    const first=list.slice(0,3).map(professionCard).join(''),rest=list.slice(3).map(professionCard).join('');
     box.innerHTML='<div class="card" style="margin-top:12px"><h3>🎓 Ausbildungsberufe A–Z</h3><p><strong>'+Math.min(3,list.length)+' / '+list.length+'</strong> Berufe werden angezeigt.</p><div>'+first+'</div>'+
       (list.length>3?'<button id="beroppAzMore" type="button" class="secondary" style="display:block;margin:14px auto;padding:12px 20px;font-weight:800">＋ More — weitere Berufe</button>':'')+
       '<div id="beroppAzRest" style="display:none">'+rest+'</div></div>';
-    const mb=$('beroppAzMore'),restBox=$('beroppAzRest');
-    if(mb)mb.onclick=function(){if(restBox)restBox.style.display='block';mb.remove();const p=box.querySelector('div.card > p');if(p)p.innerHTML='<strong>'+list.length+' / '+list.length+'</strong> Berufe werden angezeigt.'};
+    const mb=$('beroppAzMore'),rb=$('beroppAzRest');
+    if(mb)mb.onclick=function(){rb.style.display='block';mb.remove();const p=box.querySelector('div.card > p');if(p)p.innerHTML='<strong>'+list.length+' / '+list.length+'</strong> Berufe werden angezeigt.'};
     return true;
   }
   window.renderBerufe=renderAZ;
@@ -2281,40 +2280,50 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
       title:o.stellenangebotsTitel||o.beruf||'Ausbildung',company:o.arbeitgeber||'',
       place:typeof o.arbeitsort==='object'?(o.arbeitsort.ort||''):(o.arbeitsort||''),
       start:o.eintrittsdatum||'',description:o.stellenangebotsBeschreibung||'',
-      companyApplyUrl:o.externeUrl||'',companyWebsite:o.arbeitgeberdarstellungUrl||''
+      companyApplyUrl:o.externeUrl||''
     }));
   }
-  async function detailsUrl(ref){
-    if(!ref)return '';
-    const enc=btoa(unescape(encodeURIComponent(ref)));
-    const r=await fetch('https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobdetails/'+enc,{headers:{'X-API-Key':'jobboerse-jobsuche'}});
-    if(!r.ok)throw new Error('Details '+r.status);
-    const d=await r.json();
-    return d.externeUrl||d.externeURL||d.bewerbungUrl||d.bewerbungURL||d.arbeitgeberdarstellungUrl||'';
+  async function directFromDetails(o){
+    if(o.companyApplyUrl)return o;
+    if(!o.refnr)return null;
+    try{
+      const enc=btoa(unescape(encodeURIComponent(o.refnr)));
+      const r=await fetch('https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobdetails/'+enc,{headers:{'X-API-Key':'jobboerse-jobsuche'}});
+      if(!r.ok)return null;
+      const d=await r.json();
+      const url=d.externeUrl||d.externeURL||'';
+      return url?Object.assign({},o,{companyApplyUrl:url}):null;
+    }catch(e){return null}
   }
   function card(o){
-    const ref=E(o.refnr).replace(/'/g,'&#39;');
-    const direct=o.companyApplyUrl
-      ? '<a href="'+E(o.companyApplyUrl)+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;background:#2563eb;color:#fff;padding:10px 13px;border-radius:12px;font-weight:700;margin:4px">⚡ Apply direct at company</a>'
-      : '<button type="button" style="background:#2563eb" onclick="beroppOpenDirectCompany(\''+ref+'\',this);return false">⚡ Apply direct at company</button>';
-    const site=o.companyWebsite?'<a class="secondary" href="'+E(o.companyWebsite)+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;margin:4px">🏢 Company website</a>':'';
-    return '<div class="card" style="margin:9px 0"><h3>'+E(o.title)+'</h3><p>🏢 '+E(o.company)+' · 📍 '+E(o.place)+' · 📅 '+E(o.start)+'</p><p>'+E(String(o.description||'').slice(0,350))+'</p>'+direct+site+'<a class="secondary" href="https://www.arbeitsagentur.de/jobsuche/" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;margin:4px">🔗 BA Details</a></div>';
+    const url=E(o.companyApplyUrl);
+    return '<div class="card" style="margin:9px 0"><h3>'+E(o.title)+'</h3><p>🏢 '+E(o.company)+' · 📍 '+E(o.place)+' · 📅 '+E(o.start)+'</p><p>'+E(String(o.description||'').slice(0,350))+'</p><a href="'+url+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;background:#2563eb;color:#fff;padding:11px 15px;border-radius:12px;font-weight:800;margin:4px 4px 4px 0">⚡ Apply direct at company</a><span style="font-size:12px;color:#475569">Direct employer application link verified from the listing.</span></div>';
   }
   window.beroppSearchAusbildungDirect=async function(name){
     show('ausbildung');
     const box=$('berufeList');if(!box)return false;
-    box.innerHTML='<div class="card"><h3>🔎 '+E(name)+'</h3><p>⏳ Aktuelle Ausbildung-Angebote werden deutschlandweit geladen…</p></div>';
+    box.innerHTML='<div class="card"><h3>🔎 '+E(name)+'</h3><p>⏳ Searching current Ausbildung offers with a real direct company application link…</p></div>';
     try{
       const rows=await baSearch(name);
-      if(!rows.length){box.innerHTML='<div class="card"><h3>🔎 '+E(name)+'</h3><p>Keine aktuellen Treffer gefunden.</p><button class="secondary" type="button" onclick="renderBerufe()">← Ausbildungsberufe A–Z</button></div>';return false}
-      const first=rows.slice(0,3).map(card).join(''),rest=rows.slice(3).map(card).join('');
-      box.innerHTML='<div class="card"><h3>🇩🇪 '+E(name)+' — aktuelle Ausbildung</h3><p><strong>'+Math.min(3,rows.length)+' / '+rows.length+'</strong> Angebote werden angezeigt.</p><div>'+first+'</div>'+
-        (rows.length>3?'<button id="beroppAusMoreDirect" type="button" class="secondary" style="display:block;margin:14px auto;padding:12px 20px;font-weight:800">＋ More — weitere Angebote</button>':'')+
+      const candidates=rows.filter(o=>o.companyApplyUrl).concat(rows.filter(o=>!o.companyApplyUrl).slice(0,30));
+      const checked=await Promise.all(candidates.map(directFromDetails));
+      const direct=checked.filter(Boolean).filter(o=>o.companyApplyUrl);
+      if(!direct.length){
+        box.innerHTML='<div class="card"><h3>🔎 '+E(name)+'</h3><p>❌ No current Ausbildung offer was found with a verified direct company application link.</p><p>BerOpp will not show a fake or indirect Apply button.</p><button class="secondary" type="button" onclick="renderBerufe()">← Ausbildungsberufe A–Z</button></div>';
+        return false;
+      }
+      const first=direct.slice(0,3).map(card).join(''),rest=direct.slice(3).map(card).join('');
+      box.innerHTML='<div class="card"><h3>🇩🇪 '+E(name)+' — real current offers</h3><p><strong>'+Math.min(3,direct.length)+' / '+direct.length+'</strong> direct-apply offers found.</p><div>'+first+'</div>'+
+        (direct.length>3?'<button id="beroppAusMoreDirect" type="button" class="secondary" style="display:block;margin:14px auto;padding:12px 20px;font-weight:800">＋ More — weitere Angebote</button>':'')+
         '<div id="beroppAusRestDirect" style="display:none">'+rest+'</div><button class="secondary" type="button" onclick="renderBerufe()" style="margin-top:12px">← Ausbildungsberufe A–Z</button></div>';
       const mb=$('beroppAusMoreDirect'),rb=$('beroppAusRestDirect');
       if(mb)mb.onclick=function(){rb.style.display='block';mb.remove()};
       return true;
-    }catch(e){console.warn(e);box.innerHTML='<div class="card"><h3>⚠️ Live search</h3><p>Die aktuellen Ausbildung-Angebote konnten gerade nicht geladen werden.</p><button class="secondary" type="button" onclick="renderBerufe()">← Zurück</button></div>';return false}
+    }catch(e){
+      console.warn('Direct Ausbildung search failed',e);
+      box.innerHTML='<div class="card"><h3>⚠️ Live search</h3><p>Die aktuellen Ausbildung-Angebote konnten gerade nicht geladen werden.</p><button class="secondary" type="button" onclick="renderBerufe()">← Zurück</button></div>';
+      return false;
+    }
   };
 })();
 </script>
