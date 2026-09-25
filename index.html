@@ -920,9 +920,7 @@ function viewJobOpp(id){
   $('detailRequirements').innerHTML=(o.requirements||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
   $('detailTasks').innerHTML=(o.tasks||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
   $('detailConditions').innerHTML=(o.conditions||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
-  const qa=$('quickApplyBtn'),al=$('applyLinkBtn'),mode=beroppApplicationMode(o);
-  if(mode==='DIRECT_PORTAL'||mode==='DIRECT_EMAIL'){qa.textContent='⚡ Apply Now';qa.href=beroppGetApplicationUrl(o)||'#';qa.style.display='inline-block';qa.onclick=(e)=>{e.preventDefault();startBerOppApplication()};}else{qa.style.display='none';qa.onclick=null}
-  al.style.display='none';
+  const qa=$('quickApplyBtn'),al=$('applyLinkBtn'),mode=beroppApplicationMode(o);qa.textContent='⚡ Apply Now';qa.href=beroppGetApplicationUrl(o)||'#';qa.style.display='inline-block';qa.onclick=(e)=>{e.preventDefault();startBerOppApplication()};al.style.display='none';
   show('details');setTimeout(beroppEnsureDirectApplyBox,0);return true;
 }
 function saveJobOpp(id){
