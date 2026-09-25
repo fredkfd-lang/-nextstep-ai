@@ -738,7 +738,7 @@ window.beroppOpenLiveResult=function(o){
 function renderLiveCareerResults(results){
   if(!results.length)return '<div class="nsHomeSearchEmpty">No live external result was returned for this search. Try another keyword or location.</div>';
   return '<div class="nsHomeLive"><div class="nsHomeLiveHead"><strong>⚡ Live opportunities</strong><span>Original application links are used when the source provides them.</span></div>'+results.map(o=>{
-    const data=JSON.stringify(o).replace(/</g,'\\u003c');
+    const data=JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
     return '<div class="nsHomeLiveItem"><strong>💼 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.source)+(o.date?' · '+esc(o.date):'')+'</div>'+(o.url?'<button type="button" class="nsHomeLiveApply" onclick="return beroppOpenLiveResult('+data+')">🏢 Apply / View original →</button>':'<span class="nsHomeLiveNoApply">Original application link unavailable</span>')+'</div>';
   }).join('')+'</div>';
 }
@@ -1605,7 +1605,7 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
         const direct=live.filter(o=>o&&o.url);
         if(direct.length){
           box.innerHTML='<div class="card"><h3>🇩🇪 Current Ausbildung: '+esc(name)+'</h3><p><strong>'+direct.length+'</strong> live offer(s) found.</p>'+direct.slice(0,12).map((o,i)=>{
-            const safe=JSON.stringify(o).replace(/</g,'\\u003c');
+            const safe=JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
             return '<div class="card" style="margin:9px 0"><h3>'+esc(o.title||'Ausbildung')+'</h3><p>🏢 '+esc(o.company||'')+' · 📍 '+esc(o.place||'')+(o.date?' · 📅 '+esc(o.date):'')+'</p><button type="button" onclick="return beroppOpenLiveResult('+safe+')">⚡ Apply / View original →</button></div>';
           }).join('')+'</div>';
           return true;
