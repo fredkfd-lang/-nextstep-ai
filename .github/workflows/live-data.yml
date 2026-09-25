@@ -1,0 +1,32 @@
+name: Refresh live BA jobs and Ausbildung
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/update-live-data.mjs"
+      - ".github/workflows/live-data.yml"
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Fetch current BA data
+        run: node scripts/update-live-data.mjs
+      - name: Commit refreshed data
+        run: |
+          git config user.name "beropp-live-data"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/live-ausbildung.json data/live-jobs.json
+          git diff --cached --quiet || git commit -m "Refresh live BA jobs and Ausbildung"
+          git push
