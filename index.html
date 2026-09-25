@@ -1961,4 +1961,4 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
     });
   }
 })();
-</script></body></html>
+</script><script id="beropp-canonical-direct-apply-v3">(function(){function p(){try{return JSON.parse(localStorage.getItem('beropp_pending_apply')||'null')}catch(e){return null}}function r(){const x=p();if(!x||!x.url)return false;localStorage.removeItem('beropp_pending_apply');window.location.assign(x.url);return true}window.beroppResumePendingDirectApplication=r;if(window.beroppAuth&&typeof window.beroppAuth.onAuthStateChanged==='function'){window.beroppAuth.onAuthStateChanged(function(u){window.beroppUser=u||null;if(u)setTimeout(r,0)})}window.addEventListener('load',function(){setTimeout(function(){if(window.beroppUser)r()},150)})})();</script></body></html>
