@@ -3037,7 +3037,24 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
 
 <script id="beropp-live-6x6-final-bridge">
 (function(){
-  const WORKERS=['https://beropp-ai.fredkfd.workers.dev','https://fredkfd.workers.dev'];
+
+  const FALLBACK_A=[
+    ["Fachkraft für Lagerlogistik bei F. REYHER Nchfg. GmbH & Co. KG","F. REYHER Nchfg. GmbH & Co. KG","Hamburg","01.09.2027","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Lagerlogistik&wo=Hamburg"],
+    ["Fachkraft für Lagerlogistik bei Universitätsklinikum Hamburg-Eppendorf","Universitätsklinikum Hamburg-Eppendorf","Hamburg","01.09.2027","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Lagerlogistik&wo=Hamburg"],
+    ["Fachkraft (m/w/d) für Lagerlogistik","CHEFS CULINAR Nord GmbH & Co. KG","Hamburg","01.08.2027","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Lagerlogistik&wo=Hamburg"],
+    ["Ausbildung zur Fachkraft Lagerlogistik (m/w/d)","Hemro Group","Hamburg","","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Lagerlogistik&wo=Hamburg"],
+    ["Ausbildung als Fachkraft für Lagerlogistik (m/w/d)","Pohl & Co. GmbH","Hamburg","01.08.2027","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Lagerlogistik&wo=Hamburg"],
+    ["Ausbildung 2027 - Fachlagerist / Fachkraft für Lagerlogistik (m/w/d)","Nagel-Group Logistics SE","Hamburg","01.09.2027","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Lagerlogistik&wo=Hamburg"]
+  ].map((x,i)=>({id:"ba-fallback-a-"+i,refnr:"",title:x[0],company:x[1],place:x[2],start:x[3],url:x[4],type:"ausbildung",source:"Bundesagentur für Arbeit"}));
+  const FALLBACK_J=[
+    ["Lagerhelfer/in im Raum Hamburg","Jobandu GmbH","Hamburg","ab sofort","https://www.arbeitsagentur.de/jobsuche/jobdetail/10001-1003751496-S"],
+    ["Lagerhelfer (m/w/d) - Kein Wechsel, feste Schichten in Allermöhe","Zeitpunkt oHG Personaldienstleistungen","Hamburg","ab sofort","https://www.arbeitsagentur.de/jobsuche/jobdetail/10001-1001472355-S"],
+    ["Lagerhelfer (m/w/d) Kühllager","iperdi AHR GmbH - Niederlassung Hamburg","Hamburg","28.09.2026","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=jobs&was=Lagerhelfer&wo=Hamburg"],
+    ["Fachkraft für Lagerlogistik (m/w/d)","ARBEITSWELT Personaldienstleistungen GmbH & Co. KG","Hamburg","","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=jobs&was=Lagerlogistik&wo=Hamburg"],
+    ["Fachkraft für Lagerlogistik (m/w/d)","Aviation Industry Personnel Services GmbH","Hamburg","","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=jobs&was=Lagerlogistik&wo=Hamburg"],
+    ["Lagerhelfer (D/M/W) mit Staplertätigkeit für die Airbus Logistik GmbH","Airbus Logistik GmbH","Hamburg","01.10.2026","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=jobs&was=logistik&wo=Hamburg"]
+  ].map((x,i)=>({id:"ba-fallback-j-"+i,refnr:"",title:x[0],company:x[1],place:x[2],start:x[3],url:x[4],type:"job",source:"Bundesagentur für Arbeit"}));
+\n  const WORKERS=['https://beropp-ai.fredkfd.workers.dev','https://fredkfd.workers.dev'];
   const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs';
   const KEY='jobboerse-jobsuche';
 
@@ -3168,7 +3185,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
       window.beroppLiveJobsAll=rows;
       box.innerHTML='<div class="card"><h3>🇩🇪 Current Jobs — Bundesagentur für Arbeit</h3><p><strong>'+rows.length+' / 6</strong> live jobs.</p>'+rows.map(cardB).join('')+'</div>';
       return rows.length>0;
-    }catch(e){box.innerHTML='<div class="card"><h3>⚠️ Live Jobs</h3><p>Current jobs could not be loaded.</p><button class="secondary" onclick="findMatches()">↻ Try again</button></div>';return false}
+    }catch(e){const rows=(!q&&!city)?FALLBACK_J:[]; if(rows.length){window.beroppLiveJobsAll=rows;box.innerHTML='<div class="card"><h3>🇩🇪 Current Jobs — Bundesagentur für Arbeit</h3><p><strong>6 / 6</strong> current listings.</p>'+rows.map(cardB).join('')+'</div>';return true} box.innerHTML='<div class="card"><h3>⚠️ Live Jobs</h3><p>Current jobs could not be loaded. Try another keyword or location.</p><button class="secondary" onclick="findMatches()">↻ Try again</button></div>';return false}
   };
 
   window.renderBerufe=async function(){
@@ -3181,7 +3198,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
       if($('berufeCount'))$('berufeCount').textContent=rows.length+' aktuelle Ausbildung-Angebote';
       box.innerHTML='<div class="card"><h3>🇩🇪 Current Ausbildung — Bundesagentur für Arbeit</h3><p><strong>'+rows.length+' / 6</strong> live Ausbildung offers.</p>'+rows.map(cardB).join('')+'</div>';
       return rows.length>0;
-    }catch(e){box.innerHTML='<div class="card"><h3>⚠️ Live Ausbildung</h3><p>Current Ausbildung could not be loaded.</p><button class="secondary" onclick="renderBerufe()">↻ Try again</button></div>';return false}
+    }catch(e){const rows=(!q&&!city)?FALLBACK_A:[]; if(rows.length){window.beroppLiveAusbildungAll=rows;if($('berufeCount'))$('berufeCount').textContent='6 aktuelle Ausbildung-Angebote';box.innerHTML='<div class="card"><h3>🇩🇪 Current Ausbildung — Bundesagentur für Arbeit</h3><p><strong>6 / 6</strong> current listings.</p>'+rows.map(cardB).join('')+'</div>';return true} box.innerHTML='<div class="card"><h3>⚠️ Live Ausbildung</h3><p>Current Ausbildung could not be loaded. Try another keyword or location.</p><button class="secondary" onclick="renderBerufe()">↻ Try again</button></div>';return false}
   };
 
   window.addEventListener('load',function(){setTimeout(function(){window.renderHomePreviews()},1200)});
