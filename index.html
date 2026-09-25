@@ -2270,11 +2270,26 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   }
   window.renderBerufe=renderAZ;
 
+  function workerBase(){
+    const v=String(localStorage.getItem('beropp_ai_api_url')||'').trim().replace(/\\/$/,'');
+    return /^https:\\/\\//i.test(v)?v:'';
+  }
+  async function baJson(path,params){
+    const qs=params instanceof URLSearchParams?params.toString():new URLSearchParams(params||{}).toString();
+    const worker=workerBase();
+    if(worker){
+      try{
+        const wr=await fetch(worker+path+(qs?'?'+qs:''),{headers:{'Accept':'application/json'}});
+        if(wr.ok)return wr.json();
+      }catch(e){console.warn('BerOpp Worker unavailable',e)}
+    }
+    const r=await fetch('https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs?'+qs,{headers:{'X-API-Key':'jobboerse-jobsuche'}});
+    if(!r.ok)throw new Error('BA '+r.status);
+    return r.json();
+  }
   async function baSearch(name){
     const p=new URLSearchParams({angebotsart:'4',page:'1',size:'100',pav:'false',was:name});
-    const r=await fetch('https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs?'+p.toString(),{headers:{'X-API-Key':'jobboerse-jobsuche'}});
-    if(!r.ok)throw new Error('BA '+r.status);
-    const d=await r.json();
+    const d=await baJson('/ausbildung',p);
     return (d.stellenangebote||[]).map((o,i)=>({
       id:'az-ba-'+(o.referenznummer||o.refnr||i),refnr:o.referenznummer||o.refnr||'',
       title:o.stellenangebotsTitel||o.beruf||'Ausbildung',company:o.arbeitgeber||'',
@@ -2288,16 +2303,36 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     if(!o.refnr)return null;
     try{
       const enc=btoa(unescape(encodeURIComponent(o.refnr)));
-      const r=await fetch('https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobdetails/'+enc,{headers:{'X-API-Key':'jobboerse-jobsuche'}});
-      if(!r.ok)return null;
-      const d=await r.json();
+      const worker=workerBase();
+      let d=null;
+      if(worker){
+        try{
+          const wr=await fetch(worker+'/jobdetails?refnr='+encodeURIComponent(o.refnr),{headers:{'Accept':'application/json'}});
+          if(wr.ok)d=await wr.json();
+        }catch(e){console.warn('Worker jobdetails unavailable',e)}
+      }
+      if(!d){
+        const r=await fetch('https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobdetails/'+enc,{headers:{'X-API-Key':'jobboerse-jobsuche'}});
+        if(!r.ok)return null;
+        d=await r.json();
+      }
       const url=d.externeUrl||d.externeURL||'';
       return url?Object.assign({},o,{companyApplyUrl:url}):null;
     }catch(e){return null}
   }
+  window.beroppDirectLiveApply=function(url,title,company){
+    const u=String(url||'').trim();
+    if(!/^https?:\\/\\//i.test(u))return false;
+    const o={id:'live-az-'+btoa(unescape(encodeURIComponent(u))).replace(/[^a-zA-Z0-9]/g,'').slice(0,40),title:String(title||'Ausbildung'),company:String(company||''),type:'ausbildung',applicationUrl:u,applyUrl:u,applicationMode:'DIRECT_PORTAL'};
+    window.currentOpportunity=o;
+    if(typeof startBerOppApplication==='function')return startBerOppApplication();
+    window.location.assign(u);
+    return false;
+  };
   function card(o){
     const url=E(o.companyApplyUrl);
-    return '<div class="card" style="margin:9px 0"><h3>'+E(o.title)+'</h3><p>🏢 '+E(o.company)+' · 📍 '+E(o.place)+' · 📅 '+E(o.start)+'</p><p>'+E(String(o.description||'').slice(0,350))+'</p><a href="'+url+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;background:#2563eb;color:#fff;padding:11px 15px;border-radius:12px;font-weight:800;margin:4px 4px 4px 0">⚡ Apply direct at company</a><span style="font-size:12px;color:#475569">Direct employer application link verified from the listing.</span></div>';
+    const title=E(o.title).replace(/'/g,'&#39;'),company=E(o.company).replace(/'/g,'&#39;');
+    return '<div class="card" style="margin:9px 0"><h3>'+E(o.title)+'</h3><p>🏢 '+E(o.company)+' · 📍 '+E(o.place)+' · 📅 '+E(o.start)+'</p><p>'+E(String(o.description||'').slice(0,350))+'</p><button type="button" onclick="return beroppDirectLiveApply(\''+url.replace(/'/g,'&#39;')+'\',\''+title+'\',\''+company+'\')" style="display:inline-block;border:0;background:#2563eb;color:#fff;padding:11px 15px;border-radius:12px;font-weight:800;margin:4px 4px 4px 0;cursor:pointer">⚡ Apply direct at company</button><span style="font-size:12px;color:#475569">Direct employer application link verified from the listing.</span></div>';
   }
   window.beroppSearchAusbildungDirect=async function(name){
     show('ausbildung');
