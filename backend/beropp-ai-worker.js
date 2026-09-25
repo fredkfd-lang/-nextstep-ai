@@ -57,6 +57,13 @@ export default {
       });
     }
 
+    if (request.method === "GET" && url.pathname === "/health") {
+      return new Response(JSON.stringify({ ok: true, service: "beropp-ai", liveAusbildungProxy: true }), {
+        status: 200,
+        headers: { ...corsHeadersFor(request), "Content-Type": "application/json", "Cache-Control": "no-store" }
+      });
+    }
+
     if (request.method !== "POST") {
       return json({ error: "Method not allowed" }, 405, request);
     }
