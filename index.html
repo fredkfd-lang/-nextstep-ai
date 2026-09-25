@@ -811,9 +811,10 @@ async function saveProfile(){
  const p=profileData();p.name=[p.firstName,p.lastName].filter(Boolean).join(' ');p.savedAt=new Date().toISOString();p.files=window.profileFiles||{};
  try{
   const packet=await encryptText(JSON.stringify(p));localStorage.setItem('beropp_profile_encrypted',JSON.stringify(packet));nsProfile=p;window.nsProfile=p;
-  if(status)status.innerHTML='✅ <strong>Profile saved.</strong> You can apply now.';
+  if(status)status.innerHTML='✅ <strong>Profile saved on this device.</strong> Your information is stored securely in this browser and will be available when you return to BerOpp on this device. You can edit it anytime below.';
   updateProfileCompleteness();
-  if(confirm('Profile saved. Do you want to find an opportunity and apply now?'))goToMatches();
+  setTimeout(()=>{if(status){status.scrollIntoView({behavior:'smooth',block:'center'});}},50);
+  if(confirm('Profile saved successfully on this device. Do you want to find an opportunity and apply now?'))goToMatches();
  }catch(e){console.error(e);if(status)status.textContent='❌ Could not save the profile on this device.'}
 }
 async function loadProfile(){
