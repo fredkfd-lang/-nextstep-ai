@@ -524,7 +524,7 @@ function startAusbildungApplicationByProfession(name){
   const aliases={pflege:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege','altenpfleger'],gesundheit:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege']};
   const needle=String(name||'').toLowerCase().replace(/\\/g,'');
   const terms=aliases[needle]||[needle];
-  const matches=opps.filter(o=>terms.some(term=>String(o.title||'').toLowerCase().includes(term)||String(o.description||'').toLowerCase().includes(term)));
+  const matches=(Array.isArray(window.opps)?window.opps:[]).filter(o=>terms.some(term=>String(o.title||'').toLowerCase().includes(term)||String(o.description||'').toLowerCase().includes(term)));
   const direct=matches.find(o=>beroppApplicationMode(o)==='DIRECT_PORTAL'||beroppApplicationMode(o)==='DIRECT_EMAIL');
   if(!beroppUser){
     beroppPendingAusbildungName=name;
@@ -1241,11 +1241,12 @@ function beroppApplyLiveAusbildung(o){
     return false;
   }
   if(o.applyUrl){
-    window.location.assign(o.applyUrl);
+    window.open(o.applyUrl,'_blank','noopener,noreferrer');
+    updateBerOppApplicationStatus(o.id,'Company application opened');
     return true;
   }
   if(o.url){
-    window.location.assign(o.url);
+    window.open(o.url,'_blank','noopener,noreferrer');
     return true;
   }
   currentOpportunity=o;
@@ -1455,7 +1456,7 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
     });
     const box=$('berufeList');
     if(box&&matches.length){
-      box.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p><strong>'+matches.length+'</strong> Ausbildung opportunities found.</p>'+matches.map(o=>'<div class="card"><h3>'+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+' · 📍 '+esc(o.place||'')+' · '+esc(o.start||'')+'</p><p>'+esc(o.description||'')+'</p><button onclick="viewOpp('+o.id+')">📖 Details</button><button onclick="beroppApplyByOpportunityId('+o.id+')">⚡ Apply Now</button>'+'</div>').join('')+'</div>';
+      box.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p><strong>'+matches.length+'</strong> Ausbildung opportunities found.</p>'+matches.map(o=>'<div class="card"><h3>'+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+' · 📍 '+esc(o.place||'')+' · '+esc(o.start||'')+'</p><p>'+esc(o.description||'')+'</p><button type="button" onclick="viewOpp('+o.id+');return false">📖 Details</button><button type="button" onclick="beroppApplyByOpportunityId('+o.id+');return false" style="background:#2563eb">⚡ Apply Now</button>'+'</div>').join('')+'</div>';
       return true;
     }
     if(box){const baUrl=buildBAUrl(name,city);box.innerHTML='<div class="card"><h3>🔎 '+esc(name)+'</h3><p>No saved vacancy matches this profession and location yet.</p><a href="'+esc(baUrl)+'" target="_blank" rel="noopener" class="secondary" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🔗 Search current Ausbildung vacancies</a></div>'}
