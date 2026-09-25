@@ -137,3 +137,5 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+        env:
+          ACTIONS_STEP_DEBUG: false
