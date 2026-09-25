@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const API = 'https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs';
+const API_FALLBACK = 'https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/app/jobs';
 const DETAIL = 'https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobdetails/';
 const KEY = 'jobboerse-jobsuche';
 
@@ -14,16 +15,40 @@ function encodeRef(ref){
   return Buffer.from(String(ref || ''), 'utf8').toString('base64');
 }
 async function fetchJson(url){
-  const res = await fetch(url,{headers:{'X-API-Key':KEY,'Accept':'application/json'}});
-  if(!res.ok) throw new Error(`BA ${res.status} for ${url}`);
-  return res.json();
+  const res = await fetch(url,{headers:{
+    'X-API-Key':KEY,
+    'Accept':'application/json',
+    'User-Agent':'BerOpp-live-data/1.0'
+  }});
+  const text=await res.text();
+  if(!res.ok) throw new Error(`BA ${res.status} for ${url}: ${text.slice(0,300)}`);
+  try{return JSON.parse(text);}catch{throw new Error(`BA returned non-JSON for ${url}: ${text.slice(0,300)}`);}
+}
+async function searchPage(kind,page){
+  const angebot=kind==='ausbildung'?'4':'1';
+  const params=new URLSearchParams({
+    angebotsart:angebot,
+    page:String(page),
+    size:'100',
+    veroeffentlichtseit:'100',
+    zeitarbeit:'true'
+  });
+  let lastErr=null;
+  for(const base of [API,API_FALLBACK]){
+    try{
+      const d=await fetchJson(base+'?'+params.toString());
+      const rows=Array.isArray(d.stellenangebote)?d.stellenangebote:[];
+      if(rows.length)return rows;
+      lastErr=new Error(`BA returned 0 records from ${base}`);
+    }catch(e){lastErr=e;}
+  }
+  if(lastErr) throw lastErr;
+  return [];
 }
 async function load(kind){
-  const all=[],seen=new Set(),angebot=kind==='ausbildung'?'4':'1';
+  const all=[],seen=new Set();
   for(let page=1;page<=10;page++){
-    const p=new URLSearchParams({angebotsart:angebot,page:String(page),size:'100',pav:'false',veroeffentlichtseit:'60',zeitarbeit:'true',was:kind==='ausbildung'?'Ausbildung':'Job'});
-    const d=await fetchJson(API+'?'+p.toString());
-    const rows=Array.isArray(d.stellenangebote)?d.stellenangebote:[];
+    const rows=await searchPage(kind,page);
     for(const o of rows){
       const ref=String(o.referenznummer||o.refnr||'');
       const key=ref||[o.beruf,o.stellenangebotsTitel,o.arbeitgeber,typeof o.arbeitsort==='object'?o.arbeitsort?.ort:o.arbeitsort].join('|');
