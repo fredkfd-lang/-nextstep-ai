@@ -361,7 +361,6 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
 
 </div>
 </div>
-<
 <div class="nsHomeSearch" id="homeSearchLocation">
   <div class="nsHomeSearchHead"><div><h3>🔎 Find your next opportunity</h3><p>Search by job, Ausbildung, skill or location — directly from the Home page.</p></div><span class="nsHomeSearchBadge">Search + Location</span></div>
   <div class="nsHomeSearchGrid">
@@ -373,26 +372,14 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
   <div id="homeSearchStatus" class="nsHomeSearchStatus">Tip: use “My location” to detect your city, then search nearby opportunities.</div>
   <div id="homeSearchResults" class="nsHomeSearchResults"></div>
 </div>
-<div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid"><div class="nsPreviewPanel nsRemoteHomePreview"><div class="nsPreviewHead"><div><span class="nsPreviewKicker">🌐 INTERNATIONAL REMOTE</span><h3>Remote jobs from around the world</h3></div><button class="secondary" onclick="requireAuth('remoteInternational')">All Remote Jobs →</button></div><div id="homeRemotePreview" class="nsPreviewList">
-<div class="nsPreviewItem" onclick="requireAuth('remoteInternational')"><strong>Customer Support Specialist</strong><div class="nsPreviewMeta">🌍 worldwide · 💼 Customer Support · full-time</div><button class="secondary" onclick="event.stopPropagation();requireAuth('remoteInternational')">View Remote →</button></div>
-<div class="nsPreviewItem" onclick="requireAuth('remoteInternational')"><strong>Software Developer / Engineer</strong><div class="nsPreviewMeta">🌍 worldwide · 💼 Technology · full-time</div><button class="secondary" onclick="event.stopPropagation();requireAuth('remoteInternational')">View Remote →</button></div>
-<div class="nsPreviewItem" onclick="requireAuth('remoteInternational')"><strong>Digital Marketing Specialist</strong><div class="nsPreviewMeta">🌍 worldwide · 💼 Marketing · full-time</div><button class="secondary" onclick="event.stopPropagation();requireAuth('remoteInternational')">View Remote →</button></div>
-</div></div></div></div><div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid">
+<div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid"><div class="nsPreviewPanel nsRemoteHomePreview"><div class="nsPreviewHead"><div><span class="nsPreviewKicker">🌐 INTERNATIONAL REMOTE</span><h3>Remote jobs from around the world</h3></div><button class="secondary" onclick="requireAuth('remoteInternational')">All Remote Jobs →</button></div><div id="homeRemotePreview" class="nsPreviewList"></div></div></div></div><div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid">
   <div class="nsPreviewPanel">
     <div class="nsPreviewHead"><div><span class="nsPreviewKicker">🎓 AUSBILDUNG</span><h3>Ausbildung für deinen nächsten Schritt</h3></div><button class="secondary" onclick="requireAuth('ausbildung')">Alle Ausbildung →</button></div>
-    <div id="homeAusbildungPreview" class="nsPreviewList">
-<div class="nsPreviewItem" onclick="openHomeOpportunity(1,'ausbildung')"><strong>Ausbildung Fachkraft für Lagerlogistik 2027</strong><div class="nsPreviewMeta">🏢 RCL Rade GmbH (Rhenus) · 📍 Neu Wulmstorf · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(1,'ausbildung')">View Ausbildung →</button></div>
-<div class="nsPreviewItem" onclick="openHomeOpportunity(2,'ausbildung')"><strong>Auszubildenden zur Fachkraft für Lagerlogistik 2027</strong><div class="nsPreviewMeta">🏢 BMI Deutschland GmbH · 📍 Regesbostel · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(2,'ausbildung')">View Ausbildung →</button></div>
-<div class="nsPreviewItem" onclick="openHomeOpportunity(3,'ausbildung')"><strong>Auszubildenden zum Fachlagerist 2027</strong><div class="nsPreviewMeta">🏢 BMI Deutschland GmbH · 📍 Regesbostel · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(3,'ausbildung')">View Ausbildung →</button></div>
-</div>
+    <div id="homeAusbildungPreview" class="nsPreviewList"></div>
   </div>
   <div class="nsPreviewPanel">
     <div class="nsPreviewHead"><div><span class="nsPreviewKicker">💼 JOBS</span><h3>Aktuelle Jobs entdecken</h3></div><button class="secondary" onclick="requireAuth('matches')">Alle Jobs →</button></div>
-    <div id="homeJobsPreview" class="nsPreviewList">
-<div class="nsPreviewItem" onclick="openHomeOpportunity(101,'job')"><strong>Versand-/Lagermitarbeiter (m/w/d)</strong><div class="nsPreviewMeta">🏢 Amazon Logistik Hamburg · 📍 Hamburg · 💶 16,43 € / Std.</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(101,'job')">View Job →</button></div>
-<div class="nsPreviewItem" onclick="openHomeOpportunity(102,'job')"><strong>Lagerhelfer (m/w/d) – ab 15 €/h</strong><div class="nsPreviewMeta">🏢 Queens Service Personal GmbH · 📍 Hamburg · 💶 15 € / Std.</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(102,'job')">View Job →</button></div>
-<div class="nsPreviewItem" onclick="openHomeOpportunity(103,'job')"><strong>Lagerhelfer/in (gn) – Quereinsteiger</strong><div class="nsPreviewMeta">🏢 A & H Zeitarbeit GmbH · 📍 Nottensdorf · 💶 15,33 € / Std.</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(103,'job')">View Job →</button></div>
-</div>
+    <div id="homeJobsPreview" class="nsPreviewList"></div>
   </div>
 </div></div>
 <div class="nsMiniFeatures nsMiniFeaturesBottom">
@@ -1212,20 +1199,7 @@ body.dark-mode .directApplyBox{background:linear-gradient(135deg,#172554,#0f172a
 @media(max-width:620px){.directApplyGrid{grid-template-columns:1fr}}
 </style>
 <script id="beropp-remote-data">
-const remoteInternationalJobs=[
-{id:201,title:'Customer Support Specialist',company:'International Remote Employer',region:'worldwide',type:'full-time',category:'Customer Support',tags:['English','Customer Support','Remote'],desc:'Remote customer support role suitable for international applicants where the employer confirms worldwide hiring.',url:'https://www.weworkremotely.com/categories/remote-customer-support-jobs'},
-{id:202,title:'Software Developer / Engineer',company:'Global Remote Opportunities',region:'worldwide',type:'full-time',category:'Technology',tags:['Software','Engineering','Remote'],desc:'Worldwide-oriented software and engineering opportunities. Country eligibility varies by vacancy.',url:'https://remoteok.com/remote-dev-jobs'},
-{id:203,title:'Digital Marketing Specialist',company:'Global Remote Opportunities',region:'worldwide',type:'full-time',category:'Marketing',tags:['Marketing','Digital','Remote'],desc:'International remote marketing opportunities across different companies and time zones.',url:'https://www.workingnomads.com/remote-marketing-jobs'},
-{id:204,title:'Graphic / Product Designer',company:'Global Remote Opportunities',region:'worldwide',type:'contract',category:'Design',tags:['Design','Creative','Remote'],desc:'Remote design opportunities, including international contract work.',url:'https://www.workingnomads.com/remote-design-jobs'},
-{id:205,title:'Data Analyst',company:'International Remote Employer',region:'worldwide',type:'full-time',category:'Data',tags:['Data','Analytics','Remote'],desc:'Remote data and analytics opportunities with country restrictions shown by each employer.',url:'https://himalayas.app/jobs'},
-{id:206,title:'Virtual Assistant / Administrative',company:'International Remote Opportunities',region:'worldwide',type:'part-time',category:'Administration',tags:['Admin','Virtual Assistant','Remote'],desc:'International remote administrative and assistant opportunities.',url:'https://www.workingnomads.com/remote-jobs'},
-{id:207,title:'Sales Development / Sales',company:'Global Remote Opportunities',region:'worldwide',type:'full-time',category:'Sales',tags:['Sales','Business','Remote'],desc:'Remote sales roles from international companies; check language and territory requirements.',url:'https://remotive.com/remote-jobs/sales'},
-{id:208,title:'Content Writer / Copywriter',company:'Global Remote Opportunities',region:'worldwide',type:'contract',category:'Writing',tags:['Writing','Content','Remote'],desc:'Remote writing and content opportunities for international candidates.',url:'https://remotive.com/remote-jobs/marketing'},
-{id:209,title:'European Remote Operations',company:'EU Remote Opportunities',region:'europe',type:'full-time',category:'Operations',tags:['Europe','Operations','Remote'],desc:'Remote roles aimed at Europe or European time zones.',url:'https://jobgether.com/remote-jobs'},
-{id:210,title:'African Remote Opportunities',company:'International Remote Employers',region:'africa',type:'full-time',category:'Multiple',tags:['Africa','Remote','International'],desc:'Remote opportunities that may include African countries; verify country eligibility in the vacancy.',url:'https://himalayas.app/jobs'},
-{id:211,title:'Americas Remote Opportunities',company:'International Remote Employers',region:'americas',type:'full-time',category:'Multiple',tags:['Americas','Remote','International'],desc:'Remote opportunities for candidates in American time zones or countries.',url:'https://www.weworkremotely.com/'},
-{id:212,title:'Asia-Pacific Remote Opportunities',company:'International Remote Employers',region:'asia',type:'contract',category:'Multiple',tags:['Asia','APAC','Remote'],desc:'Remote opportunities for Asia-Pacific locations and time zones.',url:'https://www.workingnomads.com/remote-jobs'}
-];
+const remoteInternationalJobs=[];
 function renderRemoteJobs(){
  const box=$('remoteJobsList');if(!box)return;
  const q=normalizeLocation($('remoteSearch')?.value||''),region=$('remoteRegion')?.value||'',type=$('remoteType')?.value||'';
