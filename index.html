@@ -637,12 +637,14 @@ function initBerOppAuth(){
       try{
         const saved=JSON.parse(localStorage.getItem('beropp_pending_apply')||'null');
         if(!pendingTarget&&saved){pendingTarget=saved.target||'';pendingId=saved.id??null;pendingType=saved.type||'';}
-        if(saved&&saved.target==='ausbildungDirect'&&saved.url){
+        if((saved&&saved.target==='ausbildungDirect'&&saved.url) || (pendingTarget==='ausbildungDirect'&&pendingId!=null)){
+          const directUrl=(saved&&saved.url)?saved.url:(()=>{
+            const o=opps.concat(jobOpps).find(x=>String(x.id)===String(pendingId));
+            return o?(o.applicationUrl||o.applyUrl||o.url||''):'';
+          })();
           localStorage.removeItem('beropp_pending_apply');
           beroppPendingTarget='';beroppPendingOpportunityId=null;beroppPendingOpportunityType='';
-          await loadProfile();
-          window.location.assign(saved.url);
-          return;
+          if(directUrl){window.location.replace(directUrl);return}
         }
         if(saved) localStorage.removeItem('beropp_pending_apply');
       }catch(e){localStorage.removeItem('beropp_pending_apply')}
