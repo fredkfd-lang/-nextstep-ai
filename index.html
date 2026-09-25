@@ -629,6 +629,18 @@ function initBerOppAuth(){
       if(!user){setAuthStatus('Ready to sign in.');return}
       if(beroppJustCreatedAccount){beroppJustCreatedAccount=false;setAuthStatus('✅ Account created. You can continue directly to your application.');}
       setAuthStatus('✅ Logged in as '+(user.email||user.displayName||'BerOpp user'));
+      // Resume direct Ausbildung applications before profile loading.
+      // A slow Firestore/profile request must not block the company redirect.
+      try{
+        const directSaved=JSON.parse(localStorage.getItem('beropp_pending_apply')||'null');
+        if(directSaved&&directSaved.target==='ausbildungDirect'&&directSaved.url){
+          localStorage.removeItem('beropp_pending_apply');
+          beroppPendingTarget='';beroppPendingOpportunityId=null;beroppPendingOpportunityType='';
+          updateBerOppApplicationStatus(directSaved.id,'Company application opened');
+          window.location.assign(directSaved.url);
+          return;
+        }
+      }catch(directErr){console.warn('Direct Ausbildung resume failed',directErr)}
       await loadProfile();
       const nextInternational=new URLSearchParams(location.search).get('requireAccount');
       if(nextInternational){location.href=nextInternational;return}
