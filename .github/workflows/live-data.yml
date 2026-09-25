@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 20
       - name: Fetch current BA data
-        run: node scripts/update-live-data.mjs
+        run: node scripts/update-live-data.cjs
       - name: Commit refreshed data
         run: |
           git config user.name "beropp-live-data"
