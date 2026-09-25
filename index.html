@@ -615,12 +615,13 @@ function initBerOppAuth(){
     try{beroppDb=firebase.firestore()}catch(dbErr){console.warn('Firestore is not available yet',dbErr);beroppDb=null}
     beroppAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
     beroppAuth.getRedirectResult().catch(e=>{if(e&&e.code)setAuthStatus('❌ Google login: '+e.code+' — '+(e.message||'Please try again.'))});
-    beroppAuth.onAuthStateChanged(user=>{
+    beroppAuth.onAuthStateChanged(async user=>{
       beroppUser=user||null;
       renderBerOppAccountStatus();
       if(!user){setAuthStatus('Ready to sign in.');return}
-      if(beroppJustCreatedAccount){beroppJustCreatedAccount=false;setAuthStatus('✅ Account created successfully. We sent a verification email to <strong>'+esc(user.email||'your email')+'</strong>. Please complete your profile, then BerOpp will return you to the Ausbildung/Job you were applying for.');show('profile');loadProfile();return}
+      if(beroppJustCreatedAccount){beroppJustCreatedAccount=false;setAuthStatus('✅ Account created successfully. We sent a verification email to <strong>'+esc(user.email||'your email')+'</strong>. Please complete your profile, then BerOpp will return you to the Ausbildung/Job you were applying for.');show('profile');await loadProfile();return}
       setAuthStatus('✅ Logged in as '+(user.email||user.displayName||'BerOpp user'));
+      await loadProfile();
       const nextInternational=new URLSearchParams(location.search).get('requireAccount');
       if(nextInternational){location.href=nextInternational;return}
       if(beroppPendingTarget){
