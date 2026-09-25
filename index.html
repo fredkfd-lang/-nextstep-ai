@@ -753,10 +753,22 @@ async function useMyHomeLocation(){
   },err=>{if(status)status.textContent=err&&err.code===1?'📍 Location permission was denied. You can enter a city manually.':'📍 Could not detect your location. Please enter a city manually.'},{enableHighAccuracy:true,timeout:10000,maximumAge:300000});
 }
 function renderHomePreviews(){
-  const r=$('homeRemotePreview');if(r&&typeof remoteInternationalJobs!=='undefined')r.innerHTML=remoteInternationalJobs.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\'remoteInternational\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🌍 '+esc(o.region)+' · 💼 '+esc(o.category)+' · '+esc(o.type)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\'remoteInternational\')">View Remote →</button></div>').join('');  const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');
-  if(!a||!j||typeof opps==='undefined'||typeof jobOpps==='undefined')return;
-  a.innerHTML=opps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="openHomeOpportunity('+o.id+',\'ausbildung\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+'</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity('+o.id+',\'ausbildung\')">View Ausbildung →</button></div>').join('');
-  j.innerHTML=jobOpps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="openHomeOpportunity('+o.id+',\'job\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 💶 '+esc(o.salary)+'</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity('+o.id+',\'job\')">View Job →</button></div>').join('');
+  const r=$('homeRemotePreview');
+  if(r){
+    if(typeof remoteInternationalJobs!=='undefined'&&Array.isArray(remoteInternationalJobs)&&remoteInternationalJobs.length){
+      r.innerHTML=remoteInternationalJobs.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\\'remoteInternational\\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🌍 '+esc(o.region)+' · 💼 '+esc(o.category)+' · '+esc(o.type)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\\'remoteInternational\\')">View Remote →</button></div>').join('');
+    }else{
+      r.innerHTML='<div class="nsHomeSearchEmpty">🌍 No fixed international vacancy is shown here. Open International Remote Jobs to search current external listings.</div>';
+    }
+  }
+  const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');
+  if(!a||!j)return;
+  a.innerHTML=(typeof opps!=='undefined'&&Array.isArray(opps)&&opps.length)
+    ? opps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="openHomeOpportunity('+o.id+',\\'ausbildung\\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+'</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity('+o.id+',\\'ausbildung\\')">View Ausbildung →</button></div>').join('')
+    : '<div class="nsHomeSearchEmpty">🎓 No saved vacancy is shown here. Use the live Ausbildung search to get current offers.</div>';
+  j.innerHTML=(typeof jobOpps!=='undefined'&&Array.isArray(jobOpps)&&jobOpps.length)
+    ? jobOpps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="openHomeOpportunity('+o.id+',\\'job\\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 💶 '+esc(o.salary)+'</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity('+o.id+',\\'job\\')">View Job →</button></div>').join('')
+    : '<div class="nsHomeSearchEmpty">💼 No saved vacancy is shown here. Use Find Jobs to search current offers.</div>';
 }
 function openFeature(target){
   show(target);
