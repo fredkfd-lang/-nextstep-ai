@@ -606,7 +606,7 @@ function initBerOppAuth(){
       beroppUser=user||null;
       renderBerOppAccountStatus();
       if(!user){setAuthStatus('Ready to sign in.');return}
-      if(beroppJustCreatedAccount){beroppJustCreatedAccount=false;setAuthStatus('✅ Account created successfully. We sent a verification email to <strong>'+esc(user.email||'your email')+'</strong>. Please check your inbox.');show('profile');loadProfile();return}
+      if(beroppJustCreatedAccount){beroppJustCreatedAccount=false;setAuthStatus('✅ Account created successfully. We sent a verification email to <strong>'+esc(user.email||'your email')+'</strong>. Please complete your profile, then BerOpp will return you to the Ausbildung/Job you were applying for.');show('profile');loadProfile();return}
       setAuthStatus('✅ Logged in as '+(user.email||user.displayName||'BerOpp user'));
       const nextInternational=new URLSearchParams(location.search).get('requireAccount');
       if(nextInternational){location.href=nextInternational;return}
@@ -837,7 +837,7 @@ async function saveProfile(){
   if(status)status.innerHTML='✅ <strong>Profile saved successfully.</strong> Your information is stored securely on this device. You can edit it anytime below.';
   updateProfileCompleteness();
   setTimeout(()=>{if(status){status.scrollIntoView({behavior:'smooth',block:'center'});}},50);
-  if(confirm('Profile saved successfully on this device. Do you want to find an opportunity and apply now?'))goToMatches();
+  if(beroppPendingTarget==='homeOpportunity'&&beroppPendingOpportunityId){const id=beroppPendingOpportunityId,type=beroppPendingOpportunityType;beroppPendingTarget='';beroppPendingOpportunityId=null;beroppPendingOpportunityType='';setTimeout(()=>{show('details');if(type==='job')viewJobOpp(id);else viewOpp(id);setTimeout(beroppEnsureDirectApplyBox,50)},150);return}if(confirm('Profile saved successfully on this device. Do you want to find an opportunity and apply now?'))goToMatches();
  }catch(e){console.error(e);if(status)status.textContent='❌ Could not save the profile on this device.'}
 }
 async function loadProfile(){
@@ -1396,4 +1396,15 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
 .nsLiveDirectoryCard .badge{margin-bottom:6px}
 .nsLiveMeta{font-size:12px;color:#475569;margin:5px 0}
 .nsLiveDirectoryLoading{background:#f8fbff!important}
-</style></script></body></html>
+</style></script><script id="beropp-continue-application-fix">
+(function(){
+  function showContinueApplication(){
+    if(!window.beroppPendingOpportunityId||!window.beroppPendingOpportunityType)return;
+    const box=document.getElementById('profileSaveStatus');
+    if(!box||document.getElementById('beroppContinueApplication'))return;
+    box.insertAdjacentHTML('afterend','<div id="beroppContinueApplication" class="beroppApplyBanner"><span>🚀 Your application is waiting</span><small>Complete and save your profile. BerOpp will automatically return you to this Ausbildung/Job and show the Apply Now button.</small></div>');
+  }
+  const oldShow=window.show;
+  window.show=function(id){const r=oldShow?oldShow.apply(this,arguments):undefined;if(id==='profile')setTimeout(showContinueApplication,50);return r};
+})();
+</script></body></html>
