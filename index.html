@@ -2318,4 +2318,35 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   };
 })();
 </script>
+
+<script id="beropp-real-direct-application-v4">
+(function(){
+  const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service';
+  const KEY='jobboerse-jobsuche';
+  function enc(s){try{return btoa(unescape(encodeURIComponent(String(s||''))))}catch(e){return btoa(String(s||''))}}
+  function safeUrl(u){try{const x=new URL(String(u||''));return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return''}}
+  window.beroppOpenDirectCompany=async function(refnr,button){
+    const original=button?button.innerHTML:'';
+    try{
+      if(button){button.disabled=true;button.innerHTML='⏳ Bewerbung-Link wird gesucht…'}
+      const r=await fetch(BA+'/pc/v4/jobdetails/'+enc(refnr),{headers:{'X-API-Key':KEY}});
+      if(!r.ok)throw new Error('Details '+r.status);
+      const d=await r.json();
+      // IMPORTANT: never use the employer homepage as the application link.
+      const url=safeUrl(d.externeUrl||d.externeURL||d.bewerbungUrl||d.bewerbungURL);
+      if(url){
+        window.location.href=url;
+        return false;
+      }
+      if(button){button.disabled=false;button.innerHTML='⚡ Apply direct at company'}
+      alert('Iyi Ausbildung nta direct online application link yatanzwe n’umukoresha. BerOpp ntizohereza kuri company homepage ngo uyishakire. Iyo direct Bewerbungslink ibonetse, niyo izafunguka hano.');
+    }catch(e){
+      console.warn('Direct application lookup failed',e);
+      if(button){button.disabled=false;button.innerHTML='⚡ Apply direct at company'}
+      alert('Direct application link ntiyabonetse ubu. Gerageza nanone nyuma.');
+    }
+    return false;
+  };
+})();
+</script>
 </body></html>
