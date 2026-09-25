@@ -1621,6 +1621,42 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
   const oldShow=window.show;
   window.show=function(id){const r=oldShow?oldShow.apply(this,arguments):undefined;if(id==='profile')setTimeout(showContinueApplication,50);return r};
 })();
+</script><script id="beropp-stellen-finden-ausbildung-route">
+(function(){
+  window.findByBeruf=function(name){
+    show('ausbildung');
+    const input=$('berufSearch');
+    if(input)input.value=String(name||'');
+    if(typeof renderBerufe==='function')renderBerufe();
+    const box=$('berufeList');
+    const needle=String(name||'').toLowerCase().trim();
+    const all=[];
+    try{if(Array.isArray(window.opps))all.push(...window.opps)}catch(e){}
+    try{if(Array.isArray(window.beroppLivePflege))all.push(...window.beroppLivePflege)}catch(e){}
+    const seen=new Set(), matches=all.filter(o=>{
+      const key=String(o.id);
+      if(seen.has(key))return false;
+      seen.add(key);
+      const hay=(String(o.title||'')+' '+String(o.description||'')+' '+String(o.type||'')+' '+String(o.field||'')+' '+(o.skills||[]).join(' ')).toLowerCase();
+      return !needle||hay.includes(needle)||(
+        /pflege|gesundheit/.test(needle)&&/pflege|gesundheit/.test(hay)
+      );
+    });
+    if(box&&matches.length){
+      box.innerHTML='<div class="card"><h3>🎓 Stellen für '+esc(name)+'</h3><p><strong>'+matches.length+'</strong> passende Ausbildung-Angebote.</p>'+
+        matches.map(o=>'<div class="card"><h3>'+esc(o.title||'Ausbildung')+'</h3><p>🏢 '+esc(o.company||'')+' · 📍 '+esc(o.place||'')+' · '+esc(o.start||'')+'</p><p>'+esc(o.description||'')+'</p>'+
+          '<button type="button" class="secondary" onclick="viewOpp('+o.id+');return false">📖 Details</button>'+
+          ((o.applicationUrl||o.applyUrl||o.url)?'<button type="button" onclick="beroppApplyByOpportunityId('+o.id+');return false">⚡ Apply Now — Company Direct</button>':'')+
+        '</div>').join('')+'</div>';
+      return true;
+    }
+    if(box){
+      box.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p>Keine gespeicherte Stelle gefunden. Du kannst die aktuellen Ausbildung-Stellen direkt suchen.</p>'+
+        '<button type="button" class="secondary" onclick="show(\'ausbildung\');renderBerufe();return false">← Ausbildung öffnen</button></div>';
+    }
+    return true;
+  };
+})();
 </script><script id="beropp-final-ausbildung-direct-override">
 (function(){
   function resolve(id){
