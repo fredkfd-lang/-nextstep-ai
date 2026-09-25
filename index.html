@@ -2714,4 +2714,99 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   },true);
 })();
 </script>
+
+<script id="beropp-final-site-hardening-v2">
+(function(){
+  const previousRequireAuth=window.requireAuth;
+  window.requireAuth=function(target){
+    const t=String(target||'');
+    if(t==='matches'){
+      show('matches');
+      if(typeof window.findMatches==='function')window.findMatches();
+      return true;
+    }
+    if(t==='ausbildung'){
+      show('ausbildung');
+      if(typeof window.renderBerufe==='function')window.renderBerufe();
+      return true;
+    }
+    if(t==='remoteInternational'){
+      show('remoteInternational');
+      if(typeof window.renderRemoteJobs==='function')window.renderRemoteJobs();
+      return true;
+    }
+    return previousRequireAuth?previousRequireAuth.apply(this,arguments):false;
+  };
+
+  function norm(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()}
+  function remoteRegion(v){
+    const s=norm(v);
+    if(!s)return'worldwide';
+    if(/worldwide|remote|anywhere|global|international/.test(s))return'worldwide';
+    if(/europe|eu|uk|germany|deutschland|france|spain|italy|netherlands|poland|sweden|norway|denmark|ireland/.test(s))return'europe';
+    if(/america|usa|us |united states|canada|mexico|brazil|argentina/.test(s))return'americas';
+    if(/africa|kenya|nigeria|south africa|rwanda|ghana|uganda|mozambique|egypt/.test(s))return'africa';
+    if(/asia|pacific|australia|new zealand|japan|india|singapore|philippines|china/.test(s))return'asia';
+    return'worldwide';
+  }
+  function remoteJobType(o){
+    const s=norm([o.job_type,o.type,o.title,o.description].filter(Boolean).join(' '));
+    if(/part[ -]?time|part time/.test(s))return'part-time';
+    if(/contract|freelance/.test(s))return'contract';
+    if(/full[ -]?time|full time/.test(s))return'full-time';
+    return'';
+  }
+
+  const oldRemote=window.renderRemoteJobs;
+  window.renderRemoteJobs=async function(){
+    const box=$('remoteJobsList');if(!box)return false;
+    box.innerHTML='<div class="card"><h3>🌍 Live Remote Jobs</h3><p>⏳ Loading current remote opportunities…</p></div>';
+    try{
+      const response=await fetch('https://remoteok.com/api',{headers:{Accept:'application/json'}});
+      if(!response.ok)throw new Error('Remote OK '+response.status);
+      const data=await response.json();
+      let rows=(Array.isArray(data)?data:[]).filter(o=>o&&o.position).map((o,i)=>({
+        id:'remote-'+(o.id||i),title:o.position,company:o.company||'Remote employer',
+        place:o.location||'Remote',region:remoteRegion(o.location),type:remoteJobType(o),
+        tags:Array.isArray(o.tags)?o.tags:[],desc:o.description||'',
+        url:(typeof safeUrl==='function'?safeUrl(o.apply_url||o.url||''):(o.apply_url||o.url||'')),
+        date:o.date||'',source:'Remote OK'
+      }));
+      const q=norm($('remoteSearch')?.value||''),region=$('remoteRegion')?.value||'',type=$('remoteType')?.value||'';
+      rows=rows.filter(o=>(!q||norm([o.title,o.company,o.desc,o.tags.join(' ')].join(' ')).includes(q))&&(!region||o.region===region)&&(!type||o.type===type));
+      window.beroppLiveRemoteJobs=rows;
+      if($('remoteCount'))$('remoteCount').textContent=rows.length+' current remote opportunities';
+      const cards=rows.map(o=>{
+        const u=o.url?String(o.url):'';
+        return '<div class="card"><h3>🌐 '+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+' · 🌍 '+esc(o.place)+'</p><p>'+esc(String(o.desc||'').replace(/<[^>]+>/g,'').slice(0,320))+'</p>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer" class="secondary" style="display:inline-block;text-decoration:none">⚡ View / Apply original →</a>':'<span class="status">Original link unavailable</span>')+'</div>';
+      });
+      const first=cards.slice(0,20).join(''),rest=cards.slice(20).join('');
+      box.innerHTML=cards.length?'<div class="card"><h3>🌍 Current Remote Jobs</h3><p><strong>'+rows.length+'</strong> live results.</p>'+first+(rest?'<button id="finalRemoteMoreV2" type="button" class="secondary" style="display:block;margin:14px auto;padding:12px 20px;font-weight:800">＋ More — weitere Remote Jobs</button><div id="finalRemoteRestV2" style="display:none">'+rest+'</div>':'')+'</div>':'<div class="card"><h3>🔎 No current remote opportunities found</h3><p>Try another keyword, region or job type.</p></div>';
+      const b=$('finalRemoteMoreV2'),r=$('finalRemoteRestV2');if(b)b.onclick=function(){r.style.display='block';b.remove()};
+      return rows.length>0;
+    }catch(e){
+      console.warn('Remote live search failed',e);
+      box.innerHTML='<div class="card"><h3>⚠️ Remote search</h3><p>Live remote jobs could not be loaded right now.</p><button type="button" class="secondary" onclick="return renderRemoteJobs()">↻ Try again</button></div>';
+      return false;
+    }
+  };
+
+  const oldFetch=window.fetchLiveCareerSources;
+  window.fetchLiveCareerSources=async function(q,city,type){
+    const result=oldFetch?await oldFetch(q,city,type):[];
+    if(!Array.isArray(result))return[];
+    return result;
+  };
+
+  // Make Home vacancy previews refresh once after all final overrides are installed.
+  window.addEventListener('load',function(){setTimeout(function(){if(typeof renderHomePreviews==='function')renderHomePreviews()},700)});
+
+  // Keyboard support for card-like controls that are implemented as buttons/links.
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    const el=e.target;
+    if(el&&el.getAttribute&&el.getAttribute('role')==='button'){e.preventDefault();el.click()}
+  });
+})();
+</script>
 </body></html>
