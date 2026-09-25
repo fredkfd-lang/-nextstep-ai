@@ -2809,4 +2809,59 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   });
 })();
 </script>
+
+<script id="beropp-home-6x6-final">
+(function(){
+  const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs', KEY='jobboerse-jobsuche';
+  function base(){const v=String(localStorage.getItem('beropp_ai_api_url')||'').trim().replace(/\/$/,'');return /^https:\/\//i.test(v)?v:''}
+  function safe(u){try{const x=new URL(String(u||''));return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return''}}
+  async function search(type){
+    const p=new URLSearchParams({angebotsart:type==='ausbildung'?'4':'1',page:'1',size:'100',pav:'false'});
+    const w=base();
+    try{
+      const r=await fetch((w?w+'/ausbildung':BA)+'?'+p.toString(),{headers:{Accept:'application/json',...(w?{}:{'X-API-Key':KEY})}});
+      if(!r.ok)throw new Error(r.status);
+      const d=await r.json();
+      return (Array.isArray(d.stellenangebote)?d.stellenangebote:[]).map((o,i)=>({
+        id:'home-'+type+'-'+(o.refnr||i),refnr:o.refnr||'',
+        title:o.beruf||o.stellenangebotsTitel||o.titel||(type==='ausbildung'?'Ausbildung':'Job'),
+        company:o.arbeitgeber||'Arbeitgeber nicht angegeben',
+        place:typeof o.arbeitsort==='object'?(o.arbeitsort.ort||o.arbeitsort.region||'Deutschland'):(o.arbeitsort||'Deutschland'),
+        date:o.aktuelleVeroeffentlichungsdatum||o.eintrittsdatum||'',
+        url:safe(o.externeUrl||o.externeURL||o.bewerbungUrl||o.bewerbungURL||''),
+        type,source:'Bundesagentur für Arbeit'
+      }));
+    }catch(e){console.warn('Home live search failed',type,e);return[]}
+  }
+  function card(o,i){
+    const btn=o.url
+      ? '<button type="button" class="secondary" onclick="return window.__beroppHomeApply6('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>'
+      : '<span class="status">Original application link unavailable</span>';
+    return '<div class="nsPreviewItem"><strong>'+ (o.type==='ausbildung'?'🎓 ':'💼 ') +esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+(o.date?' · 📅 '+esc(o.date):'')+'</div>'+btn+'</div>';
+  }
+  window.__beroppHomeApply6=function(o){
+    if(!o||!o.url)return false;
+    if(!window.beroppUser){
+      localStorage.setItem('beropp_pending_apply',JSON.stringify({target:o.type==='ausbildung'?'ausbildungDirect':'jobDirect',id:o.id,type:o.type,url:o.url,title:o.title,company:o.company}));
+      if(typeof show==='function')show('auth');
+      if(typeof setAuthStatus==='function')setAuthStatus('🔐 Sign in first. After login, BerOpp opens the original application page.');
+      return false;
+    }
+    window.open(o.url,'_blank','noopener,noreferrer');return false;
+  };
+  window.renderHomePreviews=async function(){
+    const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');if(!a||!j)return false;
+    a.innerHTML='<div class="nsPreviewItem"><strong>⏳ Aktuelle Ausbildung werden geladen…</strong><div class="nsPreviewMeta">Live Bundesagentur für Arbeit</div></div>';
+    j.innerHTML='<div class="nsPreviewItem"><strong>⏳ Aktuelle Jobs werden geladen…</strong><div class="nsPreviewMeta">Live Bundesagentur für Arbeit</div></div>';
+    const [aus,jobs]=await Promise.all([search('ausbildung'),search('job')]);
+    const unique=list=>{const s=new Set();return list.filter(o=>{const k=o.title+'|'+o.company+'|'+o.place;if(s.has(k))return false;s.add(k);return true}).slice(0,6)};
+    const A=unique(aus),J=unique(jobs);
+    window.beroppHomeLiveAusbildung=A;window.beroppHomeLiveJobs=J;
+    a.innerHTML=A.length?A.map(card).join(''):'<div class="nsPreviewItem"><strong>⚠️ No current Ausbildung could be loaded.</strong><div class="nsPreviewMeta">Open Find Ausbildung to search again.</div></div>';
+    j.innerHTML=J.length?J.map(card).join(''):'<div class="nsPreviewItem"><strong>⚠️ No current Jobs could be loaded.</strong><div class="nsPreviewMeta">Open Find Jobs to search again.</div></div>';
+    return A.length===6&&J.length===6;
+  };
+  window.addEventListener('load',function(){setTimeout(window.renderHomePreviews,900)});
+})();
+</script>
 </body></html>
