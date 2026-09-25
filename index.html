@@ -2358,4 +2358,88 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   };
 })();
 </script>
+
+<script id="beropp-live-az-professions-v5">
+(function(){
+  const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs';
+  const KEY='jobboerse-jobsuche';
+  let liveIndex=null, loading=false;
+
+  function e(v){return typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+  function norm(v){
+    return String(v||'').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/[()\/,-]/g,' ')
+      .replace(/\b(in|m|w|d|f|gn|gn\*|innen)\b/g,' ')
+      .replace(/\s+/g,' ').trim();
+  }
+  function matchProfession(name, offers){
+    const n=norm(name);
+    if(!n)return false;
+    const nt=n.split(' ').filter(x=>x.length>=4);
+    return offers.some(o=>{
+      const fields=[o.beruf,o.stellenangebotsTitel].map(norm).filter(Boolean);
+      return fields.some(x=>x===n || x.includes(n) || n.includes(x) || (nt.length>=1 && nt.every(t=>x.includes(t))));
+    });
+  }
+  async function loadLiveIndex(){
+    if(liveIndex)return liveIndex;
+    if(loading){
+      while(loading) await new Promise(r=>setTimeout(r,80));
+      return liveIndex||[];
+    }
+    loading=true;
+    try{
+      const p=new URLSearchParams({angebotsart:'4',page:'1',size:'1000',pav:'false'});
+      const r=await fetch(BA+'?'+p.toString(),{headers:{'X-API-Key':KEY}});
+      if(!r.ok)throw new Error('BA '+r.status);
+      const d=await r.json();
+      liveIndex=d.stellenangebote||[];
+      sessionStorage.setItem('beroppAzLiveAt',String(Date.now()));
+      return liveIndex;
+    }finally{loading=false}
+  }
+
+  window.renderBerufe=async function(){
+    const box=$('berufeList'); if(!box)return false;
+    const q=($('berufSearch')?.value||'').toLowerCase().trim(),cat=$('berufCategory')?.value||'';
+    box.innerHTML='<div class="card"><h3>🎓 Ausbildungsberufe A–Z</h3><p>⏳ Aktuelle Ausbildungsangebote werden geprüft…</p></div>';
+    try{
+      const offers=await loadLiveIndex();
+      const source=(Array.isArray(window.berufe)?window.berufe:[])
+        .filter(b=>(!q||String(b[0]).toLowerCase().includes(q))&&(!cat||b[1]===cat));
+      const live=source.filter(b=>matchProfession(b[0],offers));
+      $('berufeCount').textContent=live.length+' aktuelle Berufe in BerOpp';
+
+      if(!live.length){
+        box.innerHTML='<div class="card"><h3>🎓 Ausbildungsberufe A–Z</h3><p>Keine aktuell verfügbaren Ausbildungsangebote für diese Auswahl gefunden.</p><p style="font-size:13px;color:#64748b">BerOpp zeigt hier nur Berufe, für die aktuell Angebote in der Bundesagentur-Datenbank gefunden wurden.</p></div>';
+        return false;
+      }
+      function card(b){
+        const name=String(b[0]||''),cat=String(b[1]||'');
+        const j=JSON.stringify(name).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
+        const c=JSON.stringify(cat).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
+        return '<div class="card beroppAzCard" style="margin:8px 0;padding:14px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><strong>'+e(name)+'</strong><span class="badge" style="background:#dcfce7;color:#166534">LIVE</span></div><span class="badge">'+e(cat)+'</span><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px"><button class="secondary" type="button" onclick="showBerufDetail('+j+','+c+')">📖 Details</button><button class="secondary" type="button" onclick="beroppSearchAusbildungDirect('+j+');return false">⚡ Find Ausbildung + Apply Direct</button></div></div>';
+      }
+      const first=live.slice(0,3).map(card).join('');
+      const rest=live.slice(3).map(card).join('');
+      box.innerHTML='<div class="card" style="margin-top:12px"><h3>🎓 Ausbildungsberufe A–Z</h3><p><strong>'+Math.min(3,live.length)+' / '+live.length+'</strong> aktuelle Berufe werden angezeigt.</p><div>'+first+'</div>'+
+        (live.length>3?'<button id="beroppAzMore" type="button" class="secondary" style="display:block;margin:14px auto;padding:12px 20px;font-weight:800">＋ More — weitere aktuelle Berufe</button>':'')+
+        '<div id="beroppAzRest" style="display:none">'+rest+'</div></div>';
+      const mb=$('beroppAzMore'),rb=$('beroppAzRest');
+      if(mb)mb.onclick=function(){rb.style.display='block';mb.remove()};
+      return true;
+    }catch(err){
+      console.warn('Live A-Z index unavailable',err);
+      box.innerHTML='<div class="card"><h3>⚠️ Live-Ausbildungssuche</h3><p>Die aktuellen Ausbildungsangebote konnten gerade nicht geladen werden.</p><button class="secondary" type="button" onclick="renderBerufe()">↻ Erneut versuchen</button></div>';
+      return false;
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded',function(){
+    const sec=$('ausbildung');
+    if(sec && !sec.classList.contains('hidden')) window.renderBerufe();
+  });
+})();
+</script>
 </body></html>
