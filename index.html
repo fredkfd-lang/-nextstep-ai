@@ -570,11 +570,7 @@ function findByBeruf(name){
 }
 
 
-const jobOpps=[
-{id:101,title:'Versand-/Lagermitarbeiter (m/w/d)',company:'Amazon Logistik Hamburg',place:'Hamburg',type:'JOB',start:'Ab sofort / aktuelle Ausschreibung',salary:'16,43 € / Std.',skills:['lager'],match:91,applicationUrl:'https://www.amazon.jobs/de/locations/hamburg-germany',description:'Versand- und Lagertätigkeit im Amazon Logistikzentrum Hamburg.',requirements:['Quereinsteiger willkommen','Keine Logistik-Vorerfahrung erforderlich laut Ausschreibung','Aktuelle Anforderungen in der Original-Ausschreibung prüfen'],tasks:['Pakete für den Versand vorbereiten','Waren sortieren und bewegen','Arbeiten im Logistikzentrum'],conditions:['Teilzeit oder Vollzeit','Schichtarbeit','Aktuelle Details in der Ausschreibung prüfen']},
-{id:102,title:'Lagerhelfer (m/w/d) – ab 15 €/h',company:'Queens Service Personal GmbH',place:'Hamburg',type:'JOB',start:'Ab sofort',salary:'15 € / Std.',skills:['lager'],match:89,description:'Lagerhelfer-Stelle mit Wareneingang, Kommissionierung und Versandvorbereitung.',requirements:['Quereinsteiger willkommen','Grundkenntnisse Deutsch','Schichtbereitschaft'],tasks:['Wareneingang','Kommissionieren','Versandvorbereitung'],conditions:['Teilzeit / Vollzeit','Schichtarbeit','Originale Arbeitgeber-Ausschreibung vor Bewerbung prüfen']},
-{id:103,title:'Lagerhelfer/in (gn) – Quereinsteiger',company:'A & H Zeitarbeit GmbH',place:'Nottensdorf',type:'JOB',start:'Ab sofort',salary:'15,33 € / Std.',skills:['lager'],match:92,applicationUrl:'https://jobs.ah-zeitarbeit.de/Jobs/9726/Lagerhelfer_in__gn_/',description:'Lagerhelfer-Stelle in der Nähe von Neu Wulmstorf.',requirements:['Quereinsteiger willkommen','Zuverlässigkeit','Bereitschaft zur Lagerarbeit'],tasks:['Allgemeine Lagertätigkeiten','Warenbewegung','Unterstützung im Lager'],conditions:['Vollzeit','Unbefristet laut Ausschreibung','Nottensdorf']},
-];
+const jobOpps=[];
 
 const opps=[
 {id:4,title:'Ausbildung Pflegefachfrau/Pflegefachmann (m/w/d) — Hannover 2027',company:'Vinzenzkrankenhaus Hannover gGmbH',place:'Hannover',type:'Ausbildung 2027',start:'01.04.2027',salary:'Nicht angegeben',skills:['pflege','gesundheit'],match:90,description:'Generalistische Ausbildung zur Pflegefachfrau bzw. zum Pflegefachmann in Hannover.',requirements:['Schulabschluss','Deutschkenntnisse nach Vorgaben des Unternehmens','Interesse an Pflege und Menschen'],tasks:['Menschen pflegen und begleiten','Pflegeprozesse unterstützen','Praktische Einsätze in verschiedenen Pflegebereichen'],conditions:['Vollzeit','Standort: Hannover','Quelle: aktuelle Ausschreibung'],applyUrl:'https://www.vinzenzkrankenhaus.de/karriere/ausbildung/'} ,
@@ -1547,17 +1543,7 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
 })();
 </script><script id="beropp-live-pflege-data">
 (function(){
-  const livePflege=[
-    {id:10,title:'Ausbildung zum/zur Pflegefachmann/Pflegefachfrau (m/w/d)',company:'Dr. med. Ernst-August Wilkening Pflegeheime GmbH',place:'Hannover',start:'01.10.2027',description:'Pflegefachmann/Pflegefachfrau Ausbildung in Hannover.',applyUrl:'https://www.wilkening-hannover.de/'},
-    {id:11,title:'Ausbildung zum 01.08.2027',company:'Deutsche Seniorenstift Gesellschaft mbH & Co.KG PWS Davenstedt',place:'Hannover',start:'01.08.2027',description:'Ausbildung Pflegefachmann/-frau in Hannover.',applyUrl:'https://www.seniorenstift.de/'},
-    {id:12,title:'Ausbildung zur Pflegefachkraft (m/w/d)',company:'Alloheim Senioren-Residenzen SE',place:'Hannover',start:'',description:'Ausbildung zur Pflegefachkraft in Hannover.',applyUrl:'https://www.alloheim.de/karriere/ausbildung/'},
-    {id:13,title:'Ausbildung 2026 - Pflegefachfachkraft (m/w/d)',company:'Diakonisches Werk Hannover gGmbH',place:'Hannover',start:'01.10.2026',description:'Pflegefachkraft Ausbildung in Hannover.',applyUrl:'https://www.diakonie-hannover.de/'},
-    {id:14,title:'Auszubildende zur Pflegefachkraft (m/w/d)',company:'Medizin Mobil Haus Bodestraße GmbH & Co. KG',place:'Hannover',start:'01.10.2026',description:'Ausbildung zur Pflegefachkraft in Hannover.',applyUrl:'https://www.medizin-mobil.de/'},
-    {id:15,title:'Auszubildende/r zur/zum Pflegefachfrau/Pflegefachmann (m/w/d)',company:'Johanniter-Unfall-Hilfe e.V.',place:'Hannover',start:'01.10.2026',description:'Pflegefachfrau/Pflegefachmann Ausbildung in Hannover.',applyUrl:'https://www.johanniter.de/juh/lv-ndsbr/karriere/ausbildung/'},
-    {id:16,title:'Ausbildung als Pflegefachkraft',company:'Seniorenpflegeheim Helenenhof',place:'Burgdorf',start:'01.08.2027',description:'Pflegefachkraft Ausbildung nahe Hannover.',applyUrl:'https://www.helenenhof.de/'},
-    {id:17,title:'Ausbildung zum/zur Pflegefachmann/-frau (m/w/d)',company:'Korian Castaneapark GmbH',place:'Hemmingen',start:'',description:'Pflegefachmann/-frau Ausbildung nahe Hannover.',applyUrl:'https://www.korian.de/karriere/ausbildung/'},
-    {id:18,title:'Ausbildung zum Pflegefachmann (m/w/d)',company:'Seniorenpflegeheim Lindenriek Wöhler GmbH',place:'Burgwedel',start:'',description:'Pflegefachmann Ausbildung nahe Hannover.',applyUrl:'https://www.lindenriek.de/'}
-  ];
+  const livePflege=[];
   window.beroppLivePflege=livePflege;
   const base=Array.isArray(window.opps)?window.opps:[];
   const seen=new Set(base.map(o=>String(o.company)+'|'+String(o.title)));
