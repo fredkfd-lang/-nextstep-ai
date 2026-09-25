@@ -1,0 +1,80 @@
+name: Update BerOpp Germany jobs and Ausbildung
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch current BA Jobsuche data
+        shell: python
+        run: |
+          import base64, json, os, time
+          from urllib.parse import urlencode
+          from urllib.request import Request, urlopen
+
+          API="https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs"
+          headers={"X-API-Key":"jobboerse-jobsuche","User-Agent":"BerOpp/1.0"}
+
+          def fetch(params):
+              req=Request(API+"?"+urlencode(params),headers=headers)
+              with urlopen(req,timeout=60) as r:
+                  return json.load(r)
+
+          def get(kind, size=100):
+              params={"angebotsart":str(kind),"page":"1","size":str(size),"pav":"false"}
+              return fetch(params)
+
+          def normalize(o, typ):
+              ref=o.get("referenznummer") or o.get("refnr") or o.get("hashId") or ""
+              title=o.get("stellenangebotsTitel") or o.get("beruf") or o.get("titel") or "Stellenangebot"
+              place=o.get("arbeitsort") or o.get("ort") or o.get("arbeitsortName") or ""
+              employer=o.get("arbeitgeber") or o.get("arbeitgeberName") or ""
+              start=o.get("beginn") or o.get("eintrittsdatum") or ""
+              url=o.get("stellenangebotsUrl") or o.get("url") or ""
+              if ref and not url:
+                  code=base64.b64encode(str(ref).encode()).decode()
+                  url="https://www.arbeitsagentur.de/jobsuche/jobdetail/"+code
+              return {
+                "id": "ba-"+str(ref or abs(hash(json.dumps(o,sort_keys=True)))),
+                "source":"Bundesagentur für Arbeit",
+                "type":typ,
+                "title":title,
+                "company":employer,
+                "place":place,
+                "start":start,
+                "applyUrl":url,
+                "reference":ref,
+                "raw":o
+              }
+
+          aus=[]
+          jobs=[]
+          for page in range(1,11):
+              data=fetch({"angebotsart":"4","page":str(page),"size":"100","pav":"false"})
+              rows=data.get("stellenangebote",[])
+              aus += [normalize(x,"Ausbildung") for x in rows]
+              if len(rows)<100: break
+          for page in range(1,11):
+              data=fetch({"angebotsart":"1","page":str(page),"size":"100","pav":"false"})
+              rows=data.get("stellenangebote",[])
+              jobs += [normalize(x,"Job") for x in rows]
+              if len(rows)<100: break
+
+          os.makedirs("data",exist_ok=True)
+          meta={"updatedAt":time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),"source":"Bundesagentur für Arbeit","ausbildungCount":len(aus),"jobCount":len(jobs)}
+          json.dump({"meta":meta,"items":aus},open("data/ausbildung.json","w",encoding="utf-8"),ensure_ascii=False)
+          json.dump({"meta":meta,"items":jobs},open("data/jobs.json","w",encoding="utf-8"),ensure_ascii=False)
+      - name: Commit refreshed data
+        run: |
+          git config user.name "BerOpp Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/ausbildung.json data/jobs.json
+          git diff --cached --quiet || (git commit -m "Auto-update Germany jobs and Ausbildung" && git push)
