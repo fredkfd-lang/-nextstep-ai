@@ -2213,4 +2213,36 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     }catch(e){console.warn('BA live search unavailable',e);return[]}
   };
 })();
-</script></body></html>
+</script>
+<script id="beropp-more-force-fix-v2">
+(function(){
+  function addMoreToBox(box){
+    if(!box)return;
+    const wrappers=Array.from(box.children).filter(x=>x.classList&&x.classList.contains('card'));
+    wrappers.forEach(w=>{
+      const cards=Array.from(w.children).filter(x=>x.classList&&x.classList.contains('card'));
+      if(cards.length<=3)return;
+      cards.forEach((card,i)=>{if(i>=3)card.classList.add('beroppExtraOffer');});
+      if(w.querySelector('.beroppMoreForce'))return;
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='secondary beroppMoreForce';
+      btn.textContent='＋ More — weitere Angebote';
+      btn.style.cssText='display:block;margin:14px auto 4px;padding:12px 20px;font-weight:800';
+      btn.onclick=function(){
+        cards.forEach(card=>card.classList.remove('beroppExtraOffer'));
+        btn.remove();
+      };
+      w.appendChild(btn);
+    });
+  }
+  const style=document.createElement('style');
+  style.textContent='.beroppExtraOffer{display:none!important}.beroppMoreForce{cursor:pointer}';
+  document.head.appendChild(style);
+  function scan(){addMoreToBox(document.getElementById('berufeList'));addMoreToBox(document.getElementById('results'));}
+  const obs=new MutationObserver(function(){clearTimeout(window.__beroppMoreTimer);window.__beroppMoreTimer=setTimeout(scan,60)});
+  obs.observe(document.body,{childList:true,subtree:true});
+  document.addEventListener('DOMContentLoaded',scan);
+  setTimeout(scan,300);setTimeout(scan,1200);setTimeout(scan,3000);
+})();
+</script>
+</body></html>
