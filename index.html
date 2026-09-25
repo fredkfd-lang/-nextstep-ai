@@ -2150,4 +2150,67 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     return r||rows.length>0;
   };
 })();
+</script>
+<script id="beropp-3plus-more-v1">
+(function(){
+  function escA(v){return typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function moreButton(id,label){
+    return '<button type="button" id="'+id+'" class="secondary beroppMoreBtn" style="display:block;margin:14px auto 4px;padding:12px 20px;font-weight:800">＋ More — weitere Angebote</button>';
+  }
+  function wrap3(containerId, htmls, total, heading){
+    const first=htmls.slice(0,3).join('');
+    const rest=htmls.slice(3).join('');
+    return '<div class="card" style="margin-top:12px"><h3>'+heading+'</h3><p><strong>3 / '+total+'</strong> Angebote werden angezeigt.</p><div id="'+containerId+'First">'+(first||'<p>Keine Treffer.</p>')+'</div>'+
+      (total>3?moreButton(containerId+'More','More'):'')+
+      '<div id="'+containerId+'Rest" style="display:none">'+rest+'</div></div>';
+  }
+  document.addEventListener('click',function(e){
+    const b=e.target.closest('.beroppMoreBtn'); if(!b)return;
+    const base=b.id.replace(/More$/,'');
+    const rest=document.getElementById(base+'Rest');
+    if(!rest)return;
+    rest.style.display='block'; b.remove();
+    const p=rest.parentElement.querySelector('p'); if(p)p.innerHTML='<strong>'+rest.querySelectorAll('.card').length+'+ weitere</strong> Angebote wurden geladen.';
+  },true);
+
+  window.beroppRenderAus3=function(box,rows){
+    if(!box)return;
+    const htmls=rows.map(o=>{
+      const apply=o.applicationUrl||o.applyUrl;
+      const btn=apply
+        ? '<a href="'+escA(apply)+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;background:#2563eb;color:#fff;padding:10px 13px;border-radius:12px;font-weight:700;margin:4px">⚡ Apply Now</a>'
+        : '';
+      return '<div class="card" style="margin:9px 0"><h3>'+escA(o.title||'Ausbildung')+'</h3><p>🏢 '+escA(o.company||'')+' · 📍 '+escA(o.place||'')+' · 📅 '+escA(o.start||'')+'</p><p>'+escA(String(o.description||'').slice(0,300))+'</p>'+btn+'</div>';
+    });
+    box.insertAdjacentHTML('beforeend',wrap3('beroppAusLive',htmls,rows.length,'🇩🇪 Aktuelle Ausbildung in Deutschland'));
+  };
+
+  window.beroppRenderJobs3=function(box,rows){
+    if(!box)return;
+    const htmls=rows.map(o=>{
+      const direct=o.companyApplyUrl
+        ? '<a href="'+escA(o.companyApplyUrl)+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;background:#2563eb;color:#fff;padding:10px 13px;border-radius:12px;font-weight:700;margin:4px">⚡ Apply direct at company</a>'
+        : '<button type="button" onclick="return beroppOpenDirectCompany(\''+escA(o.refnr||'').replace(/'/g,'&#39;')+'\',this)" style="background:#2563eb">⚡ Apply direct at company</button>';
+      const site=o.companyWebsite?'<a class="secondary" href="'+escA(o.companyWebsite)+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;margin:4px">🏢 Company website</a>':'';
+      return '<div class="card" style="margin:9px 0"><h3>'+escA(o.title||'Stellenangebot')+'</h3><p>🏢 '+escA(o.company||'')+' · 📍 '+escA(o.place||'')+' · 📅 '+escA(o.start||'')+'</p><p>'+escA(String(o.description||'').slice(0,300))+'</p>'+direct+site+'<a class="secondary" href="https://www.arbeitsagentur.de/jobsuche/" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;padding:10px 13px;border-radius:12px;margin:4px">🔗 Details</a></div>';
+    });
+    box.insertAdjacentHTML('beforeend',wrap3('beroppJobsLive',htmls,rows.length,'🇩🇪 Aktuelle Jobs in Deutschland'));
+  };
+
+  const oldLive=window.beroppSearchGermanyLive;
+  window.beroppSearchGermanyLive=async function(q,where,type,box){
+    try{
+      const rows=await (async()=>{
+        const p=new URLSearchParams({angebotsart:type==='ausbildung'?'4':'1',page:'1',size:'100',pav:'false'});
+        if(q)p.set('was',q); if(where){p.set('wo',where);p.set('umkreis','200')}
+        const r=await fetch('https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs?'+p.toString(),{headers:{'X-API-Key':'jobboerse-jobsuche'}});
+        if(!r.ok)throw new Error('BA '+r.status);
+        const d=await r.json();
+        return (d.stellenangebote||[]).map((o,i)=>({id:'ba-live-'+(o.referenznummer||o.refnr||i),refnr:o.referenznummer||o.refnr||'',title:o.stellenangebotsTitel||o.beruf||o.titel||'Stellenangebot',company:o.arbeitgeber||o.arbeitgeberName||'',place:typeof o.arbeitsort==='object'?(o.arbeitsort.ort||''):(o.arbeitsort||o.ort||''),start:o.eintrittsdatum||o.beginn||'',description:o.stellenangebotsBeschreibung||o.beschreibung||'',type:type==='ausbildung'?'Ausbildung':'Job',companyApplyUrl:o.externeUrl||'',companyWebsite:o.arbeitgeberdarstellungUrl||''}));
+      })();
+      if(type==='ausbildung')window.beroppRenderAus3(box,rows);else window.beroppRenderJobs3(box,rows);
+      return rows;
+    }catch(e){console.warn('BA live search unavailable',e);return[]}
+  };
+})();
 </script></body></html>
