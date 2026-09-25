@@ -581,7 +581,7 @@ function setLanguage(lang){
   document.documentElement.lang=safe==='rw'?'rw':safe;
 }
 const BEROPP_FIREBASE_CONFIG={apiKey:'AIzaSyBKJ7KGeMg7ATm6rSJmhfBPgp9c3cOTMaI',authDomain:'beropp.firebaseapp.com',projectId:'beropp',storageBucket:'beropp.firebasestorage.app',messagingSenderId:'175693628880',appId:'1:175693628880:web:a6e377b0deb5a73b66a5d5'};
-let beroppAuth=null,beroppUser=null,beroppPendingTarget='',beroppPendingInternational='',beroppPendingOpportunityId=null,beroppPendingOpportunityType='',beroppJustCreatedAccount=false;
+let beroppAuth=null,beroppDb=null,beroppUser=null,beroppPendingTarget='',beroppPendingInternational='',beroppPendingOpportunityId=null,beroppPendingOpportunityType='',beroppJustCreatedAccount=false;
 function setAuthStatus(msg){if($('authStatus'))$('authStatus').innerHTML=msg}
 function renderBerOppAccountStatus(){const box=$('profileAccountStatus');if(!box)return;if(!beroppUser){box.innerHTML='<strong>🔐 Account</strong><p style="margin:6px 0 0">Create or log in to a BerOpp account to keep your account access secure.</p>';return}const email=esc(beroppUser.email||beroppUser.displayName||'BerOpp user');const verified=!!beroppUser.emailVerified;box.innerHTML='<strong>👤 '+email+'</strong><p style="margin:6px 0">Account: <span class="status">'+(verified?'✅ Email verified':'⚠️ Email not verified')+'</span></p>'+(verified?'':'<button class="secondary" onclick="resendBerOppVerification()">📧 Resend verification email</button>')+'<button class="secondary" onclick="signOutBerOpp()">Log out</button>'}
 async function resendBerOppVerification(){if(!beroppUser){setAuthStatus('Please log in first.');return}try{await beroppUser.sendEmailVerification();setAuthStatus('✅ Verification email sent. Please check your inbox and spam folder.')}catch(e){setAuthStatus('❌ Could not send the verification email. '+(e.message||''))}}
@@ -591,6 +591,7 @@ function initBerOppAuth(){
   try{
     if(!firebase.apps.length)firebase.initializeApp(BEROPP_FIREBASE_CONFIG);
     beroppAuth=firebase.auth();
+    try{beroppDb=firebase.firestore()}catch(dbErr){console.warn('Firestore is not available yet',dbErr);beroppDb=null}
     beroppAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
     beroppAuth.getRedirectResult().catch(e=>{if(e&&e.code)setAuthStatus('❌ Google login: '+e.code+' — '+(e.message||'Please try again.'))});
     beroppAuth.onAuthStateChanged(user=>{
@@ -814,6 +815,17 @@ async function saveProfile(){
  const p=profileData();p.name=[p.firstName,p.lastName].filter(Boolean).join(' ');p.savedAt=new Date().toISOString();p.files=window.profileFiles||{};
  try{
   const packet=await encryptText(JSON.stringify(p));localStorage.setItem('beropp_profile_encrypted',JSON.stringify(packet));nsProfile=p;window.nsProfile=p;
+  if(beroppUser&&beroppDb){
+    try{
+      await beroppDb.collection('users').doc(beroppUser.uid).collection('private').doc('profile').set({
+        profile:p,
+        savedAt:firebase.firestore.FieldValue.serverTimestamp(),
+        email:beroppUser.email||'',
+        displayName:beroppUser.displayName||''
+      },{merge:true});
+      if(status)status.innerHTML='✅ <strong>Profile saved successfully.</strong> Your information is saved on this device and securely synced to your BerOpp account.';
+    }catch(cloudErr){console.warn('Cloud profile sync failed',cloudErr);if(status)status.innerHTML='✅ <strong>Profile saved on this device.</strong> Cloud sync is temporarily unavailable.'}
+  }
   if(status)status.innerHTML='✅ <strong>Profile saved successfully.</strong> Your information is stored securely on this device. You can edit it anytime below.';
   updateProfileCompleteness();
   setTimeout(()=>{if(status){status.scrollIntoView({behavior:'smooth',block:'center'});}},50);
@@ -821,8 +833,20 @@ async function saveProfile(){
  }catch(e){console.error(e);if(status)status.textContent='❌ Could not save the profile on this device.'}
 }
 async function loadProfile(){
- try{const raw=localStorage.getItem('beropp_profile_encrypted');if(!raw)return;const p=JSON.parse(await decryptText(JSON.parse(raw)));nsProfile=p;window.nsProfile=p;profileFields().forEach(k=>{const el=$('profile'+k);if(el)el.value=p[k.charAt(0).toLowerCase()+k.slice(1)]||''});window.profileFiles=p.files||{};$('profileConsent').checked=true;renderProfileFileStatus();$('profileSaveStatus').textContent='✅ Saved profile loaded from this device.'}
- catch(e){console.warn('Profile could not be decrypted',e)}
+ let loaded=false;
+ try{
+  if(beroppUser&&beroppDb){
+    const snap=await beroppDb.collection('users').doc(beroppUser.uid).collection('private').doc('profile').get();
+    if(snap.exists&&snap.data()?.profile){
+      const p=snap.data().profile;nsProfile=p;window.nsProfile=p;
+      profileFields().forEach(k=>{const el=$('profile'+k);if(el)el.value=p[k.charAt(0).toLowerCase()+k.slice(1)]||''});
+      window.profileFiles=p.files||{};$('profileConsent').checked=true;renderProfileFileStatus();
+      localStorage.setItem('beropp_profile_encrypted',JSON.stringify(await encryptText(JSON.stringify(p))));
+      $('profileSaveStatus').textContent='☁️ Saved profile loaded from your BerOpp account.';loaded=true;
+    }
+  }
+ }catch(cloudErr){console.warn('Cloud profile load failed',cloudErr)}
+ if(!loaded)try{const raw=localStorage.getItem('beropp_profile_encrypted');if(raw){const p=JSON.parse(await decryptText(JSON.parse(raw)));nsProfile=p;window.nsProfile=p;profileFields().forEach(k=>{const el=$('profile'+k);if(el)el.value=p[k.charAt(0).toLowerCase()+k.slice(1)]||''});window.profileFiles=p.files||{};$('profileConsent').checked=true;renderProfileFileStatus();$('profileSaveStatus').textContent='✅ Saved profile loaded from this device.'}}catch(e){console.warn('Profile could not be decrypted',e)}
  updateProfileCompleteness();
 }
 async function handleProfileFile(e,type){
@@ -840,6 +864,7 @@ async function exportProfileData(){const raw=localStorage.getItem('beropp_profil
 async function deleteAllProfileData(){
  if(!confirm('Delete your BerOpp profile and uploaded documents from this device? This cannot be undone.'))return;
  localStorage.removeItem('beropp_profile_encrypted');localStorage.removeItem('ns_profile');localStorage.removeItem('ns_cv_draft');localStorage.removeItem('ns_cv_photo');nsProfile={};window.nsProfile={};window.profileFiles={};
+ try{if(beroppUser&&beroppDb)await beroppDb.collection('users').doc(beroppUser.uid).collection('private').doc('profile').delete()}catch(cloudErr){console.warn('Cloud profile delete failed',cloudErr)}
  try{const db=await openProfileDB();await new Promise((resolve,reject)=>{const tx=db.transaction(['files','meta'],'readwrite');tx.objectStore('files').clear();tx.objectStore('meta').clear();tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});$('profileSaveStatus').textContent='🗑️ Your profile and uploaded documents were deleted from this device.';profileFields().forEach(k=>{if($('profile'+k))$('profile'+k).value=''});renderProfileFileStatus();$('profileConsent').checked=false}catch(e){console.error(e)}
 }
 function getMatch(o){const p=window.nsProfile||{};const text=((p.goal||'')+' '+(p.skills||'')+' '+(p.certs||'')+' '+(p.internships||'')).toLowerCase();return Math.min(99,o.match+o.skills.filter(s=>text.includes(s)).length*4)}function goToMatches(){const home=$('home'),matches=$('matches');if(home)home.classList.add('hidden');if(matches)matches.classList.remove('hidden');findMatches();window.scrollTo(0,0)}function openMatches(){goToMatches()}function buildBAUrl(query,city){
