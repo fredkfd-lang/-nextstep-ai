@@ -1,7 +1,8 @@
 const allowedOrigins = new Set([
   "https://beropp.de",
   "https://www.beropp.de",
-  "https://fredkfd-lang.github.io"
+  "https://fredkfd-lang.github.io",
+  "https://fredkfd.workers.dev"
 ]);
 
 function corsHeadersFor(request) {
