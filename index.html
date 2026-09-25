@@ -831,7 +831,7 @@ async function createBerOppAccount(){
     setAuthStatus('❌ '+(messages[e.code]||e.message||'Account creation failed.'));
   }
 }
-async function signInBerOpp(){
+async async function signInBerOpp(){
   if(!firebaseReady()||!beroppAuth){setAuthStatus('⚠️ Secure login is not ready yet. Please refresh the page.');return}
   const {email,password}=getAuthCredentials();
   if(!email||!password){setAuthStatus('Enter your email and password.');return}
