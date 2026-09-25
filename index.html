@@ -1868,4 +1868,97 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
     return true;
   };
 })();
+</script><script id="beropp-direct-apply-failsafe-v2">
+(function(){
+  function pending(){
+    try{return JSON.parse(localStorage.getItem('beropp_pending_apply')||'null')}catch(e){return null}
+  }
+  function resume(){
+    const p=pending();
+    if(!p||!p.url)return false;
+    localStorage.removeItem('beropp_pending_apply');
+    try{window.beroppPendingTarget='';window.beroppPendingOpportunityId=null;window.beroppPendingOpportunityType=''}catch(e){}
+    window.location.replace(p.url);
+    return true;
+  }
+  window.beroppResumePendingDirectApplication=resume;
+
+  async function emailLogin(){
+    if(!firebaseReady()||!beroppAuth){setAuthStatus('⚠️ Secure login is not ready yet. Please refresh the page.');return false}
+    const email=($('authEmail')?.value||'').trim().toLowerCase(),password=$('authPassword')?.value||'';
+    if(!email||!password){setAuthStatus('Enter your email and password.');return false}
+    try{
+      setAuthStatus('⏳ Logging you in…');
+      await beroppAuth.signInWithEmailAndPassword(email,password);
+      $('authPassword').value='';
+      if(resume())return false;
+      return true;
+    }catch(e){
+      console.error(e);
+      const messages={
+        'auth/user-not-found':'No account was found with this email.',
+        'auth/wrong-password':'The email or password is incorrect.',
+        'auth/invalid-credential':'The email or password is incorrect.',
+        'auth/invalid-email':'Please check your email address.',
+        'auth/too-many-requests':'Too many attempts. Please wait a moment and try again.',
+        'auth/user-disabled':'This account has been disabled.',
+        'auth/operation-not-allowed':'Email/password sign-in is not enabled in this Firebase project yet.'
+      };
+      setAuthStatus('❌ '+(messages[e.code]||e.message||'Login failed.'));
+      return false;
+    }
+  }
+  async function emailCreate(){
+    if(!firebaseReady()||!beroppAuth){setAuthStatus('⚠️ Secure login is not ready yet. Please refresh the page.');return false}
+    const email=($('authEmail')?.value||'').trim().toLowerCase(),password=$('authPassword')?.value||'';
+    if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setAuthStatus('Please enter a valid email address.');return false}
+    if(password.length<6){setAuthStatus('Password must be at least 6 characters.');return false}
+    try{
+      setAuthStatus('⏳ Creating your account…');
+      const credential=await beroppAuth.createUserWithEmailAndPassword(email,password);
+      try{await credential.user.sendEmailVerification()}catch(e){console.warn('Verification email could not be sent',e)}
+      $('authPassword').value='';
+      if(resume())return false;
+      setAuthStatus('✅ Account created. Your verification email is being sent.');
+      return true;
+    }catch(e){
+      console.error(e);
+      const messages={
+        'auth/email-already-in-use':'An account with this email already exists. Please log in instead.',
+        'auth/invalid-email':'Please check your email address.',
+        'auth/weak-password':'Choose a stronger password (at least 6 characters).',
+        'auth/operation-not-allowed':'Email/password sign-in is not enabled in Firebase yet.'
+      };
+      setAuthStatus('❌ '+(messages[e.code]||e.message||'Account creation failed.'));
+      return false;
+    }
+  }
+  window.signInBerOpp=emailLogin;
+  window.createBerOppAccount=emailCreate;
+
+  document.addEventListener('click',function(e){
+    const b=e.target.closest('button');
+    if(!b)return;
+    const label=(b.textContent||'').trim().toLowerCase();
+    if(label.includes('apply now')&&!b.dataset.beroppHandled){
+      const inAus=b.closest('#ausbildung');
+      const inJobs=b.closest('#matches');
+      if(inAus||inJobs){
+        b.dataset.beroppHandled='1';
+        e.preventDefault();e.stopPropagation();
+        const onclick=b.getAttribute('onclick')||'';
+        const m=onclick.match(/beroppApplyByOpportunityId\(([^)]+)\)/);
+        if(m){window.beroppApplyByOpportunityId(m[1]);return}
+      }
+    }
+  },true);
+
+  // If Firebase restores a session without firing our older direct branch in time,
+  // this listener performs the pending company redirect independently.
+  if(window.beroppAuth&&typeof window.beroppAuth.onAuthStateChanged==='function'){
+    window.beroppAuth.onAuthStateChanged(function(user){
+      if(user)setTimeout(function(){resume()},0);
+    });
+  }
+})();
 </script></body></html>
