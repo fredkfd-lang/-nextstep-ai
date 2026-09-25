@@ -540,7 +540,7 @@ function startAusbildungApplicationByProfession(name){
     show('auth');
     return false;
   }
-  if(direct){currentOpportunity=direct;show('details');setTimeout(beroppEnsureDirectApplyBox,0);return true}
+  if(direct){currentOpportunity=direct;return beroppLaunchDirectApplication(direct)}
   const firstMatch=matches[0];
   if(firstMatch){
     currentOpportunity=firstMatch;
