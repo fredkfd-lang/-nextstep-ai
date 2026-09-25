@@ -619,25 +619,30 @@ function initBerOppAuth(){
       beroppUser=user||null;
       renderBerOppAccountStatus();
       if(!user){setAuthStatus('Ready to sign in.');return}
-      if(beroppJustCreatedAccount){beroppJustCreatedAccount=false;setAuthStatus('✅ Account created successfully. We sent a verification email to <strong>'+esc(user.email||'your email')+'</strong>. Please complete your profile, then BerOpp will return you to the Ausbildung/Job you were applying for.');show('profile');await loadProfile();return}
+      if(beroppJustCreatedAccount){beroppJustCreatedAccount=false;setAuthStatus('✅ Account created. You can continue directly to your application.');}
       setAuthStatus('✅ Logged in as '+(user.email||user.displayName||'BerOpp user'));
       await loadProfile();
       const nextInternational=new URLSearchParams(location.search).get('requireAccount');
       if(nextInternational){location.href=nextInternational;return}
+      let pendingTarget=beroppPendingTarget;
+      let pendingId=beroppPendingOpportunityId;
+      let pendingType=beroppPendingOpportunityType;
+      try{
+        const saved=JSON.parse(localStorage.getItem('beropp_pending_apply')||'null');
+        if(!pendingTarget&&saved){pendingTarget=saved.target||'';pendingId=saved.id??null;pendingType=saved.type||'';localStorage.removeItem('beropp_pending_apply');}
+      }catch(e){localStorage.removeItem('beropp_pending_apply')}
+      if(pendingTarget==='homeOpportunity'&&pendingId!=null){
+        beroppPendingTarget='';beroppPendingOpportunityId=null;beroppPendingOpportunityType='';
+        const o=String(pendingType)==='job'?jobOpps.find(x=>x.id===pendingId):opps.concat(jobOpps).find(x=>x.id===pendingId);
+        if(o){currentOpportunity=o;beroppLaunchDirectApplication(o);return}
+      }
       if(beroppPendingTarget){
         const t=beroppPendingTarget;beroppPendingTarget='';
-        if(t==='homeOpportunity'){
-          const id=beroppPendingOpportunityId,type=beroppPendingOpportunityType;
-          beroppPendingOpportunityId=null;beroppPendingOpportunityType='';
-          show(type==='job'?'details':'details');
-          if(type==='job')viewJobOpp(id);else viewOpp(id);
-        }else{
-          show(t);
-          if(t==='matches')findMatches();
-          if(t==='ausbildung')renderBerufe();
-          if(t==='applications')renderApps();
-          if(t==='remoteInternational'&&typeof renderRemoteJobs==='function')renderRemoteJobs();
-        }
+        show(t);
+        if(t==='matches')findMatches();
+        if(t==='ausbildung')renderBerufe();
+        if(t==='applications')renderApps();
+        if(t==='remoteInternational'&&typeof renderRemoteJobs==='function')renderRemoteJobs();
       }else if(document.body.classList.contains('auth-open')){show('home')}
       if(beroppPendingInternational){const u=beroppPendingInternational;beroppPendingInternational='';location.href=u;}
     });
@@ -1197,7 +1202,31 @@ function beroppBuildLetter(o,p){const name=[p.firstName,p.lastName].filter(Boole
 function beroppApplyButton(id){return '<button onclick="viewOpp('+id+')" style="background:#2563eb">⚡ Apply with BerOpp</button>'}
 function beroppEnsureDirectApplyBox(){const details=document.querySelector('#details .card');if(!details||document.getElementById('directApplyBox'))return;details.insertAdjacentHTML('beforeend','<div id="directApplyBox" class="directApplyBox"><h3 style="margin:0 0 5px">🚀 Apply with BerOpp</h3><p style="margin:0;color:#475569">Use your saved BerOpp profile once. BerOpp prepares the application for this company.</p><div class="directApplyGrid"><div class="directApplyStep"><strong>1 · Your profile</strong>Name, contact details, CV and qualifications</div><div class="directApplyStep"><strong>2 · AI application</strong>Company-specific CV/Anschreiben preparation</div><div class="directApplyStep"><strong>3 · Company</strong>Direct company portal or direct email when available</div><div class="directApplyStep"><strong>4 · Track</strong>Save the application and follow its status in BerOpp</div></div><div class="directApplyActions"><button onclick="startBerOppApplication()">⚡ Apply Now</button><button class="secondary" onclick="prepareBerOppApplication()">📝 Prepare Application</button></div><div id="directApplyStatus" class="status directApplyStatus">Your BerOpp profile is used; you should not have to type the same information again.</div></div>')}
 function prepareBerOppApplication(){const o=currentOpportunity;if(!o)return;if(!beroppUser){beroppPendingTarget='details';show('auth');return}const p=beroppGetProfile();const letter=beroppBuildLetter(o,p);localStorage.setItem('beropp_pending_application',JSON.stringify({opportunityId:o.id,company:o.company,title:o.title,letter,createdAt:new Date().toISOString()}));saveBerOppApplication(o,'Prepared')}
-function startBerOppApplication(){const o=currentOpportunity;if(!o)return;if(!beroppUser){beroppPendingTarget='homeOpportunity';beroppPendingOpportunityId=o.id;beroppPendingOpportunityType=(String(o.type||'').toUpperCase()==='JOB'?'job':'ausbildung');show('auth');return}const p=beroppGetProfile();const required=typeof getRequiredProfileFields==='function'?getRequiredProfileFields():[];const profileFieldValue=id=>{const dom=String($(id)?.value||'').trim();if(dom)return dom;const map={profileFirstName:'firstName',profileLastName:'lastName',profileEmail:'email'};return String((window.nsProfile||{})[map[id]]||'').trim()};const missing=required.filter(x=>!profileFieldValue(x.id));if(missing.length){beroppPendingTarget='homeOpportunity';beroppPendingOpportunityId=o.id;beroppPendingOpportunityType=(String(o.type||'').toUpperCase()==='JOB'?'job':'ausbildung');if(typeof updateProfileCompleteness==='function')updateProfileCompleteness();if($('profileMissing'))$('profileMissing').innerHTML='⚠️ <strong>Please complete:</strong> '+missing.map(x=>esc(x.label||x.key||'')).join(', ');show('profile');if(missing[0]?.id)setTimeout(()=>$(missing[0].id)?.focus(),100);return}prepareBerOppApplication();const mode=beroppApplicationMode(o),s=$('directApplyStatus');if(mode==='DIRECT_EMAIL'&&o.applicationEmail){const subject=encodeURIComponent('Bewerbung: '+o.title),body=encodeURIComponent(beroppBuildLetter(o,p)+'\n\nAnlagen: Lebenslauf, Zeugnisse');window.location.href='mailto:'+encodeURIComponent(o.applicationEmail)+'?subject='+subject+'&body='+body;updateBerOppApplicationStatus(o.id,'Ready to send');return}const url=beroppGetApplicationUrl(o);if(mode==='DIRECT_PORTAL'&&url){if(s)s.innerHTML='🟢 <strong>Direct company application</strong> — opening the company portal. BerOpp Autofill can fill supported fields from your saved profile.';updateBerOppApplicationStatus(o.id,'Company portal opened');window.open(url,'_blank','noopener');return}if(s)s.innerHTML='🟡 <strong>Company application link is not connected yet.</strong> BerOpp has prepared your application, but it will not pretend that an external application was submitted.';updateBerOppApplicationStatus(o.id,'Application prepared — company link unavailable');if(o.applyUrl)window.open(o.applyUrl,'_blank','noopener')}
+function beroppLaunchDirectApplication(o){
+  if(!o)return false;
+  const mode=beroppApplicationMode(o),url=beroppGetApplicationUrl(o),s=$('directApplyStatus');
+  if(mode==='DIRECT_EMAIL'&&o.applicationEmail){
+    const subject=encodeURIComponent('Bewerbung: '+o.title),body=encodeURIComponent(beroppBuildLetter(o,beroppGetProfile())+'\\n\\nAnlagen: Lebenslauf, Zeugnisse');
+    updateBerOppApplicationStatus(o.id,'Ready to send');window.location.href='mailto:'+encodeURIComponent(o.applicationEmail)+'?subject='+subject+'&body='+body;return true;
+  }
+  if(url){
+    if(s)s.innerHTML='🟢 <strong>Direct company application</strong> — opening the company application now.';
+    updateBerOppApplicationStatus(o.id,'Company application opened');
+    window.location.href=url;return true;
+  }
+  if(o.applyUrl){window.location.href=o.applyUrl;return true}
+  if(s)s.innerHTML='🟡 <strong>Application link is not available yet.</strong>';
+  updateBerOppApplicationStatus(o.id,'Application link unavailable');return false;
+}
+function startBerOppApplication(){
+  const o=currentOpportunity;if(!o)return false;
+  if(!beroppUser){
+    beroppPendingTarget='homeOpportunity';beroppPendingOpportunityId=o.id;beroppPendingOpportunityType=(String(o.type||'').toUpperCase()==='JOB'?'job':'ausbildung');
+    localStorage.setItem('beropp_pending_apply',JSON.stringify({target:'homeOpportunity',id:o.id,type:beroppPendingOpportunityType}));
+    show('auth');return false;
+  }
+  return beroppLaunchDirectApplication(o);
+}
 function saveBerOppApplication(o,status){if(!o)return;const a=apps.find(x=>x.id===o.id);if(a){a.status=status;a.company=o.company;a.applicationMode=beroppApplicationMode(o)}else apps.push({id:o.id,title:o.title,company:o.company,place:o.place,type:o.type,status,applicationMode:beroppApplicationMode(o),createdAt:new Date().toISOString()});localStorage.setItem('ns_apps',JSON.stringify(apps));renderApps()}
 function updateBerOppApplicationStatus(id,status){const a=apps.find(x=>x.id===id);if(a){a.status=status;a.updatedAt=new Date().toISOString();localStorage.setItem('ns_apps',JSON.stringify(apps));renderApps()}}
 function renderBerOppApplicationTracker(){const box=$('appList');if(!box)return;if(!apps.length){box.innerHTML='<p>No applications yet. Apply to an opportunity and BerOpp will track it here.</p>';return}box.innerHTML=apps.map((a,i)=>'<div class="card"><h3>'+esc(a.title)+'</h3><p>🏢 '+esc(a.company||'Company')+' · 📍 '+esc(a.place||'')+'</p><span class="status">Status: '+esc(a.status||'Prepared')+'</span> <span class="badge">'+esc((a.applicationMode||'PROFILE').replaceAll('_',' '))+'</span><br><small>Updated: '+esc(a.updatedAt||a.createdAt||'')+'</small><br><button onclick="changeStatus('+i+')">Change Status</button> <button class="secondary" onclick="viewTrackedApplication('+i+')">View</button> <button class="secondary" onclick="apps.splice('+i+',1);localStorage.setItem(\'ns_apps\',JSON.stringify(apps));renderBerOppApplicationTracker()">Remove</button></div>').join('')}
