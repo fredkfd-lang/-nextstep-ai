@@ -22,7 +22,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Fetch current BA data
+      - name: Refresh through BerOpp Worker
+        env:
+          BEROPP_AI_WORKER_URL: ${{ secrets.BEROPP_AI_WORKER_URL }}
         run: node scripts/update-live-data.cjs
       - name: Commit refreshed data
         run: |
