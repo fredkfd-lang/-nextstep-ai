@@ -2359,10 +2359,26 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
 })();
 </script>
 
-<script id="beropp-live-az-professions-v6">
+<script id="beropp-live-az-professions-v7">
 (function(){
   const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs';
   const KEY='jobboerse-jobsuche';
+  // Prefer the BerOpp Cloudflare Worker when configured; direct BA is only a fallback.
+  function beroppApiBase(){
+    const v=String(localStorage.getItem('beropp_ai_api_url')||'').trim().replace(/\\/$/,'');
+    return /^https:\\/\\//i.test(v)?v:'';
+  }
+  async function baGet(path,params){
+    const qs=params instanceof URLSearchParams?params.toString():new URLSearchParams(params||{}).toString();
+    const worker=beroppApiBase();
+    if(worker){
+      const wr=await fetch(worker+path+(qs?'?'+qs:''),{headers:{'Accept':'application/json'}});
+      if(wr.ok)return wr.json();
+    }
+    const r=await fetch(BA+'?'+qs,{headers:{'X-API-Key':KEY}});
+    if(!r.ok)throw new Error('BA '+r.status);
+    return r.json();
+  }
   let liveIndex=null, loading=null;
 
   function e(v){return typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]) )}
@@ -2380,9 +2396,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
       const size=100;
       for(let page=1;page<=10;page++){
         const p=new URLSearchParams({angebotsart:'4',page:String(page),size:String(size),pav:'false'});
-        const r=await fetch(BA+'?'+p,{headers:{'X-API-Key':KEY}});
-        if(!r.ok)throw new Error('BA '+r.status);
-        const d=await r.json();
+        const d=await baGet('/ausbildung',p);
         const rows=Array.isArray(d.stellenangebote)?d.stellenangebote:[];
         all.push(...rows);
         if(rows.length<size)break;
@@ -2418,7 +2432,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
       return true;
     }catch(err){
       console.warn('Live A-Z index unavailable',err);
-      box.innerHTML='<div class="card"><h3>⚠️ Live-Ausbildungssuche</h3><p>Die aktuellen Ausbildungsangebote konnten gerade nicht geladen werden.</p><button class="secondary" type="button" onclick="renderBerufe()">↻ Erneut versuchen</button></div>';
+      box.innerHTML='<div class="card"><h3>⚠️ Live-Ausbildungssuche</h3><p>Die aktuellen Ausbildungsangebote konnten gerade nicht geladen werden.</p><p style="font-size:13px;color:#64748b">BerOpp versucht zuerst die sichere Server-Verbindung und nutzt nur als Fallback die BA-Suche.</p><button class="secondary" type="button" onclick="renderBerufe()">↻ Erneut versuchen</button></div>';
       return false;
     }
   };
