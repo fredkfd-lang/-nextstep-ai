@@ -714,9 +714,33 @@ async function fetchLiveCareerSources(rawQ,rawCity,type){
   }
   return results;
 }
+window.beroppOpenLiveResult=function(o){
+  if(!o||!o.url)return false;
+  const url=String(o.url||'');
+  if(!/^https?:\\/\\//i.test(url))return false;
+  if(!beroppUser){
+    localStorage.setItem('beropp_pending_apply',JSON.stringify({
+      target:String(o.kind||'').toLowerCase()==='ausbildung'?'ausbildungDirect':'jobDirect',
+      id:o.id||('live-'+Date.now()),
+      type:String(o.kind||'').toLowerCase()==='ausbildung'?'ausbildung':'job',
+      url:url,title:o.title||'',company:o.company||''
+    }));
+    beroppPendingTarget='homeOpportunity';
+    beroppPendingOpportunityId=o.id||null;
+    beroppPendingOpportunityType=String(o.kind||'').toLowerCase()==='ausbildung'?'ausbildung':'job';
+    show('auth');
+    setAuthStatus('🔐 Please sign in first. After login, BerOpp will open the original application page.');
+    return false;
+  }
+  window.open(url,'_blank','noopener,noreferrer');
+  return false;
+};
 function renderLiveCareerResults(results){
   if(!results.length)return '<div class="nsHomeSearchEmpty">No live external result was returned for this search. Try another keyword or location.</div>';
-  return '<div class="nsHomeLive"><div class="nsHomeLiveHead"><strong>⚡ Live opportunities</strong><span>Original application links are used when the source provides them.</span></div>'+results.map(o=>'<div class="nsHomeLiveItem"><strong>💼 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.source)+(o.date?' · '+esc(o.date):'')+'</div>'+(o.url?'<a class="nsHomeLiveApply" href="'+esc(o.url)+'" target="_blank" rel="noopener noreferrer">🏢 Apply / View original →</a>':'<span class="nsHomeLiveNoApply">Original application link unavailable</span>')+'</div>').join('')+'</div>';
+  return '<div class="nsHomeLive"><div class="nsHomeLiveHead"><strong>⚡ Live opportunities</strong><span>Original application links are used when the source provides them.</span></div>'+results.map(o=>{
+    const data=JSON.stringify(o).replace(/</g,'\\u003c');
+    return '<div class="nsHomeLiveItem"><strong>💼 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.source)+(o.date?' · '+esc(o.date):'')+'</div>'+(o.url?'<button type="button" class="nsHomeLiveApply" onclick="return beroppOpenLiveResult('+data+')">🏢 Apply / View original →</button>':'<span class="nsHomeLiveNoApply">Original application link unavailable</span>')+'</div>';
+  }).join('')+'</div>';
 }
 async function runHomeCareerSearch(){
   const q=normalizeLocation($('homeCareerSearch')?.value||''),city=normalizeLocation($('homeCareerLocation')?.value||''),type=$('homeCareerType')?.value||'all',box=$('homeSearchResults'),status=$('homeSearchStatus');
@@ -1569,26 +1593,31 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
   livePflege.forEach(o=>{if(!seen.has(o.company+'|'+o.title))base.push(o)});
   window.opps=base;
   const oldFindByBeruf=window.findByBeruf;
-  window.findByBeruf=function(name){
-    if(!window.beroppUser){window.beroppPendingTarget='ausbildung';show('auth');return false}
+  window.findByBeruf=async function(name){
     show('ausbildung');
-    const aliases={pflege:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege','altenpfleger'],gesundheit:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege']};
-    const needle=String(name||'').toLowerCase();
-    const terms=aliases[needle]||[needle];
-    const city=normalizeLocation($('oppCity')?.value||'');
-    const matches=window.opps.filter(o=>{
-      const hay=normalizeLocation([o.title,o.description,o.type,o.field,...(o.skills||[])].join(' '));
-      return terms.some(t=>hay.includes(normalizeLocation(t)))&&(!city||normalizeLocation(o.place||'').includes(city));
-    });
     const box=$('berufeList');
-    if(box&&matches.length){
-      box.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p><strong>'+matches.length+'</strong> Ausbildung opportunities found.</p>'+matches.map(o=>'<div class="card"><h3>'+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+' · 📍 '+esc(o.place||'')+' · '+esc(o.start||'')+'</p><p>'+esc(o.description||'')+'</p><button type="button" onclick="viewOpp('+o.id+');return false">📖 Details</button><button type="button" onclick="beroppApplyByOpportunityId('+o.id+');return false" style="background:#2563eb">⚡ Apply Now</button>'+'</div>').join('')+'</div>';
-      return true;
+    if(!box)return false;
+    const city=String($('oppCity')?.value||'').trim();
+    box.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p>⏳ Searching current Ausbildung offers…</p></div>';
+    try{
+      if(typeof fetchLiveCareerSources==='function'){
+        const live=await fetchLiveCareerSources(String(name||''),city,'ausbildung');
+        const direct=live.filter(o=>o&&o.url);
+        if(direct.length){
+          box.innerHTML='<div class="card"><h3>🇩🇪 Current Ausbildung: '+esc(name)+'</h3><p><strong>'+direct.length+'</strong> live offer(s) found.</p>'+direct.slice(0,12).map((o,i)=>{
+            const safe=JSON.stringify(o).replace(/</g,'\\u003c');
+            return '<div class="card" style="margin:9px 0"><h3>'+esc(o.title||'Ausbildung')+'</h3><p>🏢 '+esc(o.company||'')+' · 📍 '+esc(o.place||'')+(o.date?' · 📅 '+esc(o.date):'')+'</p><button type="button" onclick="return beroppOpenLiveResult('+safe+')">⚡ Apply / View original →</button></div>';
+          }).join('')+'</div>';
+          return true;
+        }
+      }
+      box.innerHTML='<div class="card"><h3>🔎 '+esc(name)+'</h3><p>No current live Ausbildung offer with an application link was found for this search.</p><button class="secondary" type="button" onclick="renderBerufe()">← Ausbildungsberufe A–Z</button></div>';
+    }catch(e){
+      console.warn('Live profession search failed',e);
+      box.innerHTML='<div class="card"><h3>⚠️ Live search</h3><p>The current Ausbildung search is temporarily unavailable.</p><button class="secondary" type="button" onclick="renderBerufe()">↻ Try again</button></div>';
     }
-    if(box){const baUrl=buildBAUrl(name,city);box.innerHTML='<div class="card"><h3>🔎 '+esc(name)+'</h3><p>No saved vacancy matches this profession and location yet.</p><a href="'+esc(baUrl)+'" target="_blank" rel="noopener" class="secondary" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🔗 Search current Ausbildung vacancies</a></div>'}
     return false;
-  };
-})();
+  };})();
 </script>
 <script id="beropp-live-directory">
 (function(){
