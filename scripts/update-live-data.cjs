@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const API = 'https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobs';
+const API = 'https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs';
 const DETAIL = 'https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobdetails/';
 const KEY = 'jobboerse-jobsuche';
 
@@ -25,13 +25,13 @@ async function load(kind){
     const d=await fetchJson(API+'?'+p.toString());
     const rows=Array.isArray(d.stellenangebote)?d.stellenangebote:[];
     for(const o of rows){
-      const ref=String(o.refnr||o.referenznummer||'');
+      const ref=String(o.referenznummer||o.refnr||'');
       const key=ref||[o.beruf,o.stellenangebotsTitel,o.arbeitgeber,typeof o.arbeitsort==='object'?o.arbeitsort?.ort:o.arbeitsort].join('|');
       if(seen.has(key))continue;
       seen.add(key);
       all.push({
         id:`live-${kind}-${ref||all.length}`,refnr:ref,
-        title:o.stellenangebotsTitel||o.beruf||o.titel||(kind==='ausbildung'?'Ausbildung':'Stellenangebot'),
+        title:o.beruf||o.stellenangebotsTitel||o.titel||(kind==='ausbildung'?'Ausbildung':'Stellenangebot'),
         company:o.arbeitgeber||o.arbeitgeberName||'Arbeitgeber nicht angegeben',
         place:typeof o.arbeitsort==='object'?(o.arbeitsort.ort||o.arbeitsort.region||'Deutschland'):(o.arbeitsort||o.ort||'Deutschland'),
         start:o.eintrittsdatum||o.beginn||'',date:o.aktuelleVeroeffentlichungsdatum||o.veroeffentlichungsdatum||'',
