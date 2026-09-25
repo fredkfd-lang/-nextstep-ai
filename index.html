@@ -903,6 +903,13 @@ function jobLocationMatches(o,city){
   return place.includes(wanted)||wanted.split(' ').every(part=>part.length<2||place.includes(part))||company.includes(wanted);
 }
 function viewJobOpp(id){
+  if(!beroppUser){
+    beroppPendingTarget='homeOpportunity';
+    beroppPendingOpportunityId=id;
+    beroppPendingOpportunityType='job';
+    show('auth');
+    return false;
+  }
   const o=jobOpps.find(x=>x.id===id); if(!o)return false;
   currentOpportunity=o;
   if(!$('detailTitle'))return false;
