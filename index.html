@@ -1836,7 +1836,7 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
       return '<div class="card" style="margin:8px 0;padding:14px"><strong>'+esc(b[0])+'</strong><br><span class="badge">'+esc(b[1])+'</span>'+
         '<button type="button" class="secondary" onclick="showBerufDetail('+name+','+catv+');return false">📖 Details</button>'+
         '<button type="button" class="secondary" onclick="findByBeruf('+name+');return false">🔎 Stellen finden</button><br>'+
-        '<button type="button" onclick="beroppApplyProfessionDirect('+name+');return false" style="margin-top:6px;background:#2563eb">⚡ Apply Now — Company Direct</button></div>';
+        '<button type="button" onclick="event.preventDefault();event.stopPropagation();return beroppApplyProfessionDirect('+name+')" style="margin-top:6px;background:#2563eb">⚡ Apply Now — Company Direct</button></div>';
     }).join(''):'<p>No professions found.</p>';
     return true;
   };
