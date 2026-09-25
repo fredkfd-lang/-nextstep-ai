@@ -636,7 +636,15 @@ function initBerOppAuth(){
       let pendingType=beroppPendingOpportunityType;
       try{
         const saved=JSON.parse(localStorage.getItem('beropp_pending_apply')||'null');
-        if(!pendingTarget&&saved){pendingTarget=saved.target||'';pendingId=saved.id??null;pendingType=saved.type||'';localStorage.removeItem('beropp_pending_apply');}
+        if(!pendingTarget&&saved){pendingTarget=saved.target||'';pendingId=saved.id??null;pendingType=saved.type||'';}
+        if(saved&&saved.target==='ausbildungDirect'&&saved.url){
+          localStorage.removeItem('beropp_pending_apply');
+          beroppPendingTarget='';beroppPendingOpportunityId=null;beroppPendingOpportunityType='';
+          await loadProfile();
+          window.location.assign(saved.url);
+          return;
+        }
+        if(saved) localStorage.removeItem('beropp_pending_apply');
       }catch(e){localStorage.removeItem('beropp_pending_apply')}
       if(pendingTarget==='homeOpportunity'&&pendingId!=null){
         beroppPendingTarget='';beroppPendingOpportunityId=null;beroppPendingOpportunityType='';
@@ -1424,7 +1432,83 @@ function makeBerOppEverywhereHomeLink(root=document.body){
 }
 window.addEventListener('load',()=>makeBerOppEverywhereHomeLink());
 new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{childList:true,subtree:true});
-</script><noscript><section aria-label="BerOpp information"><h2>BerOpp — Ausbildung, Jobs and Career Tools</h2><p>BerOpp helps people discover Ausbildung and job opportunities, build a CV, and plan their next career step in Germany and internationally.</p><p><a href="international-ausbildung.html">International Ausbildung in Germany</a> · <a href="international-jobs.html">International Jobs in Germany</a></p><p>Explore Ausbildung, jobs, international opportunities and career tools.</p><p><a href="international-ausbildung.html">International Ausbildung</a> · <a href="international-jobs.html">International Jobs</a></p></section></noscript><script id="beropp-live-pflege-data">
+</script><noscript><section aria-label="BerOpp information"><h2>BerOpp — Ausbildung, Jobs and Career Tools</h2><p>BerOpp helps people discover Ausbildung and job opportunities, build a CV, and plan their next career step in Germany and internationally.</p><p><a href="international-ausbildung.html">International Ausbildung in Germany</a> · <a href="international-jobs.html">International Jobs in Germany</a></p><p>Explore Ausbildung, jobs, international opportunities and career tools.</p><p><a href="international-ausbildung.html">International Ausbildung</a> · <a href="international-jobs.html">International Jobs</a></p></section></noscript><script id="beropp-ausbildung-apply-robust-fix">
+(function(){
+  function resolveOpp(id){
+    const lists=[];
+    try{if(Array.isArray(window.opps))lists.push(window.opps)}catch(e){}
+    try{if(Array.isArray(opps))lists.push(opps)}catch(e){}
+    try{if(Array.isArray(window.jobOpps))lists.push(window.jobOpps)}catch(e){}
+    try{if(Array.isArray(jobOpps))lists.push(jobOpps)}catch(e){}
+    try{if(Array.isArray(window.beroppLivePflege))lists.push(window.beroppLivePflege)}catch(e){}
+    for(const list of lists){const found=list.find(x=>String(x.id)===String(id));if(found)return found}
+    return null;
+  }
+  function openCompany(url,afterAuth){
+    if(!url)return false;
+    if(afterAuth){window.location.assign(url);return true}
+    const w=window.open(url,'_blank','noopener,noreferrer');
+    if(!w||w.closed){window.location.assign(url)}
+    return true;
+  }
+  window.beroppApplyAusbildungById=function(id){
+    const o=resolveOpp(id);
+    if(!o)return false;
+    const url=o.applicationUrl||o.applyUrl||o.url||'';
+    currentOpportunity=o;
+    if(!beroppUser){
+      const pending={target:'ausbildungDirect',id:o.id,type:'ausbildung',url,title:o.title||'',company:o.company||''};
+      localStorage.setItem('beropp_pending_apply',JSON.stringify(pending));
+      beroppPendingTarget='homeOpportunity';
+      beroppPendingOpportunityId=o.id;
+      beroppPendingOpportunityType='ausbildung';
+      show('auth');
+      return false;
+    }
+    if(url){
+      updateBerOppApplicationStatus(o.id,'Company application opened');
+      return openCompany(url,false);
+    }
+    show('details');
+    setTimeout(beroppEnsureDirectApplyBox,0);
+    const s=$('directApplyStatus');
+    if(s)s.innerHTML='🟡 <strong>This Ausbildung does not have a connected company application link yet.</strong>';
+    return false;
+  };
+  window.beroppApplyByOpportunityId=function(id){
+    const o=resolveOpp(id);
+    if(!o)return false;
+    if(String(o.type||'').toUpperCase()==='JOB')return beroppLaunchDirectApplication(o);
+    return window.beroppApplyAusbildungById(id);
+  };
+  window.beroppApplyLiveAusbildung=function(o){
+    if(!o)return false;
+    const url=o.applicationUrl||o.applyUrl||o.url||'';
+    if(!beroppUser){
+      localStorage.setItem('beropp_pending_apply',JSON.stringify({target:'ausbildungDirect',id:o.id,type:'ausbildung',url,title:o.title||'',company:o.company||''}));
+      beroppPendingTarget='homeOpportunity';beroppPendingOpportunityId=o.id;beroppPendingOpportunityType='ausbildung';
+      show('auth');return false;
+    }
+    if(url){updateBerOppApplicationStatus(o.id,'Company application opened');return openCompany(url,false)}
+    currentOpportunity=o;show('details');setTimeout(beroppEnsureDirectApplyBox,0);return false;
+  };
+  window.startAusbildungApplicationByProfession=function(name){
+    const aliases={pflege:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege','altenpfleger'],gesundheit:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege']};
+    const needle=String(name||'').toLowerCase().trim();
+    const terms=aliases[needle]||[needle];
+    const all=[];
+    try{if(Array.isArray(window.opps))all.push(...window.opps)}catch(e){}
+    try{if(Array.isArray(opps))all.push(...opps)}catch(e){}
+    const seen=new Set(),matches=all.filter(o=>{if(seen.has(String(o.id)))return false;seen.add(String(o.id));const hay=String(o.title||'').toLowerCase()+' '+String(o.description||'').toLowerCase()+' '+String(o.type||'').toLowerCase();return terms.some(t=>hay.includes(t))});
+    const direct=matches.find(o=>o.applicationUrl||o.applyUrl||o.url);
+    if(direct)return window.beroppApplyAusbildungById(direct.id);
+    if(matches[0]){currentOpportunity=matches[0];show('details');setTimeout(beroppEnsureDirectApplyBox,0);return false}
+    setAuthStatus('No matching Ausbildung vacancy is connected to this profession yet.');return false;
+  };
+  try{window.opps=Array.isArray(window.opps)?window.opps:opps}catch(e){}
+  try{window.jobOpps=Array.isArray(window.jobOpps)?window.jobOpps:jobOpps}catch(e){}
+})();
+</script><script id="beropp-live-pflege-data">
 (function(){
   const livePflege=[
     {id:10,title:'Ausbildung zum/zur Pflegefachmann/Pflegefachfrau (m/w/d)',company:'Dr. med. Ernst-August Wilkening Pflegeheime GmbH',place:'Hannover',start:'01.10.2027',description:'Pflegefachmann/Pflegefachfrau Ausbildung in Hannover.',applyUrl:'https://www.wilkening-hannover.de/'},
@@ -1470,7 +1554,7 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
   function liveCard(o,kind){
     const title=esc(o.title||'Stellenangebot'), company=esc(o.company||'Arbeitgeber nicht angegeben'), place=esc(o.place||'Deutschland');
     const date=o.date?'<div class="nsLiveMeta">📅 '+esc(o.date)+'</div>':'';
-    const action=(kind==='ausbildung'&&(o.url&&o.direct))?'<button onclick="beroppApplyLiveAusbildung('+JSON.stringify(o).replace(/</g,'\\u003c')+')">⚡ Apply Now</button>':(o.url&&o.direct?'<button onclick="window.open('+JSON.stringify(o.url)+',\'_blank\',\'noopener,noreferrer\')">🏢 Original / Bewerben</button>':'');
+    const action=(kind==='ausbildung'&&(o.applicationUrl||o.applyUrl||o.url))?'<button onclick="beroppApplyLiveAusbildung('+JSON.stringify(o).replace(/</g,'\\u003c')+')">⚡ Apply Now</button>':(o.url&&o.direct?'<button onclick="window.open('+JSON.stringify(o.url)+',\'_blank\',\'noopener,noreferrer\')">🏢 Original / Bewerben</button>':'');
     return '<div class="card nsLiveDirectoryCard"><span class="badge">⚡ LIVE</span><h3>'+title+'</h3><p>🏢 '+company+'<br>📍 '+place+'</p>'+date+'<small>Quelle: '+esc(o.source||'Live-Stellensuche')+'</small><br>'+action+'</div>';
   }
   async function loadLiveDirectory(kind){
