@@ -2582,8 +2582,9 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   }
   async function loadAll(q,where,type){
     const out=[],size=100;
+    q=String(q||'').trim()||(type==='ausbildung'?'Ausbildung':'Job');
     for(let page=1;page<=20;page++){
-      const p=new URLSearchParams({angebotsart:type==='ausbildung'?'4':'1',page:String(page),size:String(size),pav:'false'});
+      const p=new URLSearchParams({angebotsart:type==='ausbildung'?'4':'1',page:String(page),size:String(size),pav:'false',veroeffentlichtseit:'60',zeitarbeit:'true'});
       if(q)p.set('was',q);
       if(where){p.set('wo',where);p.set('umkreis','200')}
       const d=await baGet(p),rows=Array.isArray(d.stellenangebote)?d.stellenangebote:[];
