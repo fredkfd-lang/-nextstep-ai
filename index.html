@@ -2979,4 +2979,59 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   window.addEventListener('load',function(){setTimeout(window.renderHomePreviews,1100)});
 })();
 </script>
+<script id="beropp-static-live-fallback-v1">
+(function(){
+  async function staticData(type){
+    const u=type==='ausbildung'?'/data/live-ausbildung.json':'/data/live-jobs.json';
+    const r=await fetch(u+'?v='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('static live data '+r.status);
+    const d=await r.json();
+    return Array.isArray(d.items)?d.items:[];
+  }
+  function esc2(v){return typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function direct(o){
+    if(!o.url)return '<span class="status">Original application link unavailable</span>';
+    const x=JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
+    return '<button type="button" class="secondary" onclick="return window.__beroppHomeApply6v2('+x+')">⚡ Apply Direct →</button>';
+  }
+  function renderList(box,rows,title,moreId){
+    const first=rows.slice(0,20),rest=rows.slice(20);
+    box.innerHTML='<div class="card"><h3>'+title+'</h3><p><strong>'+rows.length+'</strong> current results found.</p>'+first.map(o=>'<div class="card beroppLiveOffer"><h3>'+esc2(o.type==='ausbildung'?'🎓 ':'💼 ')+esc2(o.title)+'</h3><p>🏢 '+esc2(o.company)+' · 📍 '+esc2(o.place)+(o.start?' · 📅 '+esc2(o.start):'')+'</p>'+direct(o)+'</div>').join('')+(rest.length?'<button id="'+moreId+'" type="button" class="secondary" style="display:block;margin:14px auto;padding:12px 20px;font-weight:800">＋ More</button><div id="'+moreId+'Rest" style="display:none">'+rest.map(o=>'<div class="card beroppLiveOffer"><h3>'+esc2(o.title)+'</h3><p>🏢 '+esc2(o.company)+' · 📍 '+esc2(o.place)+'</p>'+direct(o)+'</div>').join('')+'</div>':'')+'</div>';
+    const b=$(moreId),r=$(moreId+'Rest');if(b)b.onclick=()=>{r.style.display='block';b.remove()};
+  }
+  const oldFind=window.findMatches,oldBerufe=window.renderBerufe;
+  window.findMatches=async function(){
+    const box=$('results');if(!box)return false;
+    box.innerHTML='<div class="card"><h3>💼 Live Jobs</h3><p>⏳ Loading current jobs…</p></div>';
+    try{
+      const q=($('oppSearch')?.value||'').trim().toLowerCase(),city=($('oppCity')?.value||'').trim().toLowerCase();
+      let rows=await staticData('job');
+      rows=rows.filter(o=>(!q||[o.title,o.company,o.place,o.description].join(' ').toLowerCase().includes(q))&&(!city||String(o.place).toLowerCase().includes(city)));
+      window.beroppLiveJobsAll=rows;renderList(box,rows,'🇩🇪 Current Jobs — Bundesagentur für Arbeit','staticJobsMore');return rows.length>0;
+    }catch(e){return oldFind?oldFind():false}
+  };
+  window.renderBerufe=async function(){
+    const box=$('berufeList');if(!box)return false;
+    box.innerHTML='<div class="card"><h3>🎓 Live Ausbildung</h3><p>⏳ Loading current Ausbildung…</p></div>';
+    try{
+      const q=($('berufSearch')?.value||'').trim().toLowerCase(),cat=($('berufCategory')?.value||'').trim().toLowerCase(),city=($('oppCity')?.value||'').trim().toLowerCase();
+      let rows=await staticData('ausbildung');
+      rows=rows.filter(o=>(!q||[o.title,o.company,o.description].join(' ').toLowerCase().includes(q))&&(!cat||[o.title,o.description].join(' ').toLowerCase().includes(cat))&&(!city||String(o.place).toLowerCase().includes(city)));
+      window.beroppLiveAusbildungAll=rows;if($('berufeCount'))$('berufeCount').textContent=rows.length+' aktuelle Ausbildung-Angebote';
+      renderList(box,rows,'🇩🇪 Current Ausbildung — Bundesagentur für Arbeit','staticAusMore');return rows.length>0;
+    }catch(e){return oldBerufe?oldBerufe():false}
+  };
+  window.renderHomePreviews=async function(){
+    const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');if(!a||!j)return false;
+    try{
+      const [A,J]=await Promise.all([staticData('ausbildung'),staticData('job')]);
+      window.beroppHomeLiveAusbildung=A.slice(0,6);window.beroppHomeLiveJobs=J.slice(0,6);
+      a.innerHTML=window.beroppHomeLiveAusbildung.map(o=>'<div class="nsPreviewItem"><strong>🎓 '+esc2(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc2(o.company)+' · 📍 '+esc2(o.place)+'</div>'+direct(o)+'</div>').join('')||'<div class="nsPreviewItem">⚠️ No current Ausbildung available.</div>';
+      j.innerHTML=window.beroppHomeLiveJobs.map(o=>'<div class="nsPreviewItem"><strong>💼 '+esc2(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc2(o.company)+' · 📍 '+esc2(o.place)+'</div>'+direct(o)+'</div>').join('')||'<div class="nsPreviewItem">⚠️ No current Jobs available.</div>';
+      return A.length>=6&&J.length>=6;
+    }catch(e){console.warn('Static live fallback failed',e);return false}
+  };
+  window.addEventListener('load',()=>setTimeout(window.renderHomePreviews,500));
+})();
+</script>
 </body></html>
