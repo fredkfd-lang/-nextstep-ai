@@ -2420,4 +2420,55 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   });
 })();
 </script>
+
+<script id="beropp-jobs-direct-application-v7">
+(function(){
+  const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service';
+  const KEY='jobboerse-jobsuche';
+  function esc2(v){return typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+  function enc2(s){try{return btoa(unescape(encodeURIComponent(String(s||''))))}catch(e){return btoa(String(s||''))}}
+  function safe2(u){try{const x=new URL(String(u||''));return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return''}}
+  async function directUrl(o){
+    const first=safe2(o.companyApplyUrl);
+    if(first)return first;
+    if(!o.refnr)return '';
+    try{
+      const r=await fetch(BA+'/pc/v4/jobdetails/'+enc2(o.refnr),{headers:{'X-API-Key':KEY}});
+      if(!r.ok)return '';
+      const d=await r.json();
+      return safe2(d.externeUrl||d.externeURL||d.bewerbungUrl||d.bewerbungURL);
+    }catch(e){return''}
+  }
+  window.beroppRenderJobs3=async function(box,rows){
+    if(!box)return;
+    box.innerHTML='<div class="card"><h3>🔎 Stellenangebote</h3><p>⏳ Direkte Bewerbungslinks werden geprüft…</p></div>';
+    const checked=await Promise.all((rows||[]).slice(0,100).map(async o=>{
+      const url=await directUrl(o);
+      return url?Object.assign({},o,{companyApplyUrl:url}):null;
+    }));
+    const direct=checked.filter(Boolean);
+    if(!direct.length){
+      box.innerHTML='<div class="card"><h3>🔎 Stellenangebote</h3><p>❌ Für die aktuellen Treffer wurde kein verifizierter direkter Bewerbungslink des Arbeitgebers gefunden.</p><p style="font-size:13px;color:#64748b">BerOpp zeigt absichtlich keinen Umweg über die Firmen-Homepage und keinen falschen Apply-Button.</p></div>';
+      return [];
+    }
+    function card(o){
+      return '<div class="card beroppDirectJobCard" style="margin:9px 0;padding:15px">'+
+        '<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><h3 style="margin:0">'+esc2(o.title||'Stellenangebot')+'</h3><span class="badge" style="background:#dcfce7;color:#166534;white-space:nowrap">DIRECT APPLY</span></div>'+
+        '<p>🏢 '+esc2(o.company||'')+' · 📍 '+esc2(o.place||'')+' · 📅 '+esc2(o.start||'')+'</p>'+
+        '<p>'+esc2(String(o.description||'').slice(0,320))+'</p>'+
+        '<a href="'+esc2(o.companyApplyUrl)+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;background:#2563eb;color:#fff;padding:11px 16px;border-radius:12px;font-weight:800;margin-top:4px">⚡ Apply direct at company</a>'+
+        '<div style="font-size:12px;color:#475569;margin-top:7px">✓ Direct application page from the current job listing.</div>'+
+        '</div>';
+    }
+    const first=direct.slice(0,3).map(card).join('');
+    const rest=direct.slice(3).map(card).join('');
+    box.innerHTML='<div class="card" style="margin-top:12px"><h3>🇩🇪 Current jobs with direct application</h3><p><strong>'+Math.min(3,direct.length)+' / '+direct.length+'</strong> verified direct-apply offers.</p><div>'+first+'</div>'+
+      (direct.length>3?'<button id="beroppJobsDirectMore" type="button" class="secondary" style="display:block;margin:14px auto;padding:12px 20px;font-weight:800">＋ More — weitere Stellen</button>':'')+
+      '<div id="beroppJobsDirectRest" style="display:none">'+rest+'</div></div>';
+    const mb=$('beroppJobsDirectMore'),rb=$('beroppJobsDirectRest');
+    if(mb)mb.onclick=function(){rb.style.display='block';mb.remove()};
+    return direct;
+  };
+})();
+</script>
 </body></html>
