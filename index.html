@@ -2324,7 +2324,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     const u=String(url||'').trim();
     if(!/^https?:\\/\\//i.test(u))return false;
     const o={id:'live-az-'+btoa(unescape(encodeURIComponent(u))).replace(/[^a-zA-Z0-9]/g,'').slice(0,40),title:String(title||'Ausbildung'),company:String(company||''),type:'ausbildung',applicationUrl:u,applyUrl:u,applicationMode:'DIRECT_PORTAL'};
-    window.currentOpportunity=o;
+    currentOpportunity=o;
     if(typeof startBerOppApplication==='function')return startBerOppApplication();
     window.location.assign(u);
     return false;
