@@ -1206,9 +1206,17 @@ function beroppIsExternal(url){if(!url)return true;try{return /indeed\.|arbeitsa
 function beroppApplicationMode(o){if(!o)return'UNAVAILABLE';if(o.applicationUrl)return'DIRECT_PORTAL';if(o.applicationEmail)return'DIRECT_EMAIL';if(o.applyUrl)return'DIRECT_PORTAL';return'EXTERNAL_LISTING'}
 function beroppGetApplicationUrl(o){return o.applicationUrl||((o.applyUrl&&!beroppIsExternal(o.applyUrl))?o.applyUrl:'')}
 function beroppBuildLetter(o,p){const name=[p.firstName,p.lastName].filter(Boolean).join(' ')||p.name||'Bewerber/in';return'Bewerbung als '+(o.title||'Auszubildende/r')+' bei '+(o.company||'Ihrem Unternehmen')+'\n\nSehr geehrte Damen und Herren,\n\nmit großem Interesse bewerbe ich mich für '+(o.title||'die ausgeschriebene Position')+' bei '+(o.company||'Ihrem Unternehmen')+'. Meine bisherigen Erfahrungen, insbesondere '+(p.experience||'meine praktische Berufserfahrung')+', sowie meine Kenntnisse in '+(p.skills||'Zuverlässigkeit und Motivation')+' möchte ich gerne in Ihr Unternehmen einbringen.\n\nMeine Deutschkenntnisse: '+(p.german||'nicht angegeben')+'. Ich bin motiviert, mich fachlich weiterzuentwickeln und zuverlässig im Team zu arbeiten.\n\nÜber die Einladung zu einem persönlichen Gespräch freue ich mich sehr.\n\nMit freundlichen Grüßen\n'+name}
+function beroppFindOpportunityById(id){
+  const all=(Array.isArray(window.opps)?window.opps:[]).concat(Array.isArray(window.jobOpps)?window.jobOpps:[]);
+  return all.find(x=>String(x.id)===String(id))||null;
+}
 function beroppApplyByOpportunityId(id){
-  const o=opps.concat(jobOpps).find(x=>x.id===id);
-  if(!o)return false;
+  const o=beroppFindOpportunityById(id);
+  if(!o){
+    const live=(Array.isArray(window.beroppLivePflege)?window.beroppLivePflege:[]).find(x=>String(x.id)===String(id));
+    if(live) return beroppApplyLiveAusbildung(live);
+    return false;
+  }
   currentOpportunity=o;
   if(!beroppUser){
     beroppPendingTarget='homeOpportunity';
@@ -1221,6 +1229,31 @@ function beroppApplyByOpportunityId(id){
   const launched=beroppLaunchDirectApplication(o);
   if(!launched){show('details');setTimeout(beroppEnsureDirectApplyBox,0)}
   return launched;
+}
+function beroppApplyLiveAusbildung(o){
+  if(!o)return false;
+  if(!beroppUser){
+    beroppPendingTarget='homeOpportunity';
+    beroppPendingOpportunityId=o.id;
+    beroppPendingOpportunityType='ausbildung';
+    localStorage.setItem('beropp_pending_apply',JSON.stringify({target:'homeOpportunity',id:o.id,type:'ausbildung'}));
+    show('auth');
+    return false;
+  }
+  if(o.applyUrl){
+    window.location.assign(o.applyUrl);
+    return true;
+  }
+  if(o.url){
+    window.location.assign(o.url);
+    return true;
+  }
+  currentOpportunity=o;
+  show('details');
+  setTimeout(beroppEnsureDirectApplyBox,0);
+  const s=$('directApplyStatus');
+  if(s)s.innerHTML='🟡 <strong>This Ausbildung does not have a connected company application link yet.</strong>';
+  return false;
 }
 function beroppApplyButton(id){return '<button onclick="beroppApplyByOpportunityId('+id+')" style="background:#2563eb">⚡ Apply with BerOpp</button>'}
 function beroppEnsureDirectApplyBox(){const details=document.querySelector('#details .card');if(!details||document.getElementById('directApplyBox'))return;details.insertAdjacentHTML('beforeend','<div id="directApplyBox" class="directApplyBox"><h3 style="margin:0 0 5px">🚀 Apply with BerOpp</h3><p style="margin:0;color:#475569">Use your saved BerOpp profile once. BerOpp prepares the application for this company.</p><div class="directApplyGrid"><div class="directApplyStep"><strong>1 · Your profile</strong>Name, contact details, CV and qualifications</div><div class="directApplyStep"><strong>2 · AI application</strong>Company-specific CV/Anschreiben preparation</div><div class="directApplyStep"><strong>3 · Company</strong>Direct company portal or direct email when available</div><div class="directApplyStep"><strong>4 · Track</strong>Save the application and follow its status in BerOpp</div></div><div class="directApplyActions"><button onclick="startBerOppApplication()">⚡ Apply Now</button><button class="secondary" onclick="prepareBerOppApplication()">📝 Prepare Application</button></div><div id="directApplyStatus" class="status directApplyStatus">Your BerOpp profile is used; you should not have to type the same information again.</div></div>')}
@@ -1436,7 +1469,7 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
   function liveCard(o,kind){
     const title=esc(o.title||'Stellenangebot'), company=esc(o.company||'Arbeitgeber nicht angegeben'), place=esc(o.place||'Deutschland');
     const date=o.date?'<div class="nsLiveMeta">📅 '+esc(o.date)+'</div>':'';
-    const action=o.url&&o.direct?'<button onclick="window.open('+JSON.stringify(o.url)+',\'_blank\',\'noopener,noreferrer\')">🏢 Original / Bewerben</button>':'';
+    const action=(kind==='ausbildung'&&(o.url&&o.direct))?'<button onclick="beroppApplyLiveAusbildung('+JSON.stringify(o).replace(/</g,'\\u003c')+')">⚡ Apply Now</button>':(o.url&&o.direct?'<button onclick="window.open('+JSON.stringify(o.url)+',\'_blank\',\'noopener,noreferrer\')">🏢 Original / Bewerben</button>':'');
     return '<div class="card nsLiveDirectoryCard"><span class="badge">⚡ LIVE</span><h3>'+title+'</h3><p>🏢 '+company+'<br>📍 '+place+'</p>'+date+'<small>Quelle: '+esc(o.source||'Live-Stellensuche')+'</small><br>'+action+'</div>';
   }
   async function loadLiveDirectory(kind){
