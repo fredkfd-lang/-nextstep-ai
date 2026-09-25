@@ -2875,10 +2875,23 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   function safeUrl(u){try{const x=new URL(String(u||''));return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return''}}
   async function get(path,params){
     const qs=params.toString(),w=worker();
-    const url=w?w+path+'?'+qs:BA+'?'+qs;
-    const r=await fetch(url,{headers:{Accept:'application/json',...(w?{}:{'X-API-Key':KEY})}});
-    if(!r.ok)throw new Error('BA '+r.status);
-    return r.json();
+    const urls=w
+      ? [w+path+'?'+qs]
+      : [BA+'?'+qs,'https://www.arbeitsagentur.de/jobsuche/suche?'+qs];
+    let last;
+    for(const url of urls){
+      try{
+        const r=await fetch(url,{headers:{Accept:'application/json',...(w?{}:{'X-API-Key':KEY})}});
+        if(r.ok){
+          const ct=r.headers.get('content-type')||'';
+          if(ct.includes('application/json'))return r.json();
+          const text=await r.text();
+          try{return JSON.parse(text)}catch(e){}
+        }
+        last=new Error('BA '+r.status);
+      }catch(e){last=e}
+    }
+    throw last||new Error('Live search unavailable');
   }
   async function search(type){
     const out=[],seen=new Set();
