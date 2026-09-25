@@ -361,7 +361,7 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
 
 </div>
 </div>
-<div class="nsHomeSearch" id="homeSearchLocation">
+<div class="nsHomeSearch id="homeSearchLocation">
   <div class="nsHomeSearchHead"><div><h3>🔎 Find your next opportunity</h3><p>Search by job, Ausbildung, skill or location — directly from the Home page.</p></div><span class="nsHomeSearchBadge">Search + Location</span></div>
   <div class="nsHomeSearchGrid">
     <div class="nsHomeSearchField"><label for="homeCareerSearch">What are you looking for?</label><input id="homeCareerSearch" type="search" autocomplete="off" aria-autocomplete="list" aria-controls="homeCareerSuggestions" placeholder="e.g. Lager, Elektriker, Ausbildung" oninput="homeSearchSuggest('career');homeSearchLive('career')" onkeydown="if(event.key==='Enter')runHomeCareerSearch()"><div id="homeCareerSuggestions" class="nsSearchSuggestions" role="listbox" aria-label="Career suggestions"></div></div>
@@ -372,14 +372,26 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
   <div id="homeSearchStatus" class="nsHomeSearchStatus">Tip: use “My location” to detect your city, then search nearby opportunities.</div>
   <div id="homeSearchResults" class="nsHomeSearchResults"></div>
 </div>
-<div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid"><div class="nsPreviewPanel nsRemoteHomePreview"><div class="nsPreviewHead"><div><span class="nsPreviewKicker">🌐 INTERNATIONAL REMOTE</span><h3>Remote jobs from around the world</h3></div><button class="secondary" onclick="requireAuth('remoteInternational')">All Remote Jobs →</button></div><div id="homeRemotePreview" class="nsPreviewList"></div></div></div></div><div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid">
+<div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid"><div class="nsPreviewPanel nsRemoteHomePreview"><div class="nsPreviewHead"><div><span class="nsPreviewKicker">🌐 INTERNATIONAL REMOTE</span><h3>Remote jobs from around the world</h3></div><button class="secondary" onclick="requireAuth('remoteInternational')">All Remote Jobs →</button></div><div id="homeRemotePreview" class="nsPreviewList">
+<div class="nsPreviewItem" onclick="requireAuth('remoteInternational')"><strong>Customer Support Specialist</strong><div class="nsPreviewMeta">🌍 worldwide · 💼 Customer Support · full-time</div><button class="secondary" onclick="event.stopPropagation();requireAuth('remoteInternational')">View Remote →</button></div>
+<div class="nsPreviewItem" onclick="requireAuth('remoteInternational')"><strong>Software Developer / Engineer</strong><div class="nsPreviewMeta">🌍 worldwide · 💼 Technology · full-time</div><button class="secondary" onclick="event.stopPropagation();requireAuth('remoteInternational')">View Remote →</button></div>
+<div class="nsPreviewItem" onclick="requireAuth('remoteInternational')"><strong>Digital Marketing Specialist</strong><div class="nsPreviewMeta">🌍 worldwide · 💼 Marketing · full-time</div><button class="secondary" onclick="event.stopPropagation();requireAuth('remoteInternational')">View Remote →</button></div>
+</div></div></div></div><div class="nsHomePreviewWrap"><div class="nsHomePreviewGrid">
   <div class="nsPreviewPanel">
     <div class="nsPreviewHead"><div><span class="nsPreviewKicker">🎓 AUSBILDUNG</span><h3>Ausbildung für deinen nächsten Schritt</h3></div><button class="secondary" onclick="requireAuth('ausbildung')">Alle Ausbildung →</button></div>
-    <div id="homeAusbildungPreview" class="nsPreviewList"></div>
+    <div id="homeAusbildungPreview" class="nsPreviewList">
+<div class="nsPreviewItem" onclick="openHomeOpportunity(1,'ausbildung')"><strong>Ausbildung Fachkraft für Lagerlogistik 2027</strong><div class="nsPreviewMeta">🏢 RCL Rade GmbH (Rhenus) · 📍 Neu Wulmstorf · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(1,'ausbildung')">View Ausbildung →</button></div>
+<div class="nsPreviewItem" onclick="openHomeOpportunity(2,'ausbildung')"><strong>Auszubildenden zur Fachkraft für Lagerlogistik 2027</strong><div class="nsPreviewMeta">🏢 BMI Deutschland GmbH · 📍 Regesbostel · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(2,'ausbildung')">View Ausbildung →</button></div>
+<div class="nsPreviewItem" onclick="openHomeOpportunity(3,'ausbildung')"><strong>Auszubildenden zum Fachlagerist 2027</strong><div class="nsPreviewMeta">🏢 BMI Deutschland GmbH · 📍 Regesbostel · 📅 01.08.2027</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(3,'ausbildung')">View Ausbildung →</button></div>
+</div>
   </div>
   <div class="nsPreviewPanel">
     <div class="nsPreviewHead"><div><span class="nsPreviewKicker">💼 JOBS</span><h3>Aktuelle Jobs entdecken</h3></div><button class="secondary" onclick="requireAuth('matches')">Alle Jobs →</button></div>
-    <div id="homeJobsPreview" class="nsPreviewList"></div>
+    <div id="homeJobsPreview" class="nsPreviewList">
+<div class="nsPreviewItem" onclick="openHomeOpportunity(101,'job')"><strong>Versand-/Lagermitarbeiter (m/w/d)</strong><div class="nsPreviewMeta">🏢 Amazon Logistik Hamburg · 📍 Hamburg · 💶 16,43 € / Std.</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(101,'job')">View Job →</button></div>
+<div class="nsPreviewItem" onclick="openHomeOpportunity(102,'job')"><strong>Lagerhelfer (m/w/d) – ab 15 €/h</strong><div class="nsPreviewMeta">🏢 Queens Service Personal GmbH · 📍 Hamburg · 💶 15 € / Std.</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(102,'job')">View Job →</button></div>
+<div class="nsPreviewItem" onclick="openHomeOpportunity(103,'job')"><strong>Lagerhelfer/in (gn) – Quereinsteiger</strong><div class="nsPreviewMeta">🏢 A & H Zeitarbeit GmbH · 📍 Nottensdorf · 💶 15,33 € / Std.</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity(103,'job')">View Job →</button></div>
+</div>
   </div>
 </div></div>
 <div class="nsMiniFeatures nsMiniFeaturesBottom">
@@ -741,21 +753,17 @@ async function useMyHomeLocation(){
 }
 function renderHomePreviews(){
   const r=$('homeRemotePreview');
-  if(r){
-    if(typeof remoteInternationalJobs!=='undefined'&&Array.isArray(remoteInternationalJobs)&&remoteInternationalJobs.length){
-      r.innerHTML=remoteInternationalJobs.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\'remoteInternational\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🌍 '+esc(o.region)+' · 💼 '+esc(o.category)+' · '+esc(o.type)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\'remoteInternational\')">View Remote →</button></div>').join('');
-    }else{
-      r.innerHTML='<div class="nsHomeSearchEmpty">🌍 No fixed international vacancy is shown here. Open International Remote Jobs to search current external listings.</div>';
-    }
+  if(r&&typeof remoteInternationalJobs!=='undefined'&&Array.isArray(remoteInternationalJobs)&&remoteInternationalJobs.length){
+    r.innerHTML=remoteInternationalJobs.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\\'remoteInternational\\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🌍 '+esc(o.region)+' · 💼 '+esc(o.category)+' · '+esc(o.type)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\\'remoteInternational\\')">View Remote →</button></div>').join('');
   }
   const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');
   if(!a||!j)return;
-  a.innerHTML=(typeof opps!=='undefined'&&Array.isArray(opps)&&opps.length)
-    ? opps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="openHomeOpportunity('+o.id+',\'ausbildung\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+'</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity('+o.id+',\'ausbildung\')">View Ausbildung →</button></div>').join('')
-    : '<div class="nsHomeSearchEmpty">🎓 No saved vacancy is shown here. Use the live Ausbildung search to get current offers.</div>';
-  j.innerHTML=(typeof jobOpps!=='undefined'&&Array.isArray(jobOpps)&&jobOpps.length)
-    ? jobOpps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="openHomeOpportunity('+o.id+',\'job\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 💶 '+esc(o.salary)+'</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity('+o.id+',\'job\')">View Job →</button></div>').join('')
-    : '<div class="nsHomeSearchEmpty">💼 No saved vacancy is shown here. Use Find Jobs to search current offers.</div>';
+  if(typeof opps!=='undefined'&&Array.isArray(opps)&&opps.length){
+    a.innerHTML=opps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="openHomeOpportunity('+o.id+',\\'ausbildung\\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+'</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity('+o.id+',\\'ausbildung\\')">View Ausbildung →</button></div>').join('');
+  }
+  if(typeof jobOpps!=='undefined'&&Array.isArray(jobOpps)&&jobOpps.length){
+    j.innerHTML=jobOpps.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="openHomeOpportunity('+o.id+',\\'job\\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 💶 '+esc(o.salary)+'</div><button class="secondary" onclick="event.stopPropagation();openHomeOpportunity('+o.id+',\\'job\\')">View Job →</button></div>').join('');
+  }
 }
 function openFeature(target){
   show(target);
