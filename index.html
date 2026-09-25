@@ -1973,4 +1973,91 @@ window.beroppApplyAusbildungSearch=function(id){
 function all(){const out=[];try{if(Array.isArray(window.opps))out.push(...window.opps)}catch(e){}try{if(Array.isArray(window.beroppLivePflege))out.push(...window.beroppLivePflege)}catch(e){}const seen=new Set();return out.filter(o=>{const k=String(o.id);if(seen.has(k))return false;seen.add(k);return true})}
 function find(name){const n=String(name||"").toLowerCase().trim();const A={pflege:["pflegefachfrau","pflegefachmann","pflegefachkraft","pflege"],gesundheit:["pflegefachfrau","pflegefachmann","pflegefachkraft","pflege"],fachlagerist:["fachlagerist","lagerlogistik","lager"],"fachkraft für lagerlogistik":["fachkraft für lagerlogistik","lagerlogistik","fachlagerist"],lagerlogistik:["lagerlogistik","fachlagerist"],elektriker:["elektriker","elektroniker","elektro","elektrotechnik"],elektroniker:["elektroniker","elektriker","elektro","elektrotechnik"]};const terms=A[n]||[n];return all().filter(o=>{const h=(String(o.title||"")+" "+String(o.description||"")+" "+String(o.type||"")+" "+String(o.field||"")+" "+(o.skills||[]).join(" ")).toLowerCase();return terms.some(t=>h.includes(t))})}
 window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");if(!box)return false;const ms=find(name);if(ms.length){box.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p><strong>'+ms.length+'</strong> passende Ausbildung-Angebote.</p>'+ms.map(o=>'<div class="card" style="margin:10px 0"><h3>'+esc(o.title||"Ausbildung")+'</h3><p>🏢 '+esc(o.company||"")+' · 📍 '+esc(o.place||"")+' · 📅 '+esc(o.start||"")+'</p><p>'+esc(o.description||"")+'</p><button type="button" class="secondary" onclick="event.preventDefault();event.stopPropagation();return viewOpp('+o.id+')">📖 Details</button>'+(url(o)?'<button type="button" onclick="event.preventDefault();event.stopPropagation();return beroppApplyAusbildungSearch('+o.id+')" style="background:#2563eb">⚡ Apply Now — Company Direct</button>':"")+'</div>').join("")+'</div>';box.scrollIntoView({behavior:"smooth",block:"start"});return true}const ba=typeof buildBAUrl==="function"?buildBAUrl(name,""):"https://www.arbeitsagentur.de/jobsuche/";box.innerHTML='<div class="card"><h3>🔎 '+esc(name)+'</h3><p>BerOpp hat aktuell keine gespeicherte Ausbildung für diesen Beruf.</p><a href="'+esc(ba)+'" target="_blank" rel="noopener noreferrer" class="secondary" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🔗 Aktuelle Ausbildung suchen</a></div>';return false};
-})();</script></body></html>
+})();</script>
+<script id="beropp-search-final-stable-fix">
+(function(){
+  function norm(v){try{return normalizeLocation(String(v||''))}catch(e){return String(v||'').toLowerCase().trim()}}
+  function allAus(){const a=[];try{if(Array.isArray(window.opps))a.push(...window.opps)}catch(e){}try{if(Array.isArray(window.beroppLivePflege))a.push(...window.beroppLivePflege)}catch(e){}const seen=new Set();return a.filter(o=>{const k=String(o.id);if(seen.has(k))return false;seen.add(k);return true})}
+  function aliases(name){
+    const n=norm(name);
+    const map={
+      pflege:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege','altenpfleger'],
+      gesundheit:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege'],
+      fachlagerist:['fachlagerist','lagerlogistik','lager'],
+      'fachkraft für lagerlogistik':['fachkraft für lagerlogistik','lagerlogistik','fachlagerist'],
+      lagerlogistik:['lagerlogistik','fachlagerist'],
+      elektriker:['elektriker','elektroniker','elektro','elektrotechnik'],
+      elektroniker:['elektroniker','elektriker','elektro','elektrotechnik']
+    };
+    return map[n]||[n];
+  }
+  function renderAusMatches(name){
+    const box=$('berufeList'); if(!box)return false;
+    const terms=aliases(name), city=norm($('oppCity')?.value||'');
+    const matches=allAus().filter(o=>{
+      const hay=norm([o.title,o.description,o.type,o.field,(o.skills||[]).join(' ')].join(' '));
+      return terms.some(t=>hay.includes(norm(t))) && (!city||norm(o.place).includes(city));
+    });
+    if(!matches.length){
+      box.innerHTML='<div class="card"><h3>🔎 '+esc(name)+'</h3><p>BerOpp has no saved matching Ausbildung yet. You can continue with the official Ausbildung search.</p><a class="secondary" target="_blank" rel="noopener noreferrer" href="'+esc(typeof buildBAUrl==='function'?buildBAUrl(name,city):'https://www.arbeitsagentur.de/bildung/stellensuche')+'">🔗 Aktuelle Ausbildung suchen</a></div>';
+      return false;
+    }
+    box.innerHTML='<div class="card"><h3>🎓 Stellen für '+esc(name)+'</h3><p><strong>'+matches.length+'</strong> passende Ausbildung-Angebote.</p>'+
+      matches.map(o=>{
+        const apply=(o.applicationUrl||o.applyUrl||o.url)?'<button type="button" onclick="event.preventDefault();event.stopPropagation();return beroppApplyByOpportunityId('+o.id+')" style="background:#2563eb">⚡ Apply Now</button>':'';
+        return '<div class="card" style="margin:10px 0"><h3>'+esc(o.title||'Ausbildung')+'</h3><p>🏢 '+esc(o.company||'')+' · 📍 '+esc(o.place||'')+' · 📅 '+esc(o.start||'')+'</p><p>'+esc(o.description||'')+'</p>'+apply+'</div>';
+      }).join('')+'</div>';
+    box.scrollIntoView({behavior:'smooth',block:'start'});
+    return true;
+  }
+  window.findByBeruf=function(name){
+    show('ausbildung');
+    if($('berufSearch'))$('berufSearch').value=String(name||'');
+    return renderAusMatches(name);
+  };
+
+  // Browsing/searching does not require an account. Authentication is required only when applying/saving profile data.
+  const previousRequireAuth=window.requireAuth;
+  window.requireAuth=function(target){
+    if(target==='matches'){
+      show('matches'); if(typeof findMatches==='function')findMatches(); return true;
+    }
+    if(target==='ausbildung'){
+      show('ausbildung');
+      if($('berufSearch')&&!$('berufSearch').value)$('berufSearch').value='';
+      if(typeof renderBerufe==='function')renderBerufe();
+      return true;
+    }
+    if(target==='remoteInternational'){
+      show('remoteInternational');
+      if(typeof renderRemoteJobs==='function')renderRemoteJobs();
+      return true;
+    }
+    return previousRequireAuth?previousRequireAuth.apply(this,arguments):false;
+  };
+
+  // Make the remote page independent of a missing/overridden renderer.
+  window.renderRemoteJobs=function(){
+    const box=$('remoteJobsList'); if(!box)return false;
+    let data=[];
+    try{if(typeof remoteInternationalJobs!=='undefined'&&Array.isArray(remoteInternationalJobs))data=remoteInternationalJobs}catch(e){}
+    if(!data.length){box.innerHTML='<div class="card"><h3>🌐 Remote Jobs</h3><p>No remote opportunities are loaded right now.</p></div>';return false}
+    const q=norm($('remoteSearch')?.value||''), region=$('remoteRegion')?.value||'', type=$('remoteType')?.value||'';
+    const list=data.filter(o=>(!q||norm([o.title,o.company,o.category,(o.tags||[]).join(' '),o.desc].join(' ')).includes(q))&&(!region||o.region===region||o.region==='worldwide')&&(!type||o.type===type));
+    if($('remoteCount'))$('remoteCount').textContent=list.length+' international remote opportunities';
+    box.innerHTML=list.length?list.map(o=>'<div class="nsRemoteCard"><h3>'+esc(o.title||'Remote Job')+'</h3><div class="nsRemoteMeta">🏢 '+esc(o.company||'')+' · 🌍 '+esc(o.region||'worldwide')+' · '+esc(o.type||'')+'</div><div class="nsRemoteTags">'+(o.tags||[]).map(t=>'<span class="nsRemoteTag">'+esc(t)+'</span>').join('')+'</div><p>'+esc(o.desc||'')+'</p><a class="secondary" href="'+esc(o.url||'#')+'" target="_blank" rel="noopener noreferrer">🔗 View remote opportunities</a></div>').join(''):'<div class="card"><h3>🔎 No matching remote opportunities</h3><p>Try another keyword, region or job type.</p></div>';
+    return true;
+  };
+
+  // If an old inline handler still points at an overridden function, keep the buttons working.
+  document.addEventListener('click',function(e){
+    const b=e.target.closest('button'); if(!b)return;
+    const label=(b.textContent||'').toLowerCase();
+    if(label.includes('stellen finden')){
+      const detail=b.closest('#berufDetail');
+      const name=detail?.querySelector('h3')?.textContent?.replace(/^🎓\s*/,'').trim()||$('berufSearch')?.value||'';
+      if(name){e.preventDefault();e.stopImmediatePropagation();window.findByBeruf(name);}
+    }
+  },true);
+})();
+</script></body></html>
