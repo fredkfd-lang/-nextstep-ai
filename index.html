@@ -2287,7 +2287,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     const name=String(b[0]||''),cat=String(b[1]||'');
     const j=JSON.stringify(name).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
     const c=JSON.stringify(cat).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
-    return '<div class="card beroppAzCard" style="margin:8px 0;padding:14px"><strong>'+E(name)+'</strong><br><span class="badge">'+E(cat)+'</span><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px"><button class="secondary" type="button" onclick="showBerufDetail('+j+','+c+')">📖 Details</button><button class="secondary" type="button" onclick="beroppSearchAusbildungDirect('+j+');return false">⚡ Find Ausbildung + Apply Direct</button></div></div>';
+    return '<div class="card beroppAzCard" style="margin:8px 0;padding:14px"><strong>'+E(name)+'</strong><br><span class="badge">'+E(cat)+'</span><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px"><button class="secondary" type="button" onclick="showBerufDetail('+j+','+c+')">📖 Details</button><button class="secondary" type="button" onclick="beroppApplyProfessionDirect('+j+');return false">⚡ Find Ausbildung + Apply Direct</button></div></div>';
   }
   function renderAZ(){
     const q=($('berufSearch')?.value||'').toLowerCase().trim(),cat=$('berufCategory')?.value||'';
@@ -2478,7 +2478,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     const name=String(b[0]||''),cat=String(b[1]||'');
     const j=JSON.stringify(name).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
     const c=JSON.stringify(cat).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
-    return '<div class="card beroppAzCard" style="margin:8px 0;padding:14px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><strong>'+e(name)+'</strong><span class="badge" style="background:#dcfce7;color:#166534">LIVE</span></div><span class="badge">'+e(cat)+'</span><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px"><button class="secondary" type="button" onclick="showBerufDetail('+j+','+c+')">📖 Details</button><button class="secondary" type="button" onclick="beroppSearchAusbildungDirect('+j+');return false">⚡ Find Ausbildung + Apply Direct</button></div></div>';
+    return '<div class="card beroppAzCard" style="margin:8px 0;padding:14px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><strong>'+e(name)+'</strong><span class="badge" style="background:#dcfce7;color:#166534">LIVE</span></div><span class="badge">'+e(cat)+'</span><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px"><button class="secondary" type="button" onclick="showBerufDetail('+j+','+c+')">📖 Details</button><button class="secondary" type="button" onclick="beroppApplyProfessionDirect('+j+');return false">⚡ Find Ausbildung + Apply Direct</button></div></div>';
   }
   window.renderBerufe=async function(){
     const box=$('berufeList');if(!box)return false;
