@@ -1446,9 +1446,9 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
   }
   function openCompany(url,afterAuth){
     if(!url)return false;
-    if(afterAuth){window.location.assign(url);return true}
-    const w=window.open(url,'_blank','noopener,noreferrer');
-    if(!w||w.closed){window.location.assign(url)}
+    if(afterAuth){window.location.href=url;return true}
+    const w=window.open(url,'_blank');
+    if(!w||w.closed){window.location.href=url}
     return true;
   }
   window.beroppApplyAusbildungById=function(id){
