@@ -2262,9 +2262,9 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     $('berufeCount').textContent=list.length+' Berufe in BerOpp';
     const first=list.slice(0,3).map(professionCard).join(''),rest=list.slice(3).map(professionCard).join('');
     box.innerHTML='<div class="card" style="margin-top:12px"><h3>🎓 Ausbildungsberufe A–Z</h3><p><strong>'+Math.min(3,list.length)+' / '+list.length+'</strong> Berufe werden angezeigt.</p><div>'+first+'</div>'+
-      (list.length>3?'<button id="beroppAzMore" type="button" class="secondary" style="display:block;margin:14px auto;padding:12px 20px;font-weight:800">＋ More — weitere Berufe</button>':'')+
-      '<div id="beroppAzRest" style="display:none">'+rest+'</div></div>';
-    const mb=$('beroppAzMore'),rb=$('beroppAzRest');
+      (list.length>3?'<button id="beroppAzMoreLegacy" type="button" class="secondary" style="display:block;margin:14px auto;padding:12px 20px;font-weight:800">＋ More — weitere Berufe</button>':'')+
+      '<div id="beroppAzRestLegacy" style="display:none">'+rest+'</div></div>';
+    const mb=$('beroppAzMoreLegacy'),rb=$('beroppAzRestLegacy');
     if(mb)mb.onclick=function(){rb.style.display='block';mb.remove();const p=box.querySelector('div.card > p');if(p)p.innerHTML='<strong>'+list.length+' / '+list.length+'</strong> Berufe werden angezeigt.'};
     return true;
   }
