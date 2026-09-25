@@ -971,7 +971,7 @@ async function handleProfileFile(e,type){
   renderProfileFileStatus();$('profileSaveStatus').textContent='📎 File encrypted locally. Click Save Profile to save the profile record.';
  }catch(err){console.error(err);$('profileSaveStatus').textContent='❌ File could not be encrypted and stored.'}
 }
-function renderProfileFileStatus(){const f=window.profileFiles||{};$('profileCVFileStatus').textContent=f.cv?.name||'Noch keine Datei';$('profileCoverFileStatus').textContent=f.cover?.name||'Noch keine Datei';$('profileCertificatesFileStatus').textContent=f.certificates?.length?(f.certificates.length+' Datei(en) gespeichert'): 'Noch keine Dateien'}
+function renderProfileFileStatus(){const f=window.profileFiles||{};const cv=$('profileCVFileStatus'),cover=$('profileCoverFileStatus'),cert=$('profileCertificatesFileStatus');if(cv)cv.textContent=f.cv?.name||'Noch keine Datei';if(cover)cover.textContent=f.cover?.name||'Noch keine Datei';if(cert)cert.textContent=f.certificates?.length?(f.certificates.length+' Datei(en) gespeichert'):'Noch keine Dateien'}
 async function exportProfileData(){const raw=localStorage.getItem('beropp_profile_encrypted');if(!raw){alert('No saved profile found.');return}try{const p=JSON.parse(await decryptText(JSON.parse(raw)));const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='beropp-profile-export.json';a.click();URL.revokeObjectURL(a.href)}catch(e){alert('Could not export the profile.')}}
 async function deleteAllProfileData(){
  if(!confirm('Delete your BerOpp profile and uploaded documents from this device? This cannot be undone.'))return;
