@@ -513,7 +513,7 @@ const categoryProfiles={
 'Verkehr & Fahrzeuge':{tasks:['Fahrzeuge, Verkehrsmittel oder logistische Abläufe betreuen','Technische Kontrollen und organisatorische Aufgaben durchführen','Sicherheits- und Verkehrsregeln beachten'],requirements:['Verantwortungsbewusstsein','Technisches oder organisatorisches Interesse','Zuverlässigkeit'],work:'Verkehr, Logistik, Werkstätten und Mobilitätsunternehmen'},
 'Dienstleistung & Sicherheit':{tasks:['Kunden, Gäste oder andere Personen betreuen','Dienstleistungs- und Sicherheitsaufgaben durchführen','Abläufe dokumentieren und Regeln beachten'],requirements:['Zuverlässigkeit und Verantwortungsbewusstsein','Kommunikationsfähigkeit','Teamfähigkeit'],work:'Dienstleistungsunternehmen, öffentliche Einrichtungen und Sicherheitsbereiche'}
 };
-function showBerufDetail(name,cat){if(!beroppUser){beroppPendingTarget='ausbildung';show('auth');return false}
+function showBerufDetail(name,cat){
   const exact=berufProfiles[name]||{},base=categoryProfiles[cat]||{};
   const p={duration:exact.duration||'Je nach Ausbildungsberuf meist 2 bis 3,5 Jahre',type:exact.type||'Ausbildung (genaue Ausbildungsart beim offiziellen Profil prüfen)',tasks:exact.tasks||base.tasks||['Typische Aufgaben hängen vom konkreten Ausbildungsberuf ab.'],requirements:exact.requirements||base.requirements||['Die Zugangsvoraussetzungen hängen vom konkreten Ausbildungsberuf ab.'],work:exact.work||base.work||'Je nach Beruf unterschiedliche Einsatzorte',next:exact.next||'Weitere Fort- und Weiterbildungsmöglichkeiten hängen vom konkreten Beruf ab.'};
   $('berufDetail').innerHTML='<h3>🎓 '+esc(name)+'</h3><span class="badge">'+esc(cat)+'</span><p><strong>⏱ Ausbildungsdauer:</strong> '+esc(p.duration)+'</p><p><strong>📚 Ausbildungsart:</strong> '+esc(p.type)+'</p><h4>🛠️ Typische Aufgaben</h4><ul>'+p.tasks.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul><h4>📋 Wichtige Voraussetzungen</h4><ul>'+p.requirements.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul><p><strong>🏢 Einsatzorte:</strong> '+esc(p.work)+'</p><p><strong>🚀 Danach:</strong> '+esc(p.next)+'</p><p style="font-size:13px;color:#64748b">Ibi ni incamake ya BerOpp. Ku bisabwa nyabyo, Ausbildungsdauer n’amakuru agezweho, reba Bundesagentur für Arbeit.</p><a class="secondary" href="https://www.arbeitsagentur.de/bildung/berufe-und-wege/berufe-a-bis-z" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">🔗 Official BA Ausbildungsberufe A–Z</a><button class="secondary" onclick="findByBeruf('+JSON.stringify(name).replace(/"/g,'&quot;')+')">🔎 Stellen finden</button>';
@@ -1728,6 +1728,36 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
       if(url)return direct(o);
     }
     return oldView?oldView(id):false;
+  };
+})();
+</script>
+<script id="beropp-final-ausbildung-navigation-fix">
+(function(){
+  function openAusbildung(name){
+    try{show('ausbildung')}catch(e){return false}
+    const input=$('berufSearch');
+    if(input)input.value=String(name||'');
+    if(typeof renderBerufe==='function')renderBerufe();
+    setTimeout(function(){
+      const box=$('berufDetail');
+      if(box)box.classList.add('hidden');
+      const list=$('berufeList');
+      if(list)list.scrollIntoView({behavior:'smooth',block:'start'});
+    },0);
+    return true;
+  }
+  window.findByBeruf=function(name){return openAusbildung(name)};
+  window.showBerufDetail=function(name,cat){
+    try{show('ausbildung')}catch(e){}
+    const exact=berufProfiles[name]||{},base=categoryProfiles[cat]||{};
+    const p={duration:exact.duration||'Je nach Ausbildungsberuf meist 2 bis 3,5 Jahre',type:exact.type||'Ausbildung',tasks:exact.tasks||base.tasks||[],requirements:exact.requirements||base.requirements||[],work:exact.work||base.work||'Je nach Beruf unterschiedliche Einsatzorte',next:exact.next||base.next||'Weitere Fort- und Weiterbildungsmöglichkeiten hängen vom konkreten Beruf ab.'};
+    const box=$('berufDetail');
+    if(box){
+      box.innerHTML='<h3>🎓 '+esc(name)+'</h3><span class="badge">'+esc(cat||'Ausbildung')+'</span><p><strong>⏱ Ausbildungsdauer:</strong> '+esc(p.duration)+'</p><p><strong>📚 Ausbildungsart:</strong> '+esc(p.type)+'</p><h4>🛠️ Typische Aufgaben</h4><ul>'+p.tasks.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul><h4>📋 Wichtige Voraussetzungen</h4><ul>'+p.requirements.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul><p><strong>🏢 Einsatzorte:</strong> '+esc(p.work)+'</p><p><strong>🚀 Danach:</strong> '+esc(p.next)+'</p><button type="button" onclick="findByBeruf('+JSON.stringify(name).replace(/"/g,'&quot;')+')">🔎 Stellen finden</button>';
+      box.classList.remove('hidden');
+      box.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    return true;
   };
 })();
 </script></body></html>
