@@ -1675,15 +1675,7 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
     const o=resolve(id);
     if(o&&!window.beroppUser){
       const url=o.applicationUrl||o.applyUrl||o.url||'';
-      if(url){
-        localStorage.setItem('beropp_pending_apply',JSON.stringify({
-          target:'ausbildungDirect',id:o.id,type:'ausbildung',url:url,
-          title:o.title||'',company:o.company||''
-        }));
-        window.beroppPendingTarget='ausbildungDirect';
-        window.beroppPendingOpportunityId=o.id;
-        window.beroppPendingOpportunityType='ausbildung';
-      }
+      if(url)return direct(o);
     }
     return oldView?oldView(id):false;
   };
