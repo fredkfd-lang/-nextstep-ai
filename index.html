@@ -624,6 +624,7 @@ function initBerOppAuth(){
     beroppAuth.getRedirectResult().catch(e=>{if(e&&e.code)setAuthStatus('❌ Google login: '+e.code+' — '+(e.message||'Please try again.'))});
     beroppAuth.onAuthStateChanged(async user=>{
       beroppUser=user||null;
+      window.beroppUser=beroppUser;
       renderBerOppAccountStatus();
       if(!user){setAuthStatus('Ready to sign in.');return}
       if(beroppJustCreatedAccount){beroppJustCreatedAccount=false;setAuthStatus('✅ Account created. You can continue directly to your application.');}
@@ -777,16 +778,27 @@ function requireAuth(target){
 }
 async function signInWithGoogle(){
   if(!firebaseReady()||!beroppAuth){setAuthStatus('⚠️ Secure login is not ready yet. Please refresh the page.');return}
+  const provider=new firebase.auth.GoogleAuthProvider();
   try{
-    const provider=new firebase.auth.GoogleAuthProvider();
+    const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&'ontouchend' in document);
     setAuthStatus('⏳ Opening Google sign-in…');
+    if(isIOS){
+      await beroppAuth.signInWithRedirect(provider);
+      return;
+    }
     await beroppAuth.signInWithPopup(provider);
   }catch(e){
     console.error(e);
-    if(e&&['auth/popup-blocked','auth/operation-not-supported-in-this-environment'].includes(e.code)){
-      try{setAuthStatus('⏳ Opening Google sign-in…');await beroppAuth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());return}catch(err){e=err}
+    try{
+      setAuthStatus('⏳ Redirecting to Google sign-in…');
+      await beroppAuth.signInWithRedirect(provider);
+      return;
+    }catch(err){
+      console.error(err);
+      const code=err&&err.code?err.code:(e&&e.code);
+      const message=err&&err.message?err.message:(e&&e.message);
+      setAuthStatus('❌ Google login: '+(code||'error')+' — '+(message||'Please try again.'));
     }
-    setAuthStatus('❌ Google login: '+(e.code||'error')+' — '+(e.message||'Please try again.'));
   }
 }
 function getAuthCredentials(){
@@ -1629,14 +1641,14 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
       return false;
     }
     currentOpportunity=o;
-    if(!window.beroppUser){
+    if(!beroppUser){
       localStorage.setItem('beropp_pending_apply',JSON.stringify({
         target:'ausbildungDirect',id:o.id,type:'ausbildung',url:url,
         title:o.title||'',company:o.company||''
       }));
-      window.beroppPendingTarget='ausbildungDirect';
-      window.beroppPendingOpportunityId=o.id;
-      window.beroppPendingOpportunityType='ausbildung';
+      beroppPendingTarget='ausbildungDirect';
+      beroppPendingOpportunityId=o.id;
+      beroppPendingOpportunityType='ausbildung';
       show('auth');
       return false;
     }
@@ -1675,7 +1687,7 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
   const oldView=window.viewOpp;
   window.viewOpp=function(id){
     const o=resolve(id);
-    if(o&&!window.beroppUser){
+    if(o&&!beroppUser){
       const url=o.applicationUrl||o.applyUrl||o.url||'';
       if(url)return direct(o);
     }
