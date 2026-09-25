@@ -2060,4 +2060,64 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     }
   },true);
 })();
+</script>
+<script id="beropp-live-germany-search-v1">
+(function(){
+  const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs';
+  const BAKEY='jobboerse-jobsuche';
+  function n(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()}
+  function baUrl(ref){if(!ref)return'';try{return 'https://www.arbeitsagentur.de/jobsuche/jobdetail/'+btoa(unescape(encodeURIComponent(String(ref))))}catch(e){return 'https://www.arbeitsagentur.de/jobsuche/'}}
+  async function live(q,where,type){
+    const p=new URLSearchParams({angebotsart:type==='ausbildung'?'4':'1',page:'1',size:'100',pav:'false'});
+    if(q)p.set('was',q); if(where)p.set('wo',where); if(where)p.set('umkreis','200');
+    const r=await fetch(BA+'?'+p.toString(),{headers:{'X-API-Key':BAKEY}});
+    if(!r.ok)throw new Error('BA '+r.status);
+    const d=await r.json();
+    return (d.stellenangebote||[]).map((o,i)=>({
+      id:'ba-live-'+(o.referenznummer||o.refnr||i),
+      title:o.stellenangebotsTitel||o.beruf||o.titel||'Stellenangebot',
+      company:o.arbeitgeber||o.arbeitgeberName||'',
+      place:o.arbeitsort||o.ort||o.arbeitsortName||'',
+      start:o.beginn||o.eintrittsdatum||'',
+      description:o.stellenangebotsBeschreibung||o.beschreibung||'',
+      type:type==='ausbildung'?'Ausbildung':'Job',
+      source:'Bundesagentur für Arbeit',
+      applyUrl:o.stellenangebotsUrl||o.url||baUrl(o.referenznummer||o.refnr)
+    }));
+  }
+  function renderLive(box,rows,type){
+    if(!box)return;
+    const html=rows.length?'<div class="card" style="margin-top:12px"><h3>🇩🇪 Live aus der Bundesagentur für Arbeit</h3><p>'+rows.length+' aktuelle Treffer aus Deutschland.</p>'+
+      rows.map(o=>'<div class="card" style="margin:9px 0"><h3>'+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.start||'')+'</p><p>'+esc(String(o.description||'').slice(0,360))+'</p><a class="secondary" href="'+esc(o.applyUrl||'https://www.arbeitsagentur.de/jobsuche/')+'" target="_blank" rel="noopener noreferrer">🔗 Zur Anzeige bei der Bundesagentur</a></div>').join('')+'</div>':
+      '<div class="card" style="margin-top:12px"><p>Keine aktuellen Treffer für diese Suche.</p></div>';
+    box.insertAdjacentHTML('beforeend',html);
+  }
+  window.beroppSearchGermanyLive=async function(q,where,type,box){
+    try{const rows=await live(q,where,type);renderLive(box,rows,type);return rows}catch(e){console.warn('BA live search unavailable',e);return[]}
+  };
+  const oldFind=window.findByBeruf;
+  window.findByBeruf=async function(name){
+    const result=oldFind?oldFind(name):false;
+    const box=$('berufeList');
+    if(box){
+      const city=($('homeCareerLocation')?.value||'').trim();
+      box.insertAdjacentHTML('beforeend','<div id="baLiveLoading" class="card" style="margin-top:12px">⏳ Germany-wide live search is loading…</div>');
+      const rows=await window.beroppSearchGermanyLive(name,city,'ausbildung',box);
+      $('baLiveLoading')?.remove();
+      return !!result||rows.length>0;
+    }
+    return result;
+  };
+  const oldFindMatches=window.findMatches;
+  window.findMatches=async function(){
+    const r=oldFindMatches?oldFindMatches():false;
+    const box=$('results'); if(!box)return r;
+    const q=($('oppSearch')?.value||'').trim(), city=($('oppCity')?.value||'').trim();
+    if(!q&&!city)return r;
+    box.insertAdjacentHTML('beforeend','<div id="baJobsLoading" class="card">⏳ Searching current Germany-wide jobs…</div>');
+    const rows=await window.beroppSearchGermanyLive(q,city,'job',box);
+    $('baJobsLoading')?.remove();
+    return r||rows.length>0;
+  };
+})();
 </script></body></html>
