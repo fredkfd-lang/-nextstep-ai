@@ -4,6 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
+      - "scripts/update-live-data.cjs"
       - "scripts/update-live-data.mjs"
       - ".github/workflows/live-data.yml"
   schedule:
