@@ -633,7 +633,7 @@ function initBerOppAuth(){
       // A slow Firestore/profile request must not block the company redirect.
       try{
         const directSaved=JSON.parse(localStorage.getItem('beropp_pending_apply')||'null');
-        if(directSaved&&directSaved.target==='ausbildungDirect'&&directSaved.url){
+        if(directSaved&&(directSaved.target==='ausbildungDirect'||directSaved.target==='jobDirect'||directSaved.target==='homeOpportunity')&&directSaved.url){
           localStorage.removeItem('beropp_pending_apply');
           beroppPendingTarget='';beroppPendingOpportunityId=null;beroppPendingOpportunityType='';
           updateBerOppApplicationStatus(directSaved.id,'Company application opened');
@@ -650,7 +650,7 @@ function initBerOppAuth(){
       try{
         const saved=JSON.parse(localStorage.getItem('beropp_pending_apply')||'null');
         if(!pendingTarget&&saved){pendingTarget=saved.target||'';pendingId=saved.id??null;pendingType=saved.type||'';}
-        if((saved&&saved.target==='ausbildungDirect'&&saved.url) || (pendingTarget==='ausbildungDirect'&&pendingId!=null)){
+        if((saved&&((saved.target==='ausbildungDirect')||(saved.target==='jobDirect')||(saved.target==='homeOpportunity'))&&saved.url) || ((pendingTarget==='ausbildungDirect'||pendingTarget==='jobDirect')&&pendingId!=null)){
           const directUrl=(saved&&saved.url)?saved.url:(()=>{
             const o=opps.concat(jobOpps).find(x=>String(x.id)===String(pendingId));
             return o?(o.applicationUrl||o.applyUrl||o.url||''):'';
@@ -1319,11 +1319,21 @@ function beroppLaunchDirectApplication(o){
 function startBerOppApplication(){
   const o=currentOpportunity;if(!o)return false;
   if(!beroppUser){
+    const type=(String(o.type||'').toUpperCase()==='JOB'?'job':'ausbildung');
+    const url=o.applicationUrl||o.applyUrl||o.url||'';
     beroppPendingTarget='homeOpportunity';
     beroppPendingOpportunityId=o.id;
-    beroppPendingOpportunityType=(String(o.type||'').toUpperCase()==='JOB'?'job':'ausbildung');
-    localStorage.setItem('beropp_pending_apply',JSON.stringify({target:'homeOpportunity',id:o.id,type:beroppPendingOpportunityType}));
+    beroppPendingOpportunityType=type;
+    localStorage.setItem('beropp_pending_apply',JSON.stringify({
+      target:type==='job'?'jobDirect':'ausbildungDirect',
+      id:o.id,
+      type:type,
+      url:url,
+      title:o.title||'',
+      company:o.company||''
+    }));
     show('auth');
+    setAuthStatus('🔐 Enter your email and password or continue with Google. After login, BerOpp will open the company application directly.');
     return false;
   }
   return beroppLaunchDirectApplication(o);
@@ -1723,7 +1733,23 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
   window.beroppApplyByOpportunityId=function(id){
     const o=resolve(id);
     if(!o)return false;
-    if(String(o.type||'').toUpperCase()==='JOB')return beroppLaunchDirectApplication(o);
+    if(String(o.type||'').toUpperCase()==='JOB'){
+      const url=o.applicationUrl||o.applyUrl||o.url||'';
+      currentOpportunity=o;
+      if(!beroppUser){
+        localStorage.setItem('beropp_pending_apply',JSON.stringify({
+          target:'jobDirect',id:o.id,type:'job',url:url,
+          title:o.title||'',company:o.company||''
+        }));
+        beroppPendingTarget='homeOpportunity';
+        beroppPendingOpportunityId=o.id;
+        beroppPendingOpportunityType='job';
+        show('auth');
+        setAuthStatus('🔐 Enter your email and password or continue with Google. After login, BerOpp will open the company application directly.');
+        return false;
+      }
+      return beroppLaunchDirectApplication(o);
+    }
     return direct(o);
   };
   window.startBerOppApplication=function(){
