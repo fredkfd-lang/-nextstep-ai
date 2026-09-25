@@ -310,8 +310,42 @@ body.dark-mode:before{
     linear-gradient(90deg,rgba(147,197,253,.035) 1px,transparent 1px);
 }
 </style>
-</head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
-<section id="auth" class="hidden"><div class="card" style="max-width:520px;margin:30px auto;background:linear-gradient(135deg,#eef2ff,#fff)"><div style="text-align:center"><div class="brandMark" style="margin:auto;width:72px;height:72px"><svg viewBox="0 0 64 64"><defs><linearGradient id="authG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#authG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><h2>🔐 Create your BerOpp account</h2><p>To use Find Jobs, Find Ausbildung, Berufe and Create My CV, please sign in first.</p></div><button id="googleAuthBtn" onclick="signInWithGoogle()" style="width:100%;background:#fff;color:#1f2937;border:1px solid #cbd5e1">🔵 Continue with Google</button><div style="text-align:center;margin:10px 0;color:#64748b">or</div><label>Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"><label>Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="At least 6 characters"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button onclick="createBerOppAccount()">Create account</button><button class="secondary" onclick="signInBerOpp()">I already have an account</button></div><p id="authStatus" class="status" style="margin-top:12px">Loading secure sign-in…</p><p style="font-size:12px;color:#64748b;margin-bottom:0">Your BerOpp account is separate from your Google email password when you use email/password sign-up.</p></div></section><section id="home">
+<style id="beropp-auth-refresh">
+.nsAuthCard{max-width:520px;margin:30px auto;padding:28px 22px;background:linear-gradient(135deg,#fff,#eff6ff);border:1px solid #bfdbfe;box-shadow:0 16px 40px rgba(37,99,235,.12);text-align:left}
+.nsAuthLogo{text-align:center;margin-bottom:12px}.nsAuthLogo .brandMark{width:72px;height:72px;margin:auto}
+.nsAuthCard h2{text-align:center;margin:8px 0 6px;color:#123b62}.nsAuthCard>p{text-align:center;color:#64748b;margin:0 0 18px}
+.nsAuthGoogle{width:100%;background:#fff!important;color:#172033!important;border:1px solid #cbd5e1!important;box-shadow:0 4px 12px rgba(15,23,42,.06)!important}
+.nsAuthDivider{display:flex;align-items:center;gap:10px;color:#94a3b8;margin:16px 0}.nsAuthDivider:before,.nsAuthDivider:after{content:"";height:1px;background:#dbeafe;flex:1}.nsAuthDivider span{font-size:12px}
+.nsAuthActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.nsAuthActions button{margin:0}
+.nsAuthForgot{width:100%;margin:8px 0 0;background:transparent!important;color:#2563eb!important;box-shadow:none!important}
+.nsAuthStatus{display:block;margin:12px 0 0;min-height:20px}.nsAuthBack{width:100%;margin:10px 0 0}
+body.auth-open header,body.auth-open .nav{display:none!important}
+body.auth-open main{padding-bottom:30px}
+body.dark-mode .nsAuthCard{background:linear-gradient(135deg,#111827,#172554);border-color:#334155}
+body.dark-mode .nsAuthCard h2{color:#e0f2fe}.nsAuthCard label{display:block;font-size:13px;font-weight:700;color:#475569;margin-top:7px}
+body.dark-mode .nsAuthCard label{color:#cbd5e1}
+@media(max-width:560px){.nsAuthCard{margin:14px auto;padding:22px 16px}.nsAuthActions{grid-template-columns:1fr}}
+</style></head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
+<section id="auth" class="hidden">
+<div class="card nsAuthCard">
+  <div class="nsAuthLogo" aria-hidden="true"><div class="brandMark"><svg viewBox="0 0 64 64"><defs><linearGradient id="authG2" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#authG2)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div></div>
+  <h2 id="authTitle">Welcome to BerOpp</h2>
+  <p id="authSubtitle">Create an account or log in to continue.</p>
+  <button id="googleAuthBtn" onclick="signInWithGoogle()" class="nsAuthGoogle">Continue with Google</button>
+  <div class="nsAuthDivider"><span>or</span></div>
+  <label for="authEmail">Email</label>
+  <input id="authEmail" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com">
+  <label for="authPassword">Password</label>
+  <input id="authPassword" type="password" autocomplete="current-password" placeholder="At least 6 characters" onkeydown="if(event.key==='Enter')signInBerOpp()">
+  <div class="nsAuthActions">
+    <button onclick="signInBerOpp()">Log in</button>
+    <button class="secondary" onclick="createBerOppAccount()">Create account</button>
+  </div>
+  <button class="nsAuthForgot" onclick="resetBerOppPassword()">Forgot password?</button>
+  <p id="authStatus" class="status nsAuthStatus">Ready to sign in.</p>
+  <button class="secondary nsAuthBack" onclick="show('home')">← Back to Home</button>
+</div>
+</section><section id="home">
 <div class="nsHero">
 <div class="nsHeroGrid">
 <div>
@@ -550,18 +584,36 @@ let beroppAuth=null,beroppUser=null,beroppPendingTarget='',beroppPendingInternat
 function setAuthStatus(msg){if($('authStatus'))$('authStatus').textContent=msg}
 function firebaseReady(){return !!(BEROPP_FIREBASE_CONFIG.apiKey&&BEROPP_FIREBASE_CONFIG.authDomain&&BEROPP_FIREBASE_CONFIG.projectId&&BEROPP_FIREBASE_CONFIG.appId)}
 function initBerOppAuth(){
-  if(!firebaseReady()){setAuthStatus('⚙️ Secure login is ready, but the BerOpp Firebase project still needs to be connected.');return}
+  if(!firebaseReady()){setAuthStatus('⚠️ Secure login is not connected yet.');return}
   try{
     if(!firebase.apps.length)firebase.initializeApp(BEROPP_FIREBASE_CONFIG);
     beroppAuth=firebase.auth();
+    beroppAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
+    beroppAuth.getRedirectResult().catch(e=>{if(e&&e.code)setAuthStatus('❌ Google login: '+e.code+' — '+(e.message||'Please try again.'))});
     beroppAuth.onAuthStateChanged(user=>{
       beroppUser=user||null;
-      if(user){
-        setAuthStatus('✅ Signed in as '+(user.email||user.displayName||'BerOpp user'));
-        const nextInternational=new URLSearchParams(location.search).get('requireAccount'); if(nextInternational&&!user){show('auth');} if(nextInternational&&user){location.href=nextInternational;return;} if(beroppPendingTarget){const t=beroppPendingTarget;beroppPendingTarget='';if(t==='homeOpportunity'){const id=beroppPendingOpportunityId,type=beroppPendingOpportunityType;beroppPendingOpportunityId=null;beroppPendingOpportunityType='';if(type==='job')viewJobOpp(id);else viewOpp(id)}else{show(t);if(t==='matches')findMatches();if(t==='ausbildung')renderBerufe();if(t==='applications')renderApps()}} if(beroppPendingInternational){const u=beroppPendingInternational;beroppPendingInternational='';location.href=u;}
-      }else setAuthStatus('Please sign in to continue.');
+      if(!user){setAuthStatus('Ready to sign in.');return}
+      setAuthStatus('✅ Logged in as '+(user.email||user.displayName||'BerOpp user'));
+      const nextInternational=new URLSearchParams(location.search).get('requireAccount');
+      if(nextInternational){location.href=nextInternational;return}
+      if(beroppPendingTarget){
+        const t=beroppPendingTarget;beroppPendingTarget='';
+        if(t==='homeOpportunity'){
+          const id=beroppPendingOpportunityId,type=beroppPendingOpportunityType;
+          beroppPendingOpportunityId=null;beroppPendingOpportunityType='';
+          show(type==='job'?'details':'details');
+          if(type==='job')viewJobOpp(id);else viewOpp(id);
+        }else{
+          show(t);
+          if(t==='matches')findMatches();
+          if(t==='ausbildung')renderBerufe();
+          if(t==='applications')renderApps();
+          if(t==='remoteInternational'&&typeof renderRemoteJobs==='function')renderRemoteJobs();
+        }
+      }else if(document.body.classList.contains('auth-open')){show('home')}
+      if(beroppPendingInternational){const u=beroppPendingInternational;beroppPendingInternational='';location.href=u;}
     });
-  }catch(e){console.error(e);setAuthStatus('⚠️ Firebase configuration could not be initialized.')}
+  }catch(e){console.error(e);setAuthStatus('❌ Secure login could not be initialized. Please refresh and try again.')}
 }
 function openHomeOpportunity(id,type){if(!beroppUser){beroppPendingTarget='homeOpportunity';beroppPendingOpportunityId=id;beroppPendingOpportunityType=type;show('auth');return false}return type==='job'?viewJobOpp(id):viewOpp(id)}
 function buildExternalCareerSearches(query,city,type){
@@ -670,46 +722,71 @@ function requireAuth(target){
   if(beroppUser){show(target);if(target==='matches')findMatches();if(target==='ausbildung')renderBerufe();if(target==='remoteInternational'&&typeof renderRemoteJobs==='function')renderRemoteJobs();if(target==='applications')renderApps();return true}
   beroppPendingTarget=target;
   show('auth');
-  if(!firebaseReady())setAuthStatus('⚙️ First connect BerOpp to a Firebase project to activate Google and email accounts.');
+  if(!firebaseReady())setAuthStatus('⚠️ Secure login is not connected yet.');
   return false;
 }
 async function signInWithGoogle(){
-  if(!firebaseReady()){setAuthStatus('⚙️ Google login is not activated yet. Add the Firebase web config to BerOpp.');return}
+  if(!firebaseReady()||!beroppAuth){setAuthStatus('⚠️ Secure login is not ready yet. Please refresh the page.');return}
   try{
     const provider=new firebase.auth.GoogleAuthProvider();
     setAuthStatus('⏳ Opening Google sign-in…');
     await beroppAuth.signInWithPopup(provider);
   }catch(e){
     console.error(e);
-    setAuthStatus('❌ Google login: '+(e.code||'error')+' — '+(e.message||'Google sign-in failed'));
+    if(e&&['auth/popup-blocked','auth/operation-not-supported-in-this-environment'].includes(e.code)){
+      try{setAuthStatus('⏳ Opening Google sign-in…');await beroppAuth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());return}catch(err){e=err}
+    }
+    setAuthStatus('❌ Google login: '+(e.code||'error')+' — '+(e.message||'Please try again.'));
   }
 }
+function getAuthCredentials(){
+  return {email:($('authEmail')?.value||'').trim().toLowerCase(),password:$('authPassword')?.value||''};
+}
 async function createBerOppAccount(){
-  if(!firebaseReady()){setAuthStatus('⚙️ Email accounts are not activated yet. Add the Firebase web config to BerOpp.');return}
-  const email=($('authEmail')?.value||'').trim(),password=$('authPassword')?.value||'';
-  if(!email||password.length<6){setAuthStatus('Please enter a valid email and a password with at least 6 characters.');return}
+  if(!firebaseReady()||!beroppAuth){setAuthStatus('⚠️ Secure login is not ready yet. Please refresh the page.');return}
+  const {email,password}=getAuthCredentials();
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setAuthStatus('Please enter a valid email address.');return}
+  if(password.length<6){setAuthStatus('Password must be at least 6 characters.');return}
   try{
-    setAuthStatus('⏳ Creating your BerOpp account…');
+    setAuthStatus('⏳ Creating your account…');
     await beroppAuth.createUserWithEmailAndPassword(email,password);
+    $('authPassword').value='';
   }catch(e){
     console.error(e);
-    setAuthStatus('❌ Account creation: '+(e.code||'error')+' — '+(e.message||'Account creation failed'));
+    const messages={'auth/email-already-in-use':'An account with this email already exists. Please log in instead.','auth/invalid-email':'Please check your email address.','auth/weak-password':'Choose a stronger password (at least 6 characters).','auth/operation-not-allowed':'Email/password sign-in is not enabled in Firebase yet.'};
+    setAuthStatus('❌ '+(messages[e.code]||e.message||'Account creation failed.'));
   }
 }
 async function signInBerOpp(){
-  if(!firebaseReady()){setAuthStatus('⚙️ Email login is not activated yet. Add the Firebase web config to BerOpp.');return}
-  const email=($('authEmail')?.value||'').trim(),password=$('authPassword')?.value||'';
+  if(!firebaseReady()||!beroppAuth){setAuthStatus('⚠️ Secure login is not ready yet. Please refresh the page.');return}
+  const {email,password}=getAuthCredentials();
   if(!email||!password){setAuthStatus('Enter your email and password.');return}
   try{
-    setAuthStatus('⏳ Signing you in…');
+    setAuthStatus('⏳ Logging you in…');
     await beroppAuth.signInWithEmailAndPassword(email,password);
+    $('authPassword').value='';
   }catch(e){
     console.error(e);
-    setAuthStatus('❌ Email login: '+(e.code||'error')+' — '+(e.message||'Sign-in failed'));
+    const messages={'auth/user-not-found':'No account was found with this email.','auth/wrong-password':'The email or password is incorrect.','auth/invalid-credential':'The email or password is incorrect.','auth/invalid-email':'Please check your email address.','auth/too-many-requests':'Too many attempts. Please wait a moment and try again.','auth/user-disabled':'This account has been disabled.','auth/operation-not-allowed':'Email/password sign-in is not enabled in Firebase yet.'};
+    setAuthStatus('❌ '+(messages[e.code]||e.message||'Login failed.'));
+  }
+}
+async function resetBerOppPassword(){
+  if(!firebaseReady()||!beroppAuth){setAuthStatus('⚠️ Secure login is not ready yet. Please refresh the page.');return}
+  const email=($('authEmail')?.value||'').trim().toLowerCase();
+  if(!email){setAuthStatus('Enter your email first, then tap “Forgot password?”.');$('authEmail')?.focus();return}
+  try{
+    setAuthStatus('⏳ Sending password reset email…');
+    await beroppAuth.sendPasswordResetEmail(email);
+    setAuthStatus('✅ Password reset email sent. Check your inbox.');
+  }catch(e){
+    console.error(e);
+    const messages={'auth/user-not-found':'No account was found with this email.','auth/invalid-email':'Please check your email address.','auth/operation-not-allowed':'Password reset is not enabled for this Firebase project yet.'};
+    setAuthStatus('❌ '+(messages[e.code]||e.message||'Password reset failed.'));
   }
 }
 function signOutBerOpp(){if(beroppAuth)beroppAuth.signOut();else{beroppUser=null;show('home')}}
-function show(id){document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));$(id).classList.remove('hidden');scrollTo(0,0);if(id==='home'&&typeof renderHomePreviews==='function')setTimeout(renderHomePreviews,0)}const PROFILE_DB='beropp_profile_db_v1';
+function show(id){document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));const target=$(id);if(!target)return;target.classList.remove('hidden');document.body.classList.toggle('auth-open',id==='auth');scrollTo(0,0);if(id==='home'&&typeof renderHomePreviews==='function')setTimeout(renderHomePreviews,0)}const PROFILE_DB='beropp_profile_db_v1';
 let nsProfile={};
 function openProfileDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(PROFILE_DB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('meta'))r.result.createObjectStore('meta');if(!r.result.objectStoreNames.contains('files'))r.result.createObjectStore('files',{keyPath:'id'});};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
 async function getCryptoKey(){const db=await openProfileDB();const existing=await new Promise((resolve,reject)=>{const tx=db.transaction('meta','readonly');const r=tx.objectStore('meta').get('key');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});if(existing)return existing;const key=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);await new Promise((resolve,reject)=>{const tx=db.transaction('meta','readwrite');tx.objectStore('meta').put(key,'key');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});return key}
