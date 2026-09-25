@@ -1961,58 +1961,16 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
     });
   }
 })();
-</script><script id="beropp-canonical-direct-apply-v3">(function(){function p(){try{return JSON.parse(localStorage.getItem('beropp_pending_apply')||'null')}catch(e){return null}}function r(){const x=p();if(!x||!x.url)return false;localStorage.removeItem('beropp_pending_apply');window.location.assign(x.url);return true}window.beroppResumePendingDirectApplication=r;if(beroppAuth&&typeof beroppAuth.onAuthStateChanged==='function'){beroppAuth.onAuthStateChanged(function(u){window.beroppUser=u||null;if(u)setTimeout(r,0)})}window.addEventListener('load',function(){setTimeout(function(){if(window.beroppUser)r()},150)})})();</script><script id="beropp-login-direct-final-v4">(function(){function go(){try{var p=JSON.parse(localStorage.getItem("beropp_pending_apply")||"null");if(p&&p.url){localStorage.removeItem("beropp_pending_apply");location.replace(p.url);return true}}catch(e){}return false}window.beroppGoPendingDirect=go;window.signInBerOpp=async function(){if(!beroppAuth){setAuthStatus("⚠️ Secure login is not ready yet. Please refresh the page.");return false}var email=($("authEmail")?.value||"").trim().toLowerCase(),password=$("authPassword")?.value||"";if(!email||!password){setAuthStatus("Enter your email and password.");return false}try{setAuthStatus("⏳ Logging you in…");await beroppAuth.signInWithEmailAndPassword(email,password);if(go())return false;$("authPassword").value="";setAuthStatus("✅ Logged in successfully.");return true}catch(e){setAuthStatus("❌ "+(e.message||"Login failed."));return false}};window.createBerOppAccount=async function(){if(!beroppAuth){setAuthStatus("⚠️ Secure login is not ready yet. Please refresh the page.");return false}var email=($("authEmail")?.value||"").trim().toLowerCase(),password=$("authPassword")?.value||"";if(!email||password.length<6){setAuthStatus("Enter a valid email and a password of at least 6 characters.");return false}try{setAuthStatus("⏳ Creating your account…");await beroppAuth.createUserWithEmailAndPassword(email,password);if(go())return false;$("authPassword").value="";setAuthStatus("✅ Account created.");return true}catch(e){setAuthStatus("❌ "+(e.message||"Account creation failed."));return false}};})();</script><script id="beropp-find-ausbildung-canonical-v1">
-(function(){
-  function allAusbildung(){
-    const out=[];
-    try{if(Array.isArray(window.opps))out.push(...window.opps)}catch(e){}
-    try{if(Array.isArray(window.beroppLivePflege))out.push(...window.beroppLivePflege)}catch(e){}
-    const seen=new Set();
-    return out.filter(function(o){
-      const k=String(o.id);
-      if(seen.has(k))return false;
-      seen.add(k);
-      return true;
-    });
-  }
-  function find(name){
-    const needle=String(name||'').toLowerCase().trim();
-    const aliases={
-      pflege:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege'],
-      gesundheit:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege'],
-      fachlagerist:['fachlagerist','lagerlogistik','lager'],
-      'fachkraft für lagerlogistik':['fachkraft für lagerlogistik','lagerlogistik','fachlagerist'],
-      lagerlogistik:['lagerlogistik','fachlagerist'],
-      elektriker:['elektriker','elektroniker','elektro','elektrotechnik'],
-      elektroniker:['elektroniker','elektriker','elektro','elektrotechnik']
-    };
-    const terms=aliases[needle]||[needle];
-    return allAusbildung().filter(function(o){
-      const hay=(String(o.title||'')+' '+String(o.description||'')+' '+String(o.type||'')+' '+String(o.field||'')+' '+(o.skills||[]).join(' ')).toLowerCase();
-      return terms.some(function(t){return hay.includes(t)});
-    });
-  }
-  window.findByBeruf=function(name){
-    show('ausbildung');
-    const box=$('berufeList');
-    if(!box)return false;
-    const matches=find(name);
-    if(matches.length){
-      box.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p><strong>'+matches.length+'</strong> passende Ausbildung-Angebote.</p>'+
-        matches.map(function(o){
-          const url=o.applicationUrl||o.applyUrl||o.url||'';
-          const apply=url?'<button type="button" onclick="event.preventDefault();event.stopPropagation();return beroppApplyByOpportunityId('+o.id+')" style="background:#2563eb">⚡ Apply Now</button>':'';
-          return '<div class="card" style="margin:10px 0"><h3>'+esc(o.title||'Ausbildung')+'</h3><p>🏢 '+esc(o.company||'')+' · 📍 '+esc(o.place||'')+' · 📅 '+esc(o.start||'')+'</p><p>'+esc(o.description||'')+'</p>'+
-            '<button type="button" class="secondary" onclick="event.preventDefault();event.stopPropagation();return viewOpp('+o.id+')">📖 Details</button>'+apply+
-            '</div>';
-        }).join('')+'</div>';
-      box.scrollIntoView({behavior:'smooth',block:'start'});
-      return true;
-    }
-    const baUrl=typeof buildBAUrl==='function'?buildBAUrl(name,''):'https://www.arbeitsagentur.de/jobsuche/';
-    box.innerHTML='<div class="card"><h3>🔎 '+esc(name)+'</h3><p>BerOpp hat aktuell keine gespeicherte Ausbildung für diesen Beruf.</p>'+
-      '<a href="'+esc(baUrl)+'" target="_blank" rel="noopener noreferrer" class="secondary" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🔗 Aktuelle Ausbildung suchen</a></div>';
-    return false;
-  };
-})();
-</script></body></html>
+</script><script id="beropp-canonical-direct-apply-v3">(function(){function p(){try{return JSON.parse(localStorage.getItem('beropp_pending_apply')||'null')}catch(e){return null}}function r(){const x=p();if(!x||!x.url)return false;localStorage.removeItem('beropp_pending_apply');window.location.assign(x.url);return true}window.beroppResumePendingDirectApplication=r;if(beroppAuth&&typeof beroppAuth.onAuthStateChanged==='function'){beroppAuth.onAuthStateChanged(function(u){window.beroppUser=u||null;if(u)setTimeout(r,0)})}window.addEventListener('load',function(){setTimeout(function(){if(window.beroppUser)r()},150)})})();</script><script id="beropp-login-direct-final-v4">(function(){function go(){try{var p=JSON.parse(localStorage.getItem("beropp_pending_apply")||"null");if(p&&p.url){localStorage.removeItem("beropp_pending_apply");location.replace(p.url);return true}}catch(e){}return false}window.beroppGoPendingDirect=go;window.signInBerOpp=async function(){if(!beroppAuth){setAuthStatus("⚠️ Secure login is not ready yet. Please refresh the page.");return false}var email=($("authEmail")?.value||"").trim().toLowerCase(),password=$("authPassword")?.value||"";if(!email||!password){setAuthStatus("Enter your email and password.");return false}try{setAuthStatus("⏳ Logging you in…");await beroppAuth.signInWithEmailAndPassword(email,password);if(go())return false;$("authPassword").value="";setAuthStatus("✅ Logged in successfully.");return true}catch(e){setAuthStatus("❌ "+(e.message||"Login failed."));return false}};window.createBerOppAccount=async function(){if(!beroppAuth){setAuthStatus("⚠️ Secure login is not ready yet. Please refresh the page.");return false}var email=($("authEmail")?.value||"").trim().toLowerCase(),password=$("authPassword")?.value||"";if(!email||password.length<6){setAuthStatus("Enter a valid email and a password of at least 6 characters.");return false}try{setAuthStatus("⏳ Creating your account…");await beroppAuth.createUserWithEmailAndPassword(email,password);if(go())return false;$("authPassword").value="";setAuthStatus("✅ Account created.");return true}catch(e){setAuthStatus("❌ "+(e.message||"Account creation failed."));return false}};})();</script><script id="beropp-find-ausbildung-canonical-v2">(function(){
+function resolve(id){const lists=[];try{if(Array.isArray(window.opps))lists.push(window.opps)}catch(e){}try{if(Array.isArray(window.beroppLivePflege))lists.push(window.beroppLivePflege)}catch(e){}for(const list of lists){const o=list.find(x=>String(x.id)===String(id));if(o)return o}return null}
+function url(o){return o&&String(o.applicationUrl||o.applyUrl||o.url||"").trim()}
+window.beroppApplyAusbildungSearch=function(id){
+ const o=resolve(id); if(!o)return false; const u=url(o); if(!u){setAuthStatus("🟡 Iri tangazo nta link yo gusaba itaziguye ihari.");return false}
+ window.currentOpportunity=o;
+ if(!window.beroppUser){localStorage.setItem("beropp_pending_apply",JSON.stringify({target:"ausbildungDirect",id:o.id,type:"ausbildung",url:u,title:o.title||"",company:o.company||""}));try{beroppPendingTarget="ausbildungDirect";beroppPendingOpportunityId=o.id;beroppPendingOpportunityType="ausbildung"}catch(e){}show("auth");setAuthStatus("🔐 Injira cyangwa ukore account. Nyuma yo kwinjira BerOpp izahita ikujyana kuri Company application.");return false}
+ try{updateBerOppApplicationStatus(o.id,"Company application opened")}catch(e){}window.location.assign(u);return true
+};
+function all(){const out=[];try{if(Array.isArray(window.opps))out.push(...window.opps)}catch(e){}try{if(Array.isArray(window.beroppLivePflege))out.push(...window.beroppLivePflege)}catch(e){}const seen=new Set();return out.filter(o=>{const k=String(o.id);if(seen.has(k))return false;seen.add(k);return true})}
+function find(name){const n=String(name||"").toLowerCase().trim();const A={pflege:["pflegefachfrau","pflegefachmann","pflegefachkraft","pflege"],gesundheit:["pflegefachfrau","pflegefachmann","pflegefachkraft","pflege"],fachlagerist:["fachlagerist","lagerlogistik","lager"],"fachkraft für lagerlogistik":["fachkraft für lagerlogistik","lagerlogistik","fachlagerist"],lagerlogistik:["lagerlogistik","fachlagerist"],elektriker:["elektriker","elektroniker","elektro","elektrotechnik"],elektroniker:["elektroniker","elektriker","elektro","elektrotechnik"]};const terms=A[n]||[n];return all().filter(o=>{const h=(String(o.title||"")+" "+String(o.description||"")+" "+String(o.type||"")+" "+String(o.field||"")+" "+(o.skills||[]).join(" ")).toLowerCase();return terms.some(t=>h.includes(t))})}
+window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");if(!box)return false;const ms=find(name);if(ms.length){box.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p><strong>'+ms.length+'</strong> passende Ausbildung-Angebote.</p>'+ms.map(o=>'<div class="card" style="margin:10px 0"><h3>'+esc(o.title||"Ausbildung")+'</h3><p>🏢 '+esc(o.company||"")+' · 📍 '+esc(o.place||"")+' · 📅 '+esc(o.start||"")+'</p><p>'+esc(o.description||"")+'</p><button type="button" class="secondary" onclick="event.preventDefault();event.stopPropagation();return viewOpp('+o.id+')">📖 Details</button>'+(url(o)?'<button type="button" onclick="event.preventDefault();event.stopPropagation();return beroppApplyAusbildungSearch('+o.id+')" style="background:#2563eb">⚡ Apply Now — Company Direct</button>':"")+'</div>').join("")+'</div>';box.scrollIntoView({behavior:"smooth",block:"start"});return true}const ba=typeof buildBAUrl==="function"?buildBAUrl(name,""):"https://www.arbeitsagentur.de/jobsuche/";box.innerHTML='<div class="card"><h3>🔎 '+esc(name)+'</h3><p>BerOpp hat aktuell keine gespeicherte Ausbildung für diesen Beruf.</p><a href="'+esc(ba)+'" target="_blank" rel="noopener noreferrer" class="secondary" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🔗 Aktuelle Ausbildung suchen</a></div>';return false};
+})();</script></body></html>
