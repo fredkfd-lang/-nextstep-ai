@@ -34,6 +34,29 @@ export default {
     if (request.method === "OPTIONS") {
       return new Response("", { headers: corsHeadersFor(request) });
     }
+
+    const url = new URL(request.url);
+    if (request.method === "GET" && (url.pathname === "/ausbildung" || url.pathname === "/jobdetails")) {
+      const target = url.pathname === "/ausbildung"
+        ? "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs?" + url.searchParams.toString()
+        : "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobdetails/" + encodeURIComponent(url.searchParams.get("refnr") || "");
+      if (url.pathname === "/jobdetails" && !url.searchParams.get("refnr")) {
+        return json({ error: "refnr is required" }, 400, request);
+      }
+      const upstream = await fetch(target, {
+        headers: { "X-API-Key": "jobboerse-jobsuche", "Accept": "application/json" }
+      });
+      const body = await upstream.text();
+      return new Response(body, {
+        status: upstream.status,
+        headers: {
+          ...corsHeadersFor(request),
+          "Content-Type": "application/json",
+          "Cache-Control": "public, max-age=60"
+        }
+      });
+    }
+
     if (request.method !== "POST") {
       return json({ error: "Method not allowed" }, 405, request);
     }
