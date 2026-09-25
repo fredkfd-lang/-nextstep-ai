@@ -987,7 +987,7 @@ function getMatch(o){const p=window.nsProfile||{};const text=((p.goal||'')+' '+(
   if(city)p.set('wo',city);
   return 'https://www.arbeitsagentur.de/jobsuche/suche?'+p.toString();
 }
-function normalizeLocation(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[.,/\\-]+/g,' ').replace(/\s+/g,' ').trim()}
+function normalizeLocation(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[.,\/-]+/g,' ').replace(/\s+/g,' ').trim()}
 function jobLocationMatches(o,city){
   if(!city)return true;
   const wanted=normalizeLocation(city),place=normalizeLocation(o.place),company=normalizeLocation(o.company);
