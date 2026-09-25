@@ -24,7 +24,7 @@ jobs:
           node-version: 20
       - name: Refresh through BerOpp Worker
         env:
-          BEROPP_AI_WORKER_URL: ${{ secrets.BEROPP_AI_WORKER_URL }}
+          BEROPP_AI_WORKER_URL: ${{ secrets.BEROPP_AI_WORKER_URL || 'https://fredkfd.workers.dev' }}
         run: node scripts/update-live-data.cjs
       - name: Commit refreshed data
         run: |
