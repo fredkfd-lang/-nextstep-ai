@@ -1207,23 +1207,33 @@ function beroppLaunchDirectApplication(o){
   const mode=beroppApplicationMode(o),url=beroppGetApplicationUrl(o),s=$('directApplyStatus');
   if(mode==='DIRECT_EMAIL'&&o.applicationEmail){
     const subject=encodeURIComponent('Bewerbung: '+o.title),body=encodeURIComponent(beroppBuildLetter(o,beroppGetProfile())+'\\n\\nAnlagen: Lebenslauf, Zeugnisse');
-    updateBerOppApplicationStatus(o.id,'Ready to send');window.location.href='mailto:'+encodeURIComponent(o.applicationEmail)+'?subject='+subject+'&body='+body;return true;
+    updateBerOppApplicationStatus(o.id,'Ready to send');
+    window.location.href='mailto:'+encodeURIComponent(o.applicationEmail)+'?subject='+subject+'&body='+body;
+    return true;
   }
   if(url){
-    if(s)s.innerHTML='🟢 <strong>Direct company application</strong> — opening the company application now.';
+    if(s)s.innerHTML='🟢 <strong>Direct company application</strong> — opening the official application page now.';
     updateBerOppApplicationStatus(o.id,'Company application opened');
-    window.location.href=url;return true;
+    window.location.assign(url);
+    return true;
   }
-  if(o.applyUrl){window.location.href=o.applyUrl;return true}
-  if(s)s.innerHTML='🟡 <strong>Application link is not available yet.</strong>';
-  updateBerOppApplicationStatus(o.id,'Application link unavailable');return false;
+  if(o.applyUrl){
+    window.location.assign(o.applyUrl);
+    return true;
+  }
+  if(s)s.innerHTML='🟡 <strong>This opportunity does not have a connected application link yet.</strong>';
+  updateBerOppApplicationStatus(o.id,'Application link unavailable');
+  return false;
 }
 function startBerOppApplication(){
   const o=currentOpportunity;if(!o)return false;
   if(!beroppUser){
-    beroppPendingTarget='homeOpportunity';beroppPendingOpportunityId=o.id;beroppPendingOpportunityType=(String(o.type||'').toUpperCase()==='JOB'?'job':'ausbildung');
+    beroppPendingTarget='homeOpportunity';
+    beroppPendingOpportunityId=o.id;
+    beroppPendingOpportunityType=(String(o.type||'').toUpperCase()==='JOB'?'job':'ausbildung');
     localStorage.setItem('beropp_pending_apply',JSON.stringify({target:'homeOpportunity',id:o.id,type:beroppPendingOpportunityType}));
-    show('auth');return false;
+    show('auth');
+    return false;
   }
   return beroppLaunchDirectApplication(o);
 }
