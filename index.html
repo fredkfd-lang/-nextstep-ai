@@ -1760,4 +1760,73 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
     return true;
   };
 })();
+</script>
+<script id="beropp-final-apply-button-fix">
+(function(){
+  function allOpps(){
+    const out=[];
+    try{if(Array.isArray(window.opps))out.push(...window.opps)}catch(e){}
+    try{if(Array.isArray(window.beroppLivePflege))out.push(...window.beroppLivePflege)}catch(e){}
+    const seen=new Set();
+    return out.filter(o=>{const k=String(o.id);if(seen.has(k))return false;seen.add(k);return true});
+  }
+  function findDirect(name){
+    const needle=String(name||'').toLowerCase().trim();
+    const aliases={
+      pflege:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege'],
+      gesundheit:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege'],
+      fachlagerist:['fachlagerist','lagerlogistik','lager'],
+      fachkraft für lagerlogistik:['fachkraft für lagerlogistik','lagerlogistik','fachlagerist'],
+      lagerlogistik:['lagerlogistik','fachlagerist'],
+      elektriker:['elektriker','elektro','elektrotechnik'],
+      elektroniker:['elektroniker','elektro','elektrotechnik']
+    };
+    const terms=aliases[needle]||[needle];
+    return allOpps().find(o=>{
+      const hay=(String(o.title||'')+' '+String(o.description||'')+' '+String(o.type||'')+' '+String(o.field||'')+' '+(o.skills||[]).join(' ')).toLowerCase();
+      return (o.applicationUrl||o.applyUrl||o.url) && terms.some(t=>hay.includes(t));
+    })||null;
+  }
+  window.beroppApplyProfessionDirect=function(name){
+    const o=findDirect(name);
+    if(!o){
+      show('ausbildung');
+      setAuthStatus('🟡 Für diesen Ausbildungsberuf ist aktuell noch keine direkte Firmen-Bewerbung hinterlegt.');
+      return false;
+    }
+    const url=o.applicationUrl||o.applyUrl||o.url;
+    currentOpportunity=o;
+    if(!window.beroppUser){
+      localStorage.setItem('beropp_pending_apply',JSON.stringify({
+        target:'ausbildungDirect',id:o.id,type:'ausbildung',url:url,
+        title:o.title||'',company:o.company||''
+      }));
+      beroppPendingTarget='ausbildungDirect';
+      beroppPendingOpportunityId=o.id;
+      beroppPendingOpportunityType='ausbildung';
+      show('auth');
+      setAuthStatus('🔐 Bitte mit Google oder E-Mail anmelden. Danach öffnet BerOpp direkt die Firmen-Bewerbung.');
+      return false;
+    }
+    updateBerOppApplicationStatus(o.id,'Company application opened');
+    window.location.href=url;
+    return true;
+  };
+  window.startAusbildungApplicationByProfession=window.beroppApplyProfessionDirect;
+  window.renderBerufe=function(){
+    const q=($('berufSearch')?.value||'').toLowerCase().trim();
+    const cat=$('berufCategory')?.value||'';
+    const list=berufe.filter(b=>(!q||b[0].toLowerCase().includes(q))&&(!cat||b[1]===cat));
+    $('berufeCount').textContent=list.length+' Berufe in BerOpp';
+    $('berufeList').innerHTML=list.length?list.map(b=>{
+      const name=JSON.stringify(b[0]).replace(/"/g,'&quot;');
+      const catv=JSON.stringify(b[1]).replace(/"/g,'&quot;');
+      return '<div class="card" style="margin:8px 0;padding:14px"><strong>'+esc(b[0])+'</strong><br><span class="badge">'+esc(b[1])+'</span>'+
+        '<button type="button" class="secondary" onclick="showBerufDetail('+name+','+catv+');return false">📖 Details</button>'+
+        '<button type="button" class="secondary" onclick="findByBeruf('+name+');return false">🔎 Stellen finden</button><br>'+
+        '<button type="button" onclick="beroppApplyProfessionDirect('+name+');return false" style="margin-top:6px;background:#2563eb">⚡ Apply Now — Company Direct</button></div>';
+    }).join(''):'<p>No professions found.</p>';
+    return true;
+  };
+})();
 </script></body></html>
