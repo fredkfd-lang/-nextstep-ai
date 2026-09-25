@@ -778,7 +778,7 @@ async function useMyHomeLocation(){
 async function renderHomePreviews(){
   const r=$('homeRemotePreview');
   if(r&&typeof remoteInternationalJobs!=='undefined'&&Array.isArray(remoteInternationalJobs)&&remoteInternationalJobs.length){
-    r.innerHTML=remoteInternationalJobs.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\\'remoteInternational\\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🌍 '+esc(o.region)+' · 💼 '+esc(o.category)+' · '+esc(o.type)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\\'remoteInternational\\')">View Remote →</button></div>').join('');
+    r.innerHTML=remoteInternationalJobs.slice(0,3).map(o=>'<div class="nsPreviewItem" onclick="requireAuth(\'remoteInternational\')" role="button" tabindex="0"><strong>'+esc(o.title)+'</strong><div class="nsPreviewMeta">🌍 '+esc(o.region)+' · 💼 '+esc(o.category)+' · '+esc(o.type)+'</div><button class="secondary" onclick="event.stopPropagation();requireAuth(\'remoteInternational\')">View Remote →</button></div>').join('');
   }
   const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');
   if(!a||!j||typeof fetchLiveCareerSources!=='function')return;
@@ -793,8 +793,8 @@ async function renderHomePreviews(){
     const aus=unique(ausLive),jobs=unique(jobLive);
     window.beroppHomeLiveAusbildung=aus;
     window.beroppHomeLiveJobs=jobs;
-    a.innerHTML=aus.length?aus.map((o,i)=>'<div class="nsPreviewItem"><strong>🎓 '+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+(o.date?' · 📅 '+esc(o.date):'')+'</div>'+(o.url?'<button class="secondary" onclick="return beroppOpenHomeLive('+i+',\\'ausbildung\\')">⚡ Apply Direct →</button>':'<span>Original application link unavailable</span>')+'</div>').join(''):'<div class="nsPreviewItem"><strong>No current Ausbildung found.</strong><div class="nsPreviewMeta">Try the live Ausbildung search.</div></div>';
-    j.innerHTML=jobs.length?jobs.map((o,i)=>'<div class="nsPreviewItem"><strong>💼 '+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+(o.date?' · 📅 '+esc(o.date):'')+'</div>'+(o.url?'<button class="secondary" onclick="return beroppOpenHomeLive('+i+',\\'job\\')">⚡ Original / Bewerben →</button>':'<span>Original application link unavailable</span>')+'</div>').join(''):'<div class="nsPreviewItem"><strong>No current jobs found.</strong><div class="nsPreviewMeta">Try Find Jobs for a new live search.</div></div>';
+    a.innerHTML=aus.length?aus.map((o,i)=>'<div class="nsPreviewItem"><strong>🎓 '+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+(o.date?' · 📅 '+esc(o.date):'')+'</div>'+(o.url?'<button class="secondary" onclick="return beroppOpenHomeLive('+i+',\'ausbildung\')">⚡ Apply Direct →</button>':'<span>Original application link unavailable</span>')+'</div>').join(''):'<div class="nsPreviewItem"><strong>No current Ausbildung found.</strong><div class="nsPreviewMeta">Try the live Ausbildung search.</div></div>';
+    j.innerHTML=jobs.length?jobs.map((o,i)=>'<div class="nsPreviewItem"><strong>💼 '+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+(o.date?' · 📅 '+esc(o.date):'')+'</div>'+(o.url?'<button class="secondary" onclick="return beroppOpenHomeLive('+i+',\'job\')">⚡ Original / Bewerben →</button>':'<span>Original application link unavailable</span>')+'</div>').join(''):'<div class="nsPreviewItem"><strong>No current jobs found.</strong><div class="nsPreviewMeta">Try Find Jobs for a new live search.</div></div>';
   }catch(e){
     console.warn('Home live previews unavailable',e);
     a.innerHTML='<div class="nsPreviewItem"><strong>⚠️ Live-Ausbildung ist momentan nicht erreichbar.</strong><div class="nsPreviewMeta">Open Alle Ausbildung for another live search.</div></div>';
