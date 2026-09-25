@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const WORKER = String(process.env.BEROPP_AI_WORKER_URL || '').replace(/\/$/, '');
+const WORKERS = [\n  String(process.env.BEROPP_AI_WORKER_URL || '').replace(/\/$/, ''),\n  'https://beropp-ai.fredkfd.workers.dev',\n  'https://fredkfd.workers.dev'\n].filter((v,i,a)=>v && a.indexOf(v)===i);
 const SEARCH_PATH = '/ausbildung';
 const DETAIL_PATH = '/jobdetails';
 
@@ -69,8 +69,8 @@ async function load(kind){
 }
 (async()=>{
   fs.mkdirSync('data',{recursive:true});
-  if(!WORKER){
-    console.log('BEROPP_AI_WORKER_URL is not configured; existing live-data files are preserved.');
+  if(!WORKERS.length){
+    console.log('No BerOpp Worker URL is configured; existing live-data files are preserved.');
     process.exit(0);
   }
   try{
@@ -78,7 +78,7 @@ async function load(kind){
     if(ausbildung.count<6||jobs.count<6) throw new Error('Worker returned too few live records: Ausbildung='+ausbildung.count+', Jobs='+jobs.count);
     fs.writeFileSync('data/live-ausbildung.json',JSON.stringify(ausbildung,null,2)+'\n');
     fs.writeFileSync('data/live-jobs.json',JSON.stringify(jobs,null,2)+'\n');
-    console.log('Ausbildung: '+ausbildung.count+'; Jobs: '+jobs.count);
+    console.log('Live refresh OK — Ausbildung: '+ausbildung.count+'; Jobs: '+jobs.count);
   }catch(error){
     console.error(error);
     console.log('Live refresh failed; existing data files are preserved.');
