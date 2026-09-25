@@ -1,1 +1,70 @@
-{"meta":{"updatedAt":null,"source":"Bundesagentur für Arbeit","ausbildungCount":0,"jobCount":0},"items":[]}
+{
+  "meta": {
+    "updatedAt": "2026-09-25",
+    "source": "Verified company career pages",
+    "ausbildungCount": 0,
+    "jobCount": 6
+  },
+  "items": [
+    {
+      "id": "dsv-hh-99395",
+      "type": "job",
+      "title": "Lagermitarbeiter / Staplerfahrer (m/w/d)",
+      "company": "DSV",
+      "place": "Hamburg",
+      "start": "Sofort",
+      "url": "https://jobs.dsv.com/job/Hamburg-Lagermitarbeiter-Staplerfahrer-%28mwd%29-HH-21129/1242697301/%2B492151%207371691",
+      "description": "Lager, Be- und Entladung, Kommissionierung und Stapler; Staplerschein ist ideal."
+    },
+    {
+      "id": "dsv-hh-122953",
+      "type": "job",
+      "title": "Mitarbeiter Terminal / Scanner (m/w/d)",
+      "company": "DSV",
+      "place": "Hamburg",
+      "start": "Sofort",
+      "url": "https://jobs.dsv.com/job/Hamburg-Mitarbeiter-Terminal-Scanner-%28mwd%29-HH-21107/1420315633/?feedId=372433",
+      "description": "Waren beim Entladen mit Handscanner erfassen; motivierte Quereinsteiger willkommen."
+    },
+    {
+      "id": "dsv-hh-127679",
+      "type": "job",
+      "title": "Staplerfahrer / Verlader (m/w/d)",
+      "company": "DSV",
+      "place": "Hamburg-Eversween",
+      "start": "Sofort",
+      "url": "https://jobs.dsv.com/job/Hamburg-Verlader-Sp%C3%A4tschicht-%28mwd%29-HH-21107/1437115433/?feedId=372433",
+      "description": "Verladung von Sendungen im Umschlaglager; Spätschicht."
+    },
+    {
+      "id": "dsv-hh-128474",
+      "type": "job",
+      "title": "VAL Operator Specialist, Logistics Operations (m/w/d)",
+      "company": "DSV",
+      "place": "Hamburg-Altenwerder",
+      "start": "Sofort",
+      "url": "https://jobs.dsv.com/job/Hamburg-VAL-Operator-Specialist%2C-Logistics-Operations-%28mwd%29-Hamburg-Altenwerder-HH-21129/1440393533/?feedId=372433",
+      "description": "Operative Logistik, Warenbewegungen, Aufträge und Wareneingang/-ausgang."
+    },
+    {
+      "id": "dsv-wup-116477",
+      "type": "job",
+      "title": "Lagermitarbeiter / Terminal Operator (m/w/d)",
+      "company": "DSV",
+      "place": "Wuppertal",
+      "start": "Sofort",
+      "url": "https://jobs.dsv.com/job/Wuppertal-Lagermitarbeiter-Staplerfahrer-%28mwd%29-Nort-42327/1396132633/",
+      "description": "Be- und Entladung, Wareneingangskontrolle, Scanner und Flurförderzeuge; grundlegende Deutschkenntnisse."
+    },
+    {
+      "id": "dsv-gro-124006",
+      "type": "job",
+      "title": "Staplerfahrer (m/w/d)",
+      "company": "DSV",
+      "place": "Großbeeren",
+      "start": "Sofort",
+      "url": "https://jobs.dsv.com/job/Grossbeeren-Staplerfahrer-%28mwd%29-BB-14979/1423985533/?feedId=372433",
+      "description": "Be- und Entladung mit Stapler; gültiger Staplerschein erforderlich."
+    }
+  ]
+}
