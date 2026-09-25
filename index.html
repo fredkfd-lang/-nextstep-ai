@@ -2061,59 +2061,88 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   },true);
 })();
 </script>
-<script id="beropp-live-germany-search-v1">
+<script id="beropp-live-germany-search-v2">
 (function(){
-  const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs';
+  const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service';
   const BAKEY='jobboerse-jobsuche';
-  function n(v){return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()}
-  function baUrl(ref){if(!ref)return'';try{return 'https://www.arbeitsagentur.de/jobsuche/jobdetail/'+btoa(unescape(encodeURIComponent(String(ref))))}catch(e){return 'https://www.arbeitsagentur.de/jobsuche/'}}
-  async function live(q,where,type){
+  function enc(s){try{return btoa(unescape(encodeURIComponent(String(s||''))))}catch(e){return btoa(String(s||''))}}
+  function escUrl(s){return esc(String(s||''))}
+  async function searchBA(q,where,type){
     const p=new URLSearchParams({angebotsart:type==='ausbildung'?'4':'1',page:'1',size:'100',pav:'false'});
-    if(q)p.set('was',q); if(where)p.set('wo',where); if(where)p.set('umkreis','200');
-    const r=await fetch(BA+'?'+p.toString(),{headers:{'X-API-Key':BAKEY}});
+    if(q)p.set('was',q); if(where){p.set('wo',where);p.set('umkreis','200')}
+    const r=await fetch(BA+'/pc/v6/jobs?'+p.toString(),{headers:{'X-API-Key':BAKEY}});
     if(!r.ok)throw new Error('BA '+r.status);
     const d=await r.json();
     return (d.stellenangebote||[]).map((o,i)=>({
       id:'ba-live-'+(o.referenznummer||o.refnr||i),
+      refnr:o.referenznummer||o.refnr||'',
       title:o.stellenangebotsTitel||o.beruf||o.titel||'Stellenangebot',
       company:o.arbeitgeber||o.arbeitgeberName||'',
-      place:o.arbeitsort||o.ort||o.arbeitsortName||'',
-      start:o.beginn||o.eintrittsdatum||'',
+      place:typeof o.arbeitsort==='object'?(o.arbeitsort.ort||''):(o.arbeitsort||o.ort||''),
+      start:o.eintrittsdatum||o.beginn||'',
       description:o.stellenangebotsBeschreibung||o.beschreibung||'',
       type:type==='ausbildung'?'Ausbildung':'Job',
       source:'Bundesagentur für Arbeit',
-      applyUrl:o.externeUrl||o.stellenangebotsUrl||o.url||baUrl(o.referenznummer||o.refnr),
-      companyApplyUrl:o.externeUrl||''
+      companyApplyUrl:o.externeUrl||'',
+      companyWebsite:o.arbeitgeberdarstellungUrl||''
     }));
   }
-  function renderLive(box,rows,type){
+  async function getDirectUrl(refnr){
+    if(!refnr)return'';
+    const r=await fetch(BA+'/pc/v4/jobdetails/'+enc(refnr),{headers:{'X-API-Key':BAKEY}});
+    if(!r.ok)throw new Error('Jobdetails '+r.status);
+    const d=await r.json();
+    return d.externeUrl||d.externeURL||d.bewerbungUrl||d.bewerbungURL||d.arbeitgeberdarstellungUrl||'';
+  }
+  window.beroppOpenDirectCompany=async function(refnr,button){
+    const original=button?button.innerHTML:'';
+    try{
+      if(button){button.disabled=true;button.innerHTML='⏳ Company link…'}
+      let url=await getDirectUrl(refnr);
+      if(!url){if(button){button.disabled=false;button.innerHTML=original} alert('Diese Anzeige hat aktuell keinen direkten externen Bewerbungslink.');return false}
+      window.open(url,'_blank','noopener,noreferrer');
+    }catch(e){
+      console.warn('Direct company application unavailable',e);
+      if(button){button.disabled=false;button.innerHTML=original}
+      alert('Der direkte Firmen-Link konnte gerade nicht geladen werden. Bitte versuche es noch einmal.');
+    }
+    return false;
+  };
+  function render(box,rows,type){
     if(!box)return;
-    const html=rows.length?'<div class="card" style="margin-top:12px"><h3>🇩🇪 Live aus der Bundesagentur für Arbeit</h3><p>'+rows.length+' aktuelle Treffer aus Deutschland.</p>'+
-      rows.map(o=>'<div class="card" style="margin:9px 0"><h3>'+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.start||'')+'</p><p>'+esc(String(o.description||'').slice(0,360))+'</p>'+(o.companyApplyUrl?'<a href="'+esc(o.companyApplyUrl)+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;background:#2563eb;color:#fff;padding:11px 14px;border-radius:12px;font-weight:700;margin:4px 4px 4px 0">⚡ Apply direct at company</a>':'')+'<a class="secondary" href="'+esc(baUrl(o.id.replace(/^ba-live-/,'')||o.applyUrl))+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🔗 View job at Bundesagentur</a></div>').join('')+'</div>':
-      '<div class="card" style="margin-top:12px"><p>Keine aktuellen Treffer für diese Suche.</p></div>';
+    const html=rows.length
+      ?'<div class="card" style="margin-top:12px"><h3>🇩🇪 Live aus der Bundesagentur für Arbeit</h3><p><strong>'+rows.length+'</strong> aktuelle Treffer aus Deutschland.</p>'+
+        rows.map(o=>{
+          const direct=o.companyApplyUrl
+            ?'<a href="'+escUrl(o.companyApplyUrl)+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;background:#2563eb;color:#fff;padding:11px 14px;border-radius:12px;font-weight:700;margin:4px 4px 4px 0">⚡ Apply direct at company</a>'
+            :'<button type="button" onclick="return beroppOpenDirectCompany(\''+esc(String(o.refnr||'')).replace(/'/g,'&#39;')+'\',this)" style="background:#2563eb">⚡ Apply direct at company</button>';
+          const website=o.companyWebsite
+            ?'<a class="secondary" href="'+escUrl(o.companyWebsite)+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🏢 Company website</a>':'';
+          const ref=o.refnr||'';
+          const ba='https://www.arbeitsagentur.de/jobsuche/jobdetail/'+enc(ref);
+          return '<div class="card" style="margin:9px 0"><h3>'+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start||'')+'</p><p>'+esc(String(o.description||'').slice(0,360))+'</p>'+direct+website+'<a class="secondary" href="'+esc(ba)+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🔗 Details bei Bundesagentur</a></div>';
+        }).join('')+'</div>'
+      :'<div class="card" style="margin-top:12px"><p>Keine aktuellen Treffer für diese Suche.</p></div>';
     box.insertAdjacentHTML('beforeend',html);
   }
   window.beroppSearchGermanyLive=async function(q,where,type,box){
-    try{const rows=await live(q,where,type);renderLive(box,rows,type);return rows}catch(e){console.warn('BA live search unavailable',e);return[]}
+    try{const rows=await searchBA(q,where,type);render(box,rows,type);return rows}
+    catch(e){console.warn('BA live search unavailable',e);return[]}
   };
   const oldFind=window.findByBeruf;
   window.findByBeruf=async function(name){
     const result=oldFind?oldFind(name):false;
-    const box=$('berufeList');
-    if(box){
-      const city=($('homeCareerLocation')?.value||'').trim();
-      box.insertAdjacentHTML('beforeend','<div id="baLiveLoading" class="card" style="margin-top:12px">⏳ Germany-wide live search is loading…</div>');
-      const rows=await window.beroppSearchGermanyLive(name,city,'ausbildung',box);
-      $('baLiveLoading')?.remove();
-      return !!result||rows.length>0;
-    }
-    return result;
+    const box=$('berufeList'); if(!box)return result;
+    box.insertAdjacentHTML('beforeend','<div id="baLiveLoading" class="card" style="margin-top:12px">⏳ Germany-wide live search is loading…</div>');
+    const rows=await window.beroppSearchGermanyLive(name,($('homeCareerLocation')?.value||'').trim(),'ausbildung',box);
+    $('baLiveLoading')?.remove();
+    return !!result||rows.length>0;
   };
   const oldFindMatches=window.findMatches;
   window.findMatches=async function(){
     const r=oldFindMatches?oldFindMatches():false;
     const box=$('results'); if(!box)return r;
-    const q=($('oppSearch')?.value||'').trim(), city=($('oppCity')?.value||'').trim();
+    const q=($('oppSearch')?.value||'').trim(),city=($('oppCity')?.value||'').trim();
     if(!q&&!city)return r;
     box.insertAdjacentHTML('beforeend','<div id="baJobsLoading" class="card">⏳ Searching current Germany-wide jobs…</div>');
     const rows=await window.beroppSearchGermanyLive(q,city,'job',box);
