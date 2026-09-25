@@ -11,7 +11,7 @@ function corsHeadersFor(request) {
     "Access-Control-Allow-Origin": allowOrigin,
     "Vary": "Origin",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "POST, OPTIONS"
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
   };
 }
 
