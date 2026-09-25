@@ -2864,4 +2864,105 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   window.addEventListener('load',function(){setTimeout(window.renderHomePreviews,900)});
 })();
 </script>
+<script id="beropp-home-live-6x6-v2">
+(function(){
+  const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs';
+  const KEY='jobboerse-jobsuche';
+  function worker(){
+    const v=String(localStorage.getItem('beropp_ai_api_url')||'').trim().replace(/\/$/,'');
+    return /^https:\/\//i.test(v)?v:'';
+  }
+  function safeUrl(u){try{const x=new URL(String(u||''));return /^https?:$/.test(x.protocol)?x.href:''}catch(e){return''}}
+  async function get(path,params){
+    const qs=params.toString(),w=worker();
+    const url=w?w+path+'?'+qs:BA+'?'+qs;
+    const r=await fetch(url,{headers:{Accept:'application/json',...(w?{}:{'X-API-Key':KEY})}});
+    if(!r.ok)throw new Error('BA '+r.status);
+    return r.json();
+  }
+  async function search(type){
+    const out=[],seen=new Set();
+    for(let page=1;page<=5&&out.length<12;page++){
+      const p=new URLSearchParams({angebotsart:type==='ausbildung'?'4':'1',page:String(page),size:'100',pav:'false'});
+      const d=await get('/ausbildung',p);
+      const rows=Array.isArray(d.stellenangebote)?d.stellenangebote:[];
+      if(!rows.length)break;
+      for(const o of rows){
+        const key=String(o.refnr||'')+'|'+String(o.beruf||o.stellenangebotsTitel||o.titel||'')+'|'+String(o.arbeitgeber||'');
+        if(seen.has(key))continue;
+        seen.add(key);
+        out.push({
+          id:'home-v2-'+type+'-'+(o.refnr||out.length),
+          refnr:o.refnr||'',
+          title:o.beruf||o.stellenangebotsTitel||o.titel||(type==='ausbildung'?'Ausbildung':'Job'),
+          company:o.arbeitgeber||'Arbeitgeber nicht angegeben',
+          place:typeof o.arbeitsort==='object'?(o.arbeitsort.ort||o.arbeitsort.region||'Deutschland'):(o.arbeitsort||'Deutschland'),
+          date:o.aktuelleVeroeffentlichungsdatum||o.eintrittsdatum||'',
+          url:safeUrl(o.externeUrl||o.externeURL||o.bewerbungUrl||o.bewerbungURL||''),
+          type,source:'Bundesagentur für Arbeit'
+        });
+        if(out.length>=12)break;
+      }
+      if(rows.length<100)break;
+    }
+    return out;
+  }
+  async function enrichDirect(rows){
+    const w=worker(),out=[];
+    for(let i=0;i<rows.length;i+=6){
+      const chunk=rows.slice(i,i+6);
+      const done=await Promise.all(chunk.map(async o=>{
+        if(o.url||!o.refnr)return o;
+        try{
+          const p=new URLSearchParams({refnr:o.refnr});
+          const r=await fetch((w?w+'/jobdetails': 'https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobdetails/'+encodeURIComponent(o.refnr))+(w?'?'+p.toString():''),{headers:{Accept:'application/json',...(w?{}:{'X-API-Key':KEY})}});
+          if(!r.ok)return o;
+          const d=await r.json();
+          return Object.assign({},o,{url:safeUrl(d.externeUrl||d.externeURL||d.bewerbungUrl||d.bewerbungURL||d.applicationUrl||d.applicationURL||'')});
+        }catch(e){return o}
+      }));
+      out.push(...done);
+    }
+    return out;
+  }
+  function card(o){
+    const btn=o.url
+      ? '<button type="button" class="secondary" onclick="return window.__beroppHomeApply6v2('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>'
+      : '<span class="status">Original application link unavailable</span>';
+    return '<div class="nsPreviewItem"><strong>'+esc(o.type==='ausbildung'?'🎓 ':'💼 ')+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+(o.date?' · 📅 '+esc(o.date):'')+'</div>'+btn+'</div>';
+  }
+  window.__beroppHomeApply6v2=function(o){
+    if(!o||!o.url)return false;
+    if(!window.beroppUser){
+      localStorage.setItem('beropp_pending_apply',JSON.stringify({target:o.type==='ausbildung'?'ausbildungDirect':'jobDirect',id:o.id,type:o.type,url:o.url,title:o.title||'',company:o.company||''}));
+      if(typeof show==='function')show('auth');
+      if(typeof setAuthStatus==='function')setAuthStatus('🔐 Sign in first. After login, BerOpp opens the original company application page.');
+      return false;
+    }
+    window.open(o.url,'_blank','noopener,noreferrer');
+    return false;
+  };
+  window.renderHomePreviews=async function(){
+    const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');if(!a||!j)return false;
+    a.innerHTML='<div class="nsPreviewItem"><strong>⏳ Aktuelle Ausbildung werden geladen…</strong><div class="nsPreviewMeta">Live Bundesagentur für Arbeit</div></div>';
+    j.innerHTML='<div class="nsPreviewItem"><strong>⏳ Aktuelle Jobs werden geladen…</strong><div class="nsPreviewMeta">Live Bundesagentur für Arbeit</div></div>';
+    try{
+      const [aus0,jobs0]=await Promise.all([search('ausbildung'),search('job')]);
+      const [aus,jobs]=await Promise.all([enrichDirect(aus0),enrichDirect(jobs0)]);
+      const unique=list=>{const s=new Set();return list.filter(o=>{const k=o.title+'|'+o.company+'|'+o.place;if(s.has(k))return false;s.add(k);return true}).slice(0,6)};
+      const A=unique(aus),J=unique(jobs);
+      window.beroppHomeLiveAusbildung=A;window.beroppHomeLiveJobs=J;
+      a.innerHTML=A.length?A.map(card).join(''):'<div class="nsPreviewItem"><strong>⚠️ No current Ausbildung could be loaded.</strong><div class="nsPreviewMeta">Open Find Ausbildung to search again.</div></div>';
+      j.innerHTML=J.length?J.map(card).join(''):'<div class="nsPreviewItem"><strong>⚠️ No current Jobs could be loaded.</strong><div class="nsPreviewMeta">Open Find Jobs to search again.</div></div>';
+      return A.length===6&&J.length===6;
+    }catch(e){
+      console.warn('Home live 6x6 v2 failed',e);
+      a.innerHTML='<div class="nsPreviewItem"><strong>⚠️ Live-Ausbildung ist momentan nicht erreichbar.</strong><div class="nsPreviewMeta">Open Find Ausbildung for another live search.</div></div>';
+      j.innerHTML='<div class="nsPreviewItem"><strong>⚠️ Live-Jobs sind momentan nicht erreichbar.</strong><div class="nsPreviewMeta">Open Find Jobs for another live search.</div></div>';
+      return false;
+    }
+  };
+  window.addEventListener('load',function(){setTimeout(window.renderHomePreviews,1100)});
+})();
+</script>
 </body></html>
