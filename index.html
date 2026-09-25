@@ -1309,4 +1309,43 @@ function makeBerOppEverywhereHomeLink(root=document.body){
 }
 window.addEventListener('load',()=>makeBerOppEverywhereHomeLink());
 new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{childList:true,subtree:true});
-</script><noscript><section aria-label="BerOpp information"><h2>BerOpp — Ausbildung, Jobs and Career Tools</h2><p>BerOpp helps people discover Ausbildung and job opportunities, build a CV, and plan their next career step in Germany and internationally.</p><p><a href="international-ausbildung.html">International Ausbildung in Germany</a> · <a href="international-jobs.html">International Jobs in Germany</a></p><p>Explore Ausbildung, jobs, international opportunities and career tools.</p><p><a href="international-ausbildung.html">International Ausbildung</a> · <a href="international-jobs.html">International Jobs</a></p></section></noscript></body></html>
+</script><noscript><section aria-label="BerOpp information"><h2>BerOpp — Ausbildung, Jobs and Career Tools</h2><p>BerOpp helps people discover Ausbildung and job opportunities, build a CV, and plan their next career step in Germany and internationally.</p><p><a href="international-ausbildung.html">International Ausbildung in Germany</a> · <a href="international-jobs.html">International Jobs in Germany</a></p><p>Explore Ausbildung, jobs, international opportunities and career tools.</p><p><a href="international-ausbildung.html">International Ausbildung</a> · <a href="international-jobs.html">International Jobs</a></p></section></noscript><script id="beropp-live-pflege-data">
+(function(){
+  const livePflege=[
+    {id:10,title:'Ausbildung zum/zur Pflegefachmann/Pflegefachfrau (m/w/d)',company:'Dr. med. Ernst-August Wilkening Pflegeheime GmbH',place:'Hannover',start:'01.10.2027',description:'Pflegefachmann/Pflegefachfrau Ausbildung in Hannover.',applyUrl:'https://www.wilkening-hannover.de/'},
+    {id:11,title:'Ausbildung zum 01.08.2027',company:'Deutsche Seniorenstift Gesellschaft mbH & Co.KG PWS Davenstedt',place:'Hannover',start:'01.08.2027',description:'Ausbildung Pflegefachmann/-frau in Hannover.',applyUrl:'https://www.seniorenstift.de/'},
+    {id:12,title:'Ausbildung zur Pflegefachkraft (m/w/d)',company:'Alloheim Senioren-Residenzen SE',place:'Hannover',start:'',description:'Ausbildung zur Pflegefachkraft in Hannover.',applyUrl:'https://www.alloheim.de/karriere/ausbildung/'},
+    {id:13,title:'Ausbildung 2026 - Pflegefachfachkraft (m/w/d)',company:'Diakonisches Werk Hannover gGmbH',place:'Hannover',start:'01.10.2026',description:'Pflegefachkraft Ausbildung in Hannover.',applyUrl:'https://www.diakonie-hannover.de/'},
+    {id:14,title:'Auszubildende zur Pflegefachkraft (m/w/d)',company:'Medizin Mobil Haus Bodestraße GmbH & Co. KG',place:'Hannover',start:'01.10.2026',description:'Ausbildung zur Pflegefachkraft in Hannover.',applyUrl:'https://www.medizin-mobil.de/'},
+    {id:15,title:'Auszubildende/r zur/zum Pflegefachfrau/Pflegefachmann (m/w/d)',company:'Johanniter-Unfall-Hilfe e.V.',place:'Hannover',start:'01.10.2026',description:'Pflegefachfrau/Pflegefachmann Ausbildung in Hannover.',applyUrl:'https://www.johanniter.de/juh/lv-ndsbr/karriere/ausbildung/'},
+    {id:16,title:'Ausbildung als Pflegefachkraft',company:'Seniorenpflegeheim Helenenhof',place:'Burgdorf',start:'01.08.2027',description:'Pflegefachkraft Ausbildung nahe Hannover.',applyUrl:'https://www.helenenhof.de/'},
+    {id:17,title:'Ausbildung zum/zur Pflegefachmann/-frau (m/w/d)',company:'Korian Castaneapark GmbH',place:'Hemmingen',start:'',description:'Pflegefachmann/-frau Ausbildung nahe Hannover.',applyUrl:'https://www.korian.de/karriere/ausbildung/'},
+    {id:18,title:'Ausbildung zum Pflegefachmann (m/w/d)',company:'Seniorenpflegeheim Lindenriek Wöhler GmbH',place:'Burgwedel',start:'',description:'Pflegefachmann Ausbildung nahe Hannover.',applyUrl:'https://www.lindenriek.de/'}
+  ];
+  window.beroppLivePflege=livePflege;
+  const base=Array.isArray(window.opps)?window.opps:[];
+  const seen=new Set(base.map(o=>String(o.company)+'|'+String(o.title)));
+  livePflege.forEach(o=>{if(!seen.has(o.company+'|'+o.title))base.push(o)});
+  window.opps=base;
+  const oldFindByBeruf=window.findByBeruf;
+  window.findByBeruf=function(name){
+    if(!window.beroppUser){window.beroppPendingTarget='ausbildung';show('auth');return false}
+    show('ausbildung');
+    const aliases={pflege:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege','altenpfleger'],gesundheit:['pflegefachfrau','pflegefachmann','pflegefachkraft','pflege']};
+    const needle=String(name||'').toLowerCase();
+    const terms=aliases[needle]||[needle];
+    const city=normalizeLocation($('oppCity')?.value||'');
+    const matches=window.opps.filter(o=>{
+      const hay=normalizeLocation([o.title,o.description,o.type,o.field,...(o.skills||[])].join(' '));
+      return terms.some(t=>hay.includes(normalizeLocation(t)))&&(!city||normalizeLocation(o.place||'').includes(city));
+    });
+    const box=$('berufeList');
+    if(box&&matches.length){
+      box.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p><strong>'+matches.length+'</strong> Ausbildung opportunities found.</p>'+matches.map(o=>'<div class="card"><h3>'+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+' · 📍 '+esc(o.place||'')+' · '+esc(o.start||'')+'</p><p>'+esc(o.description||'')+'</p><button onclick="viewOpp('+o.id+')">📖 Details</button>'+(o.applyUrl?'<a href="'+esc(o.applyUrl)+'" target="_blank" rel="noopener" class="secondary" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🚀 Company application</a>':'')+'</div>').join('')+'</div>';
+      return true;
+    }
+    if(box){const baUrl=buildBAUrl(name,city);box.innerHTML='<div class="card"><h3>🔎 '+esc(name)+'</h3><p>No saved vacancy matches this profession and location yet.</p><a href="'+esc(baUrl)+'" target="_blank" rel="noopener" class="secondary" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🔗 Search current Ausbildung vacancies</a></div>'}
+    return false;
+  };
+})();
+</script></body></html>
