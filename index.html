@@ -339,10 +339,10 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
   <label for="authPassword">Password</label>
   <input id="authPassword" type="password" autocomplete="current-password" placeholder="At least 6 characters" onkeydown="if(event.key==='Enter')signInBerOpp()">
   <div class="nsAuthActions">
-    <button onclick="signInBerOpp()">Log in</button>
-    <button class="secondary" onclick="createBerOppAccount()">Create account</button>
+    <button type="button" onclick="event.preventDefault();event.stopPropagation();return signInBerOpp()">Log in</button>
+    <button type="button" class="secondary" onclick="event.preventDefault();event.stopPropagation();return createBerOppAccount()">Create account</button>
   </div>
-  <button class="nsAuthForgot" onclick="resetBerOppPassword()">Forgot password?</button>
+  <button type="button" class="nsAuthForgot" onclick="event.preventDefault();event.stopPropagation();return resetBerOppPassword()">Forgot password?</button>
   <p id="authStatus" class="status nsAuthStatus">Ready to sign in.</p>
   <button class="secondary nsAuthBack" onclick="show('home')">← Back to Home</button>
 </div>
@@ -634,10 +634,11 @@ function initBerOppAuth(){
       try{
         const directSaved=JSON.parse(localStorage.getItem('beropp_pending_apply')||'null');
         if(directSaved&&(directSaved.target==='ausbildungDirect'||directSaved.target==='jobDirect'||directSaved.target==='homeOpportunity')&&directSaved.url){
+          const directUrl=directSaved.url;
           localStorage.removeItem('beropp_pending_apply');
           beroppPendingTarget='';beroppPendingOpportunityId=null;beroppPendingOpportunityType='';
-          updateBerOppApplicationStatus(directSaved.id,'Company application opened');
-          window.location.assign(directSaved.url);
+          // Redirect first: profile/application tracking must never block the company page.
+          window.location.assign(directUrl);
           return;
         }
       }catch(directErr){console.warn('Direct Ausbildung resume failed',directErr)}
