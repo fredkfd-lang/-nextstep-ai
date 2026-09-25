@@ -654,7 +654,7 @@ async function fetchLiveCareerSources(rawQ,rawCity,type){
   const isGermany=!rawCity||/germany|deutschland|hamburg|berlin|munich|münchen|frankfurt|hannover|neu wulmstorf|winsen|harburg|niedersachsen|lower saxony/i.test(rawCity);
   if(isGermany){
     try{
-      const p=new URLSearchParams();p.set('was',rawQ);if(rawCity)p.set('wo',rawCity);p.set('page','1');p.set('size','12');p.set('veroeffentlichtseit','60');p.set('zeitarbeit','true');
+      const p=new URLSearchParams();p.set('was',rawQ);if(rawCity)p.set('wo',rawCity);p.set('page','1');p.set('size','50');p.set('veroeffentlichtseit','60');p.set('zeitarbeit','true');
       if(type==='ausbildung')p.set('angebotsart','4');else if(type==='job')p.set('angebotsart','1');
       const res=await fetch('https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs?'+p.toString(),{headers:{'X-API-Key':'jobboerse-jobsuche'}});
       if(res.ok){
@@ -1348,4 +1348,52 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
     return false;
   };
 })();
-</script></body></html>
+<script id="beropp-live-directory">
+(function(){
+  let liveDirectoryBusy={job:false,ausbildung:false};
+  function liveCard(o,kind){
+    const title=esc(o.title||'Stellenangebot'), company=esc(o.company||'Arbeitgeber nicht angegeben'), place=esc(o.place||'Deutschland');
+    const date=o.date?'<div class="nsLiveMeta">📅 '+esc(o.date)+'</div>':'';
+    const action=o.url&&o.direct?'<button class="secondary" onclick="window.open('+JSON.stringify(o.url)+',\'_blank\',\'noopener,noreferrer\')">🏢 Original / Bewerben</button>':'';
+    return '<div class="card nsLiveDirectoryCard"><span class="badge">⚡ LIVE</span><h3>'+title+'</h3><p>🏢 '+company+'<br>📍 '+place+'</p>'+date+'<small>Quelle: '+esc(o.source||'Live-Stellensuche')+'</small><br>'+action+'</div>';
+  }
+  async function loadLiveDirectory(kind){
+    if(liveDirectoryBusy[kind])return;
+    const box=$(kind==='job'?'results':'berufeList'); if(!box||typeof fetchLiveCareerSources!=='function')return;
+    liveDirectoryBusy[kind]=true;
+    const old=box.innerHTML;
+    const heading=kind==='job'?'💼 Aktuelle Jobs':'🎓 Aktuelle Ausbildung';
+    box.innerHTML='<div class="card nsLiveDirectoryLoading"><strong>⏳ '+heading+' werden aktualisiert…</strong><p>BerOpp sucht gerade nach aktuellen Angeboten.</p></div>'+old;
+    try{
+      const live=await fetchLiveCareerSources('', '', kind);
+      const unique=[],seen=new Set();
+      live.forEach(o=>{const key=(o.title||'')+'|'+(o.company||'')+'|'+(o.place||'');if(!seen.has(key)){seen.add(key);unique.push(o)}});
+      const html='<div class="card nsLiveDirectory"><h3>'+heading+'</h3><p><strong>'+unique.length+'</strong> aktuelle Live-Angebote wurden gefunden. Die Liste wird bei der Suche neu abgefragt.</p>'+unique.map(o=>liveCard(o,kind)).join('')+'</div>';
+      box.innerHTML=html+old;
+    }catch(e){
+      console.warn('Live directory unavailable',e);
+      box.innerHTML=old+'<div class="card"><p>⚠️ Die Live-Aktualisierung ist momentan nicht erreichbar. Die gespeicherten BerOpp-Angebote bleiben sichtbar.</p></div>';
+    }finally{liveDirectoryBusy[kind]=false}
+  }
+  const originalFindMatches=window.findMatches;
+  window.findMatches=function(){
+    const result=originalFindMatches?originalFindMatches.apply(this,arguments):undefined;
+    setTimeout(()=>loadLiveDirectory('job'),50);
+    return result;
+  };
+  const originalRenderBerufe=window.renderBerufe;
+  window.renderBerufe=function(){
+    const result=originalRenderBerufe?originalRenderBerufe.apply(this,arguments):undefined;
+    setTimeout(()=>loadLiveDirectory('ausbildung'),50);
+    return result;
+  };
+  window.beroppRefreshLiveDirectory=function(kind){return loadLiveDirectory(kind||'job')};
+  window.addEventListener('load',()=>{setTimeout(()=>{if(document.body.classList.contains('auth-open'))return;},500)});
+})();
+</script><style id="beropp-live-directory-style">
+.nsLiveDirectory{border:1px solid #93c5fd!important;background:linear-gradient(180deg,#eff6ff,#fff)!important}
+.nsLiveDirectoryCard{border:1px solid #dbeafe!important;box-shadow:0 6px 18px rgba(37,99,235,.06)!important}
+.nsLiveDirectoryCard .badge{margin-bottom:6px}
+.nsLiveMeta{font-size:12px;color:#475569;margin:5px 0}
+.nsLiveDirectoryLoading{background:#f8fbff!important}
+</style></script></body></html>
