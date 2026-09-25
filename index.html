@@ -1422,7 +1422,7 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
     });
     const box=$('berufeList');
     if(box&&matches.length){
-      box.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p><strong>'+matches.length+'</strong> Ausbildung opportunities found.</p>'+matches.map(o=>'<div class="card"><h3>'+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+' · 📍 '+esc(o.place||'')+' · '+esc(o.start||'')+'</p><p>'+esc(o.description||'')+'</p><button onclick="viewOpp('+o.id+')">📖 Details</button>'+(o.applyUrl?'<a href="'+esc(o.applyUrl)+'" target="_blank" rel="noopener" class="secondary" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🚀 Company application</a>':'')+'</div>').join('')+'</div>';
+      box.innerHTML='<div class="card"><h3>🎓 '+esc(name)+'</h3><p><strong>'+matches.length+'</strong> Ausbildung opportunities found.</p>'+matches.map(o=>'<div class="card"><h3>'+esc(o.title)+'</h3><p>🏢 '+esc(o.company)+' · 📍 '+esc(o.place||'')+' · '+esc(o.start||'')+'</p><p>'+esc(o.description||'')+'</p><button onclick="viewOpp('+o.id+')">📖 Details</button><button onclick="beroppApplyByOpportunityId('+o.id+')">⚡ Apply Now</button>'+'</div>').join('')+'</div>';
       return true;
     }
     if(box){const baUrl=buildBAUrl(name,city);box.innerHTML='<div class="card"><h3>🔎 '+esc(name)+'</h3><p>No saved vacancy matches this profession and location yet.</p><a href="'+esc(baUrl)+'" target="_blank" rel="noopener" class="secondary" style="display:inline-block;text-decoration:none;padding:11px 14px;border-radius:12px;margin:4px">🔗 Search current Ausbildung vacancies</a></div>'}
@@ -1436,7 +1436,7 @@ new MutationObserver(()=>makeBerOppEverywhereHomeLink()).observe(document.body,{
   function liveCard(o,kind){
     const title=esc(o.title||'Stellenangebot'), company=esc(o.company||'Arbeitgeber nicht angegeben'), place=esc(o.place||'Deutschland');
     const date=o.date?'<div class="nsLiveMeta">📅 '+esc(o.date)+'</div>':'';
-    const action=o.url&&o.direct?'<button class="secondary" onclick="window.open('+JSON.stringify(o.url)+',\'_blank\',\'noopener,noreferrer\')">🏢 Original / Bewerben</button>':'';
+    const action=o.url&&o.direct?'<button onclick="window.open('+JSON.stringify(o.url)+',\'_blank\',\'noopener,noreferrer\')">🏢 Original / Bewerben</button>':'';
     return '<div class="card nsLiveDirectoryCard"><span class="badge">⚡ LIVE</span><h3>'+title+'</h3><p>🏢 '+company+'<br>📍 '+place+'</p>'+date+'<small>Quelle: '+esc(o.source||'Live-Stellensuche')+'</small><br>'+action+'</div>';
   }
   async function loadLiveDirectory(kind){
