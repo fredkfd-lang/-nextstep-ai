@@ -2981,12 +2981,46 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
 </script>
 <script id="beropp-static-live-fallback-v1">
 (function(){
-  async function staticData(type){
-    const u=type==='ausbildung'?'/data/live-ausbildung.json':'/data/live-jobs.json';
-    const r=await fetch(u+'?v='+Date.now(),{cache:'no-store'});
-    if(!r.ok)throw new Error('static live data '+r.status);
-    const d=await r.json();
-    return Array.isArray(d.items)?d.items:[];
+  async function staticData(type, rawQ, rawCity){
+    const worker='https://fredkfd.workers.dev';
+    const kind=type==='ausbildung'?'4':'1';
+    const q=String(rawQ||'').trim();
+    const city=String(rawCity||'').trim();
+    const all=[],seen=new Set();
+    for(let page=1;page<=10;page++){
+      const p=new URLSearchParams({angebotsart:kind,page:String(page),size:'100',veroeffentlichtseit:'100',zeitarbeit:'true'});
+      if(q)p.set('was',q);
+      if(city)p.set('wo',city);
+      const r=await fetch(worker+'/ausbildung?'+p.toString(),{headers:{Accept:'application/json'},cache:'no-store'});
+      if(!r.ok)throw new Error('live worker '+r.status);
+      const d=await r.json();
+      const rows=Array.isArray(d.stellenangebote)?d.stellenangebote:[];
+      for(const o of rows){
+        const ref=String(o.referenznummer||o.refnr||'');
+        const place=typeof o.arbeitsort==='object'?(o.arbeitsort?.ort||o.arbeitsort?.region||'Deutschland'):(o.arbeitsort||o.ort||'Deutschland');
+        const key=ref||[o.beruf,o.stellenangebotsTitel,o.arbeitgeber,place].join('|');
+        if(seen.has(key))continue;
+        seen.add(key);
+        const direct=o.externeUrl||o.externeURL||o.bewerbungUrl||o.bewerbungURL||'';
+        const detail=ref?'https://www.arbeitsagentur.de/jobsuche/jobdetail/'+btoa(unescape(encodeURIComponent(ref))):'';
+        all.push({
+          id:'live-'+type+'-'+(ref||all.length),
+          refnr:ref,
+          title:o.beruf||o.stellenangebotsTitel||o.titel||(type==='ausbildung'?'Ausbildung':'Stellenangebot'),
+          company:o.arbeitgeber||o.arbeitgeberName||'Arbeitgeber nicht angegeben',
+          place,
+          start:o.eintrittsdatum||o.beginn||'',
+          date:o.aktuelleVeroeffentlichungsdatum||o.veroeffentlichungsdatum||'',
+          description:o.stellenangebotsBeschreibung||o.beschreibung||'',
+          url:direct||detail,
+          type,
+          source:'Bundesagentur für Arbeit'
+        });
+      }
+      if(rows.length<100)break;
+    }
+    if(!all.length)throw new Error('No live records returned');
+    return all;
   }
   function esc2(v){return typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
   function direct(o){
