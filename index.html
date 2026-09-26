@@ -13,6 +13,7 @@
             --card-glass: rgba(255, 255, 255, 0.07);
             --card-border: rgba(255, 255, 255, 0.12);
             --blue-primary: #1a5cff;
+            --blue-gradient: linear-gradient(135deg, #1a5cff 0%, #0040c8 100%);
             --text-white: #ffffff;
             --text-muted: #94a3b8;
         }
@@ -83,6 +84,26 @@
             color: var(--text-muted);
         }
 
+        .nav-links {
+            display: none;
+            gap: 1.8rem;
+            list-style: none;
+        }
+
+        @media (min-width: 900px) {
+            .nav-links { display: flex; }
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active { color: white; }
+
         .btn-google-nav {
             background: white;
             color: #1e293b;
@@ -98,7 +119,8 @@
 
         /* HERO SECTION */
         .hero {
-            padding: 3.5rem 1.5rem 4rem;
+            position: relative;
+            padding: 3.5rem 1.5rem 5rem;
             max-width: 1280px;
             margin: 0 auto;
             display: flex;
@@ -110,8 +132,20 @@
             .hero {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                padding: 4.5rem 2rem 5rem;
+                padding: 4.5rem 2rem 6rem;
             }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(26, 92, 255, 0.15);
+            border: 1px solid rgba(26, 92, 255, 0.3);
+            color: #60a5fa;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
         }
 
         .hero-title {
@@ -119,6 +153,10 @@
             font-weight: 800;
             line-height: 1.15;
             margin-bottom: 1.2rem;
+        }
+
+        @media (min-width: 900px) {
+            .hero-title { font-size: 3.2rem; }
         }
 
         .hero-title span {
@@ -133,6 +171,42 @@
             margin-bottom: 2rem;
         }
 
+        .hero-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        @media (min-width: 600px) {
+            .hero-buttons { flex-direction: row; }
+        }
+
+        .btn-primary-google {
+            background: var(--blue-primary);
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 25px rgba(26, 92, 255, 0.4);
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--card-border);
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        /* HERO GLASS CARDS */
         .hero-glass-cards {
             display: flex;
             flex-direction: column;
@@ -150,13 +224,54 @@
             justify-content: space-between;
             text-decoration: none;
             color: white;
+            transition: transform 0.2s, background 0.2s;
             cursor: pointer;
         }
 
-        /* LISTINGS GRID */
+        .glass-card-item:hover {
+            transform: translateX(6px);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .glass-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        /* FEATURE STRIP */
+        .feature-strip {
+            background: #060919;
+            border-top: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+            padding: 2.5rem 1.5rem;
+        }
+
+        .feature-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 900px) {
+            .feature-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .feature-item { text-align: center; }
+        .feature-item h4 { font-size: 1rem; margin: 0.5rem 0 0.2rem; }
+        .feature-item p { color: var(--text-muted); font-size: 0.85rem; }
+
+        /* MAIN SEARCH & LISTINGS */
         .content-section {
             max-width: 1280px;
-            margin: 3rem auto;
+            margin: 3.5rem auto;
             padding: 0 1.5rem;
         }
 
@@ -168,7 +283,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
         @media (min-width: 600px) {
@@ -186,6 +301,42 @@
             outline: none;
         }
 
+        .btn-search-main {
+            background: var(--blue-primary);
+            color: white;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 0.8rem;
+            overflow-x: auto;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--blue-primary);
+            color: white;
+            border-color: var(--blue-primary);
+        }
+
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -200,6 +351,12 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .job-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--blue-primary);
         }
 
         .badge-type {
@@ -213,6 +370,23 @@
             margin-bottom: 0.8rem;
         }
 
+        .badge-job {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .job-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .company-info {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+        }
+
         .btn-card-details {
             background: rgba(255, 255, 255, 0.1);
             color: white;
@@ -223,9 +397,14 @@
             cursor: pointer;
             width: 100%;
             margin-top: 1.2rem;
+            transition: background 0.2s;
         }
 
-        /* MODALS */
+        .btn-card-details:hover {
+            background: var(--blue-primary);
+        }
+
+        /* MODAL POPUPS */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -256,6 +435,21 @@
             float: right;
         }
 
+        .detail-section {
+            margin-bottom: 1.2rem;
+        }
+
+        .detail-section h4 {
+            font-size: 0.95rem;
+            color: #60a5fa;
+            margin-bottom: 0.4rem;
+        }
+
+        .detail-section p {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
         .form-input {
             width: 100%;
             padding: 0.8rem;
@@ -284,7 +478,7 @@
         footer {
             background: #040711;
             border-top: 1px solid var(--card-border);
-            padding: 3rem 1.5rem;
+            padding: 3.5rem 1.5rem 2rem;
             color: var(--text-muted);
             font-size: 0.85rem;
             text-align: center;
@@ -293,6 +487,7 @@
 </head>
 <body>
 
+    <!-- HEADER -->
     <header>
         <div class="header-container">
             <a href="#" class="brand">
@@ -302,20 +497,36 @@
                     <p>Dein nächster Schritt</p>
                 </div>
             </a>
+
+            <ul class="nav-links">
+                <li><a href="#" class="active">Start</a></li>
+                <li><a href="#listings">Ausbildung</a></li>
+                <li><a href="#listings">Jobs</a></li>
+                <li><a href="#">CV</a></li>
+                <li><a href="#">Über uns</a></li>
+            </ul>
+
             <a href="#" class="btn-google-nav">G Login mit Google</a>
         </div>
     </header>
 
+    <!-- HERO SECTION -->
     <section class="hero">
         <div>
+            <span class="hero-badge">BEROPP – Karriere. Bildung. Zukunft.</span>
             <h1 class="hero-title">Dein Weg in <span>Ausbildung & Job</span> beginnt hier.</h1>
             <p class="hero-desc">BEROPP hilft dir, den passenden Ausbildungsplatz, Job oder neue berufliche Chancen zu finden. Einfach. Schnell. Kostenlos.</p>
+            
+            <div class="hero-buttons">
+                <a href="#" class="btn-primary-google">G Mit Google anmelden →</a>
+                <a href="#listings" class="btn-secondary">► Mehr erfahren</a>
+            </div>
         </div>
 
         <div class="hero-glass-cards">
-            <div class="glass-card-item" onclick="openDetail(1)">
+            <div class="glass-card-item" onclick="filterTab('ausbildung')">
                 <div style="display: flex; align-items: center; gap: 0.8rem;">
-                    <div style="font-size: 1.4rem;">🎓</div>
+                    <div class="glass-icon" style="background: rgba(26, 92, 255, 0.2); color: #60a5fa;">🎓</div>
                     <div>
                         <h3 style="font-size: 1.05rem;">Ausbildung</h3>
                         <p style="font-size: 0.8rem; color: var(--text-muted);">Alle Ausbildungsplätze in Deutschland</p>
@@ -323,18 +534,78 @@
                 </div>
                 <span>›</span>
             </div>
+
+            <div class="glass-card-item" onclick="filterTab('jobs')">
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                    <div class="glass-icon" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">💼</div>
+                    <div>
+                        <h3 style="font-size: 1.05rem;">Jobs & Minijobs</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Entdecke aktuelle Stellen und Chancen</p>
+                    </div>
+                </div>
+                <span>›</span>
+            </div>
+
+            <div class="glass-card-item" onclick="openDetail(1)">
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                    <div class="glass-icon" style="background: rgba(236, 72, 153, 0.2); color: #f472b6;">📄</div>
+                    <div>
+                        <h3 style="font-size: 1.05rem;">CV & Bewerbung</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Lebenslauf hochladen & Profil erstellen</p>
+                    </div>
+                </div>
+                <span>›</span>
+            </div>
         </div>
     </section>
 
+    <!-- FEATURE STRIP -->
+    <section class="feature-strip">
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div style="font-size: 1.8rem;">🎯</div>
+                <h4>Passende Angebote</h4>
+                <p>Top Stellenangebote in deiner Region</p>
+            </div>
+            <div class="feature-item">
+                <div style="font-size: 1.8rem;">📄</div>
+                <h4>CV hochladen</h4>
+                <p>Einfach vom Handy oder Laptop</p>
+            </div>
+            <div class="feature-item">
+                <div style="font-size: 1.8rem;">🛡️</div>
+                <h4>Sicher & Kostenlos</h4>
+                <p>100% Kostenfrei für Bewerber</p>
+            </div>
+            <div class="feature-item">
+                <div style="font-size: 1.8rem;">📱</div>
+                <h4>Überall verfügbar</h4>
+                <p>Optimal auf jedem Gerät</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTENT SECTION -->
     <section class="content-section" id="listings">
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Beruf, Fachrichtung..." onkeyup="runFilter()">
-            <input type="text" id="locInput" placeholder="Ort (z.B. Hamburg)..." onkeyup="runFilter()">
+            <input type="text" id="searchInput" placeholder="Beruf, Fachrichtung oder Stichwort..." onkeyup="runFilter()">
+            <input type="text" id="locInput" placeholder="Ort oder PLZ (z.B. Hamburg)..." onkeyup="runFilter()">
+            <button class="btn-search-main" onclick="runFilter()">Stellen finden</button>
+        </div>
+
+        <div class="category-tabs">
+            <button class="tab-btn active" onclick="filterTab('all')" id="tab-all">Alle Angebote</button>
+            <button class="tab-btn" onclick="filterTab('ausbildung')" id="tab-ausbildung">🎓 Ausbildung</button>
+            <button class="tab-btn" onclick="filterTab('jobs')" id="tab-jobs">💼 Jobs & Minijobs</button>
+            <button class="tab-btn" onclick="filterTab('logistik')" id="tab-logistik">📦 Logistik</button>
+            <button class="tab-btn" onclick="filterTab('pflege')" id="tab-pflege">🏥 Pflege & Medizin</button>
+            <button class="tab-btn" onclick="filterTab('technik')" id="tab-technik">⚡ Technik & Handwerk</button>
         </div>
 
         <div class="cards-grid" id="jobsGrid"></div>
     </section>
 
+    <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 BEROPP – DEIN NÄCHSTER SCHRITT. Alle Rechte vorbehalten.</p>
     </footer>
@@ -347,22 +618,26 @@
             <h3 id="modalJobTitle" style="font-size: 1.3rem; margin-top: 0.4rem;">Job Titel</h3>
             <p id="modalCompany" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom:1rem;">Firma • Ort</p>
 
-            <div style="margin-bottom: 1rem;">
-                <h4 style="color:#60a5fa; font-size:0.95rem;">Beschreibung:</h4>
-                <p id="modalDesc" style="font-size:0.9rem; color:#cbd5e1;"></p>
+            <div class="detail-section">
+                <h4>Beschreibung & Aufgaben:</h4>
+                <p id="modalDesc"></p>
             </div>
 
-            <div style="margin-bottom: 1rem;">
-                <h4 style="color:#60a5fa; font-size:0.95rem;">Gehalt / Vergütung:</h4>
-                <p id="modalSalary" style="font-size:0.9rem; color:#cbd5e1;"></p>
+            <div class="detail-section">
+                <h4>Voraussetzungen:</h4>
+                <p id="modalReqs">Deutsch B1/B2, Motivation und Engagement.</p>
             </div>
 
-            <!-- BUTTON THAT OPENS STEP 2 FORM -->
+            <div class="detail-section">
+                <h4>Vergütung / Gehalt:</h4>
+                <p id="modalSalary"></p>
+            </div>
+
             <button class="btn-submit-action" onclick="goToStep2()">Direkt beim Arbeitgeber bewerben →</button>
         </div>
     </div>
 
-    <!-- STEP 2: FORM APPLICATION MODAL -->
+    <!-- STEP 2: APPLICATION FORM MODAL -->
     <div class="modal-overlay" id="formModal">
         <div class="modal-body">
             <span class="close-modal" onclick="closeModal('formModal')">&times;</span>
@@ -370,9 +645,9 @@
             <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Gib deine Daten ein, um deine Bewerbung direkt zu senden:</p>
 
             <form onsubmit="submitFinalForm(event)">
-                <input type="text" class="form-input" placeholder="Vollständiger Name (Izina ryawe)" required>
+                <input type="text" class="form-input" placeholder="Vollständiger Name" required>
                 <input type="email" class="form-input" placeholder="E-Mail-Adresse" required>
-                <input type="tel" class="form-input" placeholder="Telefonnummer (Inumero za telefone)">
+                <input type="tel" class="form-input" placeholder="Telefonnummer">
                 <textarea class="form-input" rows="3" placeholder="Kurzes Anschreiben / Nachricht..."></textarea>
                 <button type="submit" class="btn-submit-action">Bewerbung jetzt absenden</button>
             </form>
@@ -381,26 +656,36 @@
 
     <script>
         const allListings = [
-            { id: 1, type: 'ausbildung', title: 'Kaufmann / -frau im Einzelhandel', company: 'Supermarkt Gruppe Nord', location: 'Buxtehude / Neu Wulmstorf', desc: 'Kundenberatung, Warendisposition und Kassenführung.', salary: '1. Ausbildungsjahr: ~1.000 € / Monat' },
-            { id: 2, type: 'ausbildung', title: 'Fachkraft für Lagerlogistik (m/w/d)', company: 'Hamburger Logistik GmbH', location: 'Hamburg / Harburg', desc: 'Organisation, Güterannahme und Kommissionierung in modernen Logistikzentren.', salary: '1. Ausbildungsjahr: ~1.050 € / Monat' },
-            { id: 3, type: 'ausbildung', title: 'Elektroniker für Energie- & Gebäudetechnik', company: 'Elektro Technik Nord', location: 'Hamburg / Buxtehude', desc: 'Installation, Wartung und Planung intelligenter Gebäudetechnik.', salary: '1. Ausbildungsjahr: ~980 € / Monat' },
-            { id: 4, type: 'jobs', title: 'Lagerhelfer / Staplerfahrer (m/w/d)', company: 'Express Logistik Partner', location: 'Neu Wulmstorf', desc: 'Be- und Entladung von LKW sowie innerbetrieblicher Transport mit Gabelstapler.', salary: '14,50 € - 16,80 € / Stunde' }
+            { id: 1, type: 'ausbildung', cat: 'logistik', title: 'Fachkraft für Lagerlogistik (m/w/d)', company: 'Hamburger Logistik GmbH', location: 'Hamburg / Harburg', desc: 'Organisation, Güterannahme und Kommissionierung in modernen Logistikzentren.', reqs: 'Hauptschulabschluss / MSA, Deutsch B1.', salary: '1. Ausbildungsjahr: ~1.050 € / Monat' },
+            { id: 2, type: 'ausbildung', cat: 'technik', title: 'Elektroniker für Energie- & Gebäudetechnik', company: 'Elektro Technik Nord', location: 'Hamburg / Buxtehude', desc: 'Installation, Wartung und Planung intelligenter Gebäudetechnik.', reqs: 'Technisches Verständnis, Deutsch B1/B2.', salary: '1. Ausbildungsjahr: ~980 € / Monat' },
+            { id: 3, type: 'ausbildung', cat: 'technik', title: 'Kraftfahrzeugmechatroniker (m/w/d)', company: 'Auto Service Nord AG', location: 'Stuttgart / Hamburg', desc: 'Diagnose, Wartung und Reparatur von PKW und modernen E-Fahrzeugen.', reqs: 'MSA, Handwerkliches Geschick.', salary: '1. Ausbildungsjahr: ~1.020 € / Monat' },
+            { id: 4, type: 'ausbildung', cat: 'pflege', title: 'Pflegefachmann / Pflegefachfrau (m/w/d)', company: 'Klinikum Harburg gGmbH', location: 'Hamburg', desc: 'Betreuung, Pflege und medizinische Versorgung von Patienten.', reqs: 'B2 Deutsch, Empathie und Teamfähigkeit.', salary: '1. Ausbildungsjahr: ~1.340 € / Monat' },
+            { id: 5, type: 'jobs', cat: 'logistik', title: 'Lagerhelfer / Staplerfahrer (m/w/d)', company: 'Express Logistik Partner', location: 'Neu Wulmstorf', desc: 'Be- und Entladung von LKW sowie innerbetrieblicher Transport mit Gabelstapler.', reqs: 'Staplerschein von Vorteil, Deutschkenntnisse.', salary: '14,50 € - 16,80 € / Stunde' },
+            { id: 6, type: 'jobs', cat: 'logistik', title: 'Minijob 530€ - Logistik Aushilfe', company: 'Paketdienst Nord GmbH', location: 'Neu Wulmstorf / Hamburg', desc: 'Paketsortierung und Vorbereitung für den Versand in den Abendstunden.', reqs: 'Zuverlässigkeit und körperliche Belastbarkeit.', salary: 'Bis zu 530 € steuerfrei' },
+            { id: 7, type: 'ausbildung', cat: 'kaufmann', title: 'Kaufmann / -frau im Einzelhandel', company: 'Supermarkt Gruppe Nord', location: 'Buxtehude / Neu Wulmstorf', desc: 'Kundenberatung, Warendisposition und Kassenführung.', reqs: 'Freude am Umgang mit Menschen.', salary: '1. Ausbildungsjahr: ~1.000 € / Monat' }
         ];
 
+        let activeTab = 'all';
         let selectedJobTitle = '';
 
         function renderGrid(items) {
             const grid = document.getElementById('jobsGrid');
             grid.innerHTML = '';
+
+            if (items.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">Keine passenden Angebote gefunden.</p>';
+                return;
+            }
+
             items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'job-card';
                 card.innerHTML = `
                     <div>
-                        <span class="badge-type">${item.type.toUpperCase()}</span>
+                        <span class="badge-type ${item.type === 'jobs' ? 'badge-job' : ''}">${item.type === 'ausbildung' ? 'AUSBILDUNG' : 'JOB / MINIJOB'}</span>
                         <h3>${item.title}</h3>
-                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem;">🏢 ${item.company} • 📍 ${item.location}</p>
-                        <p style="font-size: 0.85rem; color: #cbd5e1;">${item.desc}</p>
+                        <p class="company-info">🏢 ${item.company} • 📍 ${item.location}</p>
+                        <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">${item.desc}</p>
                     </div>
                     <button class="btn-card-details" onclick="openDetail(${item.id})">Mehr Infos & Bewerben →</button>
                 `;
@@ -408,21 +693,42 @@
             });
         }
 
+        function filterTab(tab) {
+            activeTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            const btn = document.getElementById('tab-' + tab);
+            if (btn) btn.classList.add('active');
+
+            runFilter();
+        }
+
         function runFilter() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            const l = document.getElementById('locInput').value.toLowerCase();
-            const filtered = allListings.filter(i => (i.title.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q)) && i.location.toLowerCase().includes(l));
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const loc = document.getElementById('locInput').value.toLowerCase();
+
+            const filtered = allListings.filter(item => {
+                const matchTab = (activeTab === 'all') || (item.type === activeTab) || (item.cat === activeTab);
+                const matchQ = item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query);
+                const matchL = item.location.toLowerCase().includes(loc);
+                return matchTab && matchQ && matchL;
+            });
+
             renderGrid(filtered);
         }
 
         function openDetail(id) {
             const item = allListings.find(x => x.id === id);
             if(!item) return;
+
             selectedJobTitle = item.title;
             document.getElementById('modalJobTitle').innerText = item.title;
             document.getElementById('modalCompany').innerText = item.company + ' • 📍 ' + item.location;
+            document.getElementById('modalBadge').innerText = item.type.toUpperCase();
+            document.getElementById('modalBadge').className = 'badge-type ' + (item.type === 'jobs' ? 'badge-job' : '');
             document.getElementById('modalDesc').innerText = item.desc;
+            document.getElementById('modalReqs').innerText = item.reqs;
             document.getElementById('modalSalary').innerText = item.salary;
+
             document.getElementById('detailModal').style.display = 'flex';
         }
 
@@ -435,32 +741,38 @@
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
-function submitFinalForm(e) {
-    e.preventDefault();
-    closeModal('formModal');
-    
-    // Yerekanisha Success Message mu gishushanyo cya Dark Mode aho gukoresha Browser Alert
-    const successBox = document.createElement('div');
-    successBox.style.position = 'fixed';
-    successBox.style.top = '50%';
-    successBox.style.left = '50%';
-    successBox.style.transform = 'translate(-50%, -50%)';
-    successBox.style.background = '#111827';
-    successBox.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-    successBox.style.padding = '2rem';
-    successBox.style.borderRadius = '20px';
-    successBox.style.boxShadow = '0 25px 50px rgba(0,0,0,0.7)';
-    successBox.style.zIndex = '3000';
-    successBox.style.textAlign = 'center';
-    successBox.style.maxWidth = '400px';
-    successBox.style.width = '90%';
 
-    successBox.innerHTML = `
-        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
-        <h3 style="color: #ffffff; font-size: 1.3rem; margin-bottom: 0.5rem;">Vielen Dank!</h3>
-        <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Deine Bewerbung für <strong>"${selectedJobTitle}"</strong> wurde erfolgreich gesendet.</p>
-        <button onclick="this.parentElement.remove()" style="background: #1a5cff; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%;">Zurück zur Startseite</button>
-    `;
+        function submitFinalForm(e) {
+            e.preventDefault();
+            closeModal('formModal');
+            
+            const successBox = document.createElement('div');
+            successBox.style.position = 'fixed';
+            successBox.style.top = '50%';
+            successBox.style.left = '50%';
+            successBox.style.transform = 'translate(-50%, -50%)';
+            successBox.style.background = '#111827';
+            successBox.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+            successBox.style.padding = '2rem';
+            successBox.style.borderRadius = '20px';
+            successBox.style.boxShadow = '0 25px 50px rgba(0,0,0,0.8)';
+            successBox.style.zIndex = '3000';
+            successBox.style.textAlign = 'center';
+            successBox.style.maxWidth = '400px';
+            successBox.style.width = '90%';
 
-    document.body.appendChild(successBox);
-}
+            successBox.innerHTML = `
+                <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
+                <h3 style="color: #ffffff; font-size: 1.3rem; margin-bottom: 0.5rem;">Vielen Dank!</h3>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Deine Bewerbung für <strong>"${selectedJobTitle}"</strong> wurde erfolgreich gesendet.</p>
+                <button onclick="this.parentElement.remove()" style="background: #1a5cff; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%;">Zurück zur Startseite</button>
+            `;
+
+            document.body.appendChild(successBox);
+        }
+
+        // Initialize display
+        renderGrid(allListings);
+    </script>
+</body>
+</html>
