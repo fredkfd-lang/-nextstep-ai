@@ -3179,14 +3179,32 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     }
     return out.slice(0,6);
   }
+  function companyApplyB(o){
+    const candidates=[o&&o.applicationUrl,o&&o.applicationURL,o&&o.bewerbungUrl,o&&o.bewerbungURL];
+    for(const raw of candidates){
+      const u=safeB(raw);
+      if(!u)continue;
+      try{
+        const h=new URL(u).hostname.toLowerCase();
+        if(h==='arbeitsagentur.de'||h.endsWith('.arbeitsagentur.de'))continue;
+        if(h==='beropp.de'||h.endsWith('.beropp.de'))continue;
+        if(h.endsWith('.workers.dev'))continue;
+        return u;
+      }catch(e){}
+    }
+    return '';
+  }
   function applyB(o){
     if(!o)return false;
-    const url=safeB(o.url||'');
-    if(!url)return false;
+    const url=companyApplyB(o);
+    if(!url){
+      if(typeof setAuthStatus==='function')setAuthStatus('⚠️ This listing has no verified company application link yet.');
+      return false;
+    }
     if(!window.beroppUser){
-      localStorage.setItem('beropp_pending_apply',JSON.stringify({target:o.type==='job'?'jobDirect':'ausbildungDirect',id:o.id,type:o.type,url:url,title:o.title||'',company:o.company||''}));
+      localStorage.setItem('beropp_pending_apply',JSON.stringify({target:o.type==='job'?'jobDirect':'ausbildungDirect',id:o.id,type:o.type,applicationUrl:url,title:o.title||'',company:o.company||''}));
       if(typeof show==='function')show('auth');
-      if(typeof setAuthStatus==='function')setAuthStatus('🔐 Sign in first. After login, BerOpp opens the original company application page.');
+      if(typeof setAuthStatus==='function')setAuthStatus('🔐 Sign in first. After login, BerOpp opens the verified company application page.');
       return false;
     }
     window.location.assign(url);return false;
@@ -3194,7 +3212,8 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   window.__beroppLive6Apply=applyB;
 
   function cardB(o){
-    const button=o.url?'<button type="button" class="secondary" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span class="status">Original application link not available</span>';
+    const url=companyApplyB(o);
+    const button=url?'<button type="button" class="secondary" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span class="status">Company application link unavailable</span>';
     return '<div class="card beroppLiveOffer"><span class="badge">✓ LIVE</span><h3>'+escB(o.type==='ausbildung'?'🎓 ':'💼 ')+escB(o.title)+'</h3><p>🏢 '+escB(o.company)+' · 📍 '+escB(o.place)+(o.start?' · 📅 '+escB(o.start):'')+'</p>'+button+'</div>';
   }
   function uniq(rows){const s=new Set();return rows.filter(o=>{const k=(o.refnr||'')+'|'+o.title+'|'+o.company+'|'+o.place;if(s.has(k))return false;s.add(k);return true})}
@@ -3217,7 +3236,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     try{
       const [A,J]=await Promise.all([load6('ausbildung','',''),load6('job','','')]);
       window.beroppHomeLiveAusbildung=A;window.beroppHomeLiveJobs=J;
-      const mini=o=>'<div class="nsPreviewItem"><strong>'+escB(o.type==='ausbildung'?'🎓 ':'💼 ')+escB(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+escB(o.company)+' · 📍 '+escB(o.place)+'</div>'+(o.url?'<button type="button" class="secondary" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span class="status">Company application link unavailable</span>')+'</div>';
+      const mini=o=>'<div class="nsPreviewItem"><strong>'+escB(o.type==='ausbildung'?'🎓 ':'💼 ')+escB(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+escB(o.company)+' · 📍 '+escB(o.place)+'</div>'+(companyApplyB(o)?'<button type="button" class="secondary" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span class="status">Company application link unavailable</span>')+'</div>';
       a.innerHTML=A.map(mini).join('')||'<div class="nsPreviewItem">No current Ausbildung found.</div>';
       j.innerHTML=J.map(mini).join('')||'<div class="nsPreviewItem">No current Jobs found.</div>';
       return A.length===6&&J.length===6;
