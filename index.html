@@ -13,7 +13,6 @@
             --card-glass: rgba(255, 255, 255, 0.07);
             --card-border: rgba(255, 255, 255, 0.12);
             --blue-primary: #1a5cff;
-            --blue-gradient: linear-gradient(135deg, #1a5cff 0%, #0040c8 100%);
             --text-white: #ffffff;
             --text-muted: #94a3b8;
         }
@@ -649,24 +648,24 @@
                 <input type="email" class="form-input" placeholder="E-Mail-Adresse" required>
                 <input type="tel" class="form-input" placeholder="Telefonnummer">
                 <textarea class="form-input" rows="3" placeholder="Kurzes Anschreiben / Nachricht..."></textarea>
-                <button type="submit" class="btn-submit-action">Bewerbung jetzt absenden</button>
+                <button type="submit" class="btn-submit-action">Bewerbung jetzt absenden & Weiter →</button>
             </form>
         </div>
     </div>
 
     <script>
         const allListings = [
-            { id: 1, type: 'ausbildung', cat: 'logistik', title: 'Fachkraft für Lagerlogistik (m/w/d)', company: 'Hamburger Logistik GmbH', location: 'Hamburg / Harburg', desc: 'Organisation, Güterannahme und Kommissionierung in modernen Logistikzentren.', reqs: 'Hauptschulabschluss / MSA, Deutsch B1.', salary: '1. Ausbildungsjahr: ~1.050 € / Monat' },
-            { id: 2, type: 'ausbildung', cat: 'technik', title: 'Elektroniker für Energie- & Gebäudetechnik', company: 'Elektro Technik Nord', location: 'Hamburg / Buxtehude', desc: 'Installation, Wartung und Planung intelligenter Gebäudetechnik.', reqs: 'Technisches Verständnis, Deutsch B1/B2.', salary: '1. Ausbildungsjahr: ~980 € / Monat' },
-            { id: 3, type: 'ausbildung', cat: 'technik', title: 'Kraftfahrzeugmechatroniker (m/w/d)', company: 'Auto Service Nord AG', location: 'Stuttgart / Hamburg', desc: 'Diagnose, Wartung und Reparatur von PKW und modernen E-Fahrzeugen.', reqs: 'MSA, Handwerkliches Geschick.', salary: '1. Ausbildungsjahr: ~1.020 € / Monat' },
-            { id: 4, type: 'ausbildung', cat: 'pflege', title: 'Pflegefachmann / Pflegefachfrau (m/w/d)', company: 'Klinikum Harburg gGmbH', location: 'Hamburg', desc: 'Betreuung, Pflege und medizinische Versorgung von Patienten.', reqs: 'B2 Deutsch, Empathie und Teamfähigkeit.', salary: '1. Ausbildungsjahr: ~1.340 € / Monat' },
-            { id: 5, type: 'jobs', cat: 'logistik', title: 'Lagerhelfer / Staplerfahrer (m/w/d)', company: 'Express Logistik Partner', location: 'Neu Wulmstorf', desc: 'Be- und Entladung von LKW sowie innerbetrieblicher Transport mit Gabelstapler.', reqs: 'Staplerschein von Vorteil, Deutschkenntnisse.', salary: '14,50 € - 16,80 € / Stunde' },
-            { id: 6, type: 'jobs', cat: 'logistik', title: 'Minijob 530€ - Logistik Aushilfe', company: 'Paketdienst Nord GmbH', location: 'Neu Wulmstorf / Hamburg', desc: 'Paketsortierung und Vorbereitung für den Versand in den Abendstunden.', reqs: 'Zuverlässigkeit und körperliche Belastbarkeit.', salary: 'Bis zu 530 € steuerfrei' },
-            { id: 7, type: 'ausbildung', cat: 'kaufmann', title: 'Kaufmann / -frau im Einzelhandel', company: 'Supermarkt Gruppe Nord', location: 'Buxtehude / Neu Wulmstorf', desc: 'Kundenberatung, Warendisposition und Kassenführung.', reqs: 'Freude am Umgang mit Menschen.', salary: '1. Ausbildungsjahr: ~1.000 € / Monat' }
+            { id: 1, type: 'ausbildung', cat: 'logistik', title: 'Fachkraft für Lagerlogistik (m/w/d)', company: 'Hamburger Logistik GmbH', location: 'Hamburg / Harburg', desc: 'Organisation, Güterannahme und Kommissionierung in modernen Logistikzentren.', reqs: 'Hauptschulabschluss / MSA, Deutsch B1.', salary: '1. Ausbildungsjahr: ~1.050 € / Monat', applyUrl: 'https://www.ausbildung.de/berufe/fachkraft-lagerlogistik/' },
+            { id: 2, type: 'ausbildung', cat: 'technik', title: 'Elektroniker für Energie- & Gebäudetechnik', company: 'Elektro Technik Nord', location: 'Hamburg / Buxtehude', desc: 'Installation, Wartung und Planung intelligenter Gebäudetechnik.', reqs: 'Technisches Verständnis, Deutsch B1/B2.', salary: '1. Ausbildungsjahr: ~980 € / Monat', applyUrl: 'https://www.ausbildung.de/berufe/elektroniker-energie-und-gebaeudetechnik/' },
+            { id: 3, type: 'ausbildung', cat: 'technik', title: 'Kraftfahrzeugmechatroniker (m/w/d)', company: 'Auto Service Nord AG', location: 'Stuttgart / Hamburg', desc: 'Diagnose, Wartung und Reparatur von PKW und modernen E-Fahrzeugen.', reqs: 'MSA, Handwerkliches Geschick.', salary: '1. Ausbildungsjahr: ~1.020 € / Monat', applyUrl: 'https://www.ausbildung.de/berufe/kfz-mechatroniker/' },
+            { id: 4, type: 'ausbildung', cat: 'pflege', title: 'Pflegefachmann / Pflegefachfrau (m/w/d)', company: 'Klinikum Harburg gGmbH', location: 'Hamburg', desc: 'Betreuung, Pflege und medizinische Versorgung von Patienten.', reqs: 'B2 Deutsch, Empathie und Teamfähigkeit.', salary: '1. Ausbildungsjahr: ~1.340 € / Monat', applyUrl: 'https://www.ausbildung.de/berufe/pflegefachmann/' },
+            { id: 5, type: 'jobs', cat: 'logistik', title: 'Lagerhelfer / Staplerfahrer (m/w/d)', company: 'Express Logistik Partner', location: 'Neu Wulmstorf', desc: 'Be- und Entladung von LKW sowie innerbetrieblicher Transport mit Gabelstapler.', reqs: 'Staplerschein von Vorteil, Deutschkenntnisse.', salary: '14,50 € - 16,80 € / Stunde', applyUrl: 'https://www.ausbildung.de/suche/?query=lagerhelfer' },
+            { id: 6, type: 'jobs', cat: 'logistik', title: 'Minijob 530€ - Logistik Aushilfe', company: 'Paketdienst Nord GmbH', location: 'Neu Wulmstorf / Hamburg', desc: 'Paketsortierung und Vorbereitung für den Versand in den Abendstunden.', reqs: 'Zuverlässigkeit und körperliche Belastbarkeit.', salary: 'Bis zu 530 € steuerfrei', applyUrl: 'https://www.ausbildung.de/suche/?query=minijob' },
+            { id: 7, type: 'ausbildung', cat: 'kaufmann', title: 'Kaufmann / -frau im Einzelhandel', company: 'Supermarkt Gruppe Nord', location: 'Buxtehude / Neu Wulmstorf', desc: 'Kundenberatung, Warendisposition und Kassenführung.', reqs: 'Freude am Umgang mit Menschen.', salary: '1. Ausbildungsjahr: ~1.000 € / Monat', applyUrl: 'https://www.ausbildung.de/berufe/kaufmann-einzelhandel/' }
         ];
 
         let activeTab = 'all';
-        let selectedJobTitle = '';
+        let selectedJob = null;
 
         function renderGrid(items) {
             const grid = document.getElementById('jobsGrid');
@@ -720,7 +719,7 @@
             const item = allListings.find(x => x.id === id);
             if(!item) return;
 
-            selectedJobTitle = item.title;
+            selectedJob = item;
             document.getElementById('modalJobTitle').innerText = item.title;
             document.getElementById('modalCompany').innerText = item.company + ' • 📍 ' + item.location;
             document.getElementById('modalBadge').innerText = item.type.toUpperCase();
@@ -734,7 +733,9 @@
 
         function goToStep2() {
             closeModal('detailModal');
-            document.getElementById('formJobTitle').innerText = 'Bewerbung für: ' + selectedJobTitle;
+            if(selectedJob) {
+                document.getElementById('formJobTitle').innerText = 'Bewerbung für: ' + selectedJob.title;
+            }
             document.getElementById('formModal').style.display = 'flex';
         }
 
@@ -745,30 +746,13 @@
         function submitFinalForm(e) {
             e.preventDefault();
             closeModal('formModal');
-            
-            const successBox = document.createElement('div');
-            successBox.style.position = 'fixed';
-            successBox.style.top = '50%';
-            successBox.style.left = '50%';
-            successBox.style.transform = 'translate(-50%, -50%)';
-            successBox.style.background = '#111827';
-            successBox.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-            successBox.style.padding = '2rem';
-            successBox.style.borderRadius = '20px';
-            successBox.style.boxShadow = '0 25px 50px rgba(0,0,0,0.8)';
-            successBox.style.zIndex = '3000';
-            successBox.style.textAlign = 'center';
-            successBox.style.maxWidth = '400px';
-            successBox.style.width = '90%';
 
-            successBox.innerHTML = `
-                <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
-                <h3 style="color: #ffffff; font-size: 1.3rem; margin-bottom: 0.5rem;">Vielen Dank!</h3>
-                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Deine Bewerbung für <strong>"${selectedJobTitle}"</strong> wurde erfolgreich gesendet.</p>
-                <button onclick="this.parentElement.remove()" style="background: #1a5cff; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%;">Zurück zur Startseite</button>
-            `;
-
-            document.body.appendChild(successBox);
+            // Direct Redirection to company application portal page
+            if (selectedJob && selectedJob.applyUrl) {
+                window.open(selectedJob.applyUrl, '_blank');
+            } else {
+                window.open('https://www.ausbildung.de', '_blank');
+            }
         }
 
         // Initialize display
