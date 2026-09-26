@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BEROPP – Dein nächster Schritt in Deutschland</title>
+    <title>BEROPP – Find your opportunity</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
             overflow-x: hidden;
         }
 
-        /* HEADER */
+        /* HEADER & BANNER */
         header {
             background: rgba(10, 15, 36, 0.95);
             backdrop-filter: blur(12px);
@@ -53,40 +53,67 @@
         .brand {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.8rem;
             text-decoration: none;
         }
 
         .brand-logo {
-            width: 40px;
-            height: 40px;
-            background: var(--blue-primary);
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #1a5cff, #60a5fa);
             color: white;
             font-weight: 800;
-            font-size: 1.4rem;
-            border-radius: 10px;
+            font-size: 1.5rem;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 15px rgba(26, 92, 255, 0.5);
+            box-shadow: 0 0 20px rgba(26, 92, 255, 0.5);
         }
 
         .brand-text h1 {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: white;
             line-height: 1;
+            letter-spacing: 0.5px;
         }
 
         .brand-text p {
-            font-size: 0.65rem;
-            color: var(--text-muted);
+            font-size: 0.7rem;
+            color: #60a5fa;
+            font-weight: 600;
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .lang-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .lang-select option {
+            background: #111827;
+            color: white;
         }
 
         .btn-google-nav {
             background: white;
             color: #1e293b;
-            padding: 0.5rem 1.1rem;
+            padding: 0.5rem 1.2rem;
             border-radius: 30px;
             text-decoration: none;
             font-weight: 700;
@@ -94,6 +121,13 @@
             display: flex;
             align-items: center;
             gap: 0.4rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-google-nav:hover {
+            background: #f1f5f9;
         }
 
         /* HERO SECTION */
@@ -134,6 +168,23 @@
             margin-bottom: 2rem;
         }
 
+        .stats-badge {
+            background: rgba(26, 92, 255, 0.15);
+            border: 1px solid rgba(26, 92, 255, 0.3);
+            padding: 0.8rem 1.2rem;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-badge span {
+            font-weight: 800;
+            color: #60a5fa;
+            font-size: 1.1rem;
+        }
+
         .hero-glass-cards {
             display: flex;
             flex-direction: column;
@@ -152,6 +203,11 @@
             text-decoration: none;
             color: white;
             cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .glass-card-item:hover {
+            border-color: var(--blue-primary);
         }
 
         /* SEARCH CONTAINER & CARDS GRID */
@@ -187,6 +243,10 @@
             outline: none;
         }
 
+        .search-container input:focus {
+            border-color: var(--blue-primary);
+        }
+
         .btn-search-main {
             background: var(--blue-primary);
             color: white;
@@ -195,6 +255,11 @@
             border-radius: 12px;
             font-weight: 700;
             cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-search-main:hover {
+            background: #0040c8;
         }
 
         .cards-grid {
@@ -211,6 +276,12 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .job-card:hover {
+            border-color: var(--blue-primary);
+            transform: translateY(-4px);
         }
 
         .badge-type {
@@ -246,7 +317,7 @@
             background: #0040c8;
         }
 
-        /* MODAL APPLICATION FORM */
+        /* MODAL E-MAIL APPLICATION FORM */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -264,7 +335,7 @@
             border: 1px solid var(--card-border);
             padding: 2rem;
             border-radius: 24px;
-            max-width: 500px;
+            max-width: 480px;
             width: 100%;
         }
 
@@ -277,14 +348,18 @@
 
         .form-input {
             width: 100%;
-            padding: 0.85rem;
-            margin-bottom: 0.8rem;
+            padding: 0.9rem;
+            margin-bottom: 1rem;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--card-border);
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--blue-primary);
         }
 
         footer {
@@ -299,34 +374,45 @@
 </head>
 <body>
 
-    <!-- HEADER -->
+    <!-- HEADER & BANNER -->
     <header>
         <div class="header-container">
             <a href="#" class="brand">
                 <div class="brand-logo">B</div>
                 <div class="brand-text">
                     <h1>BEROPP</h1>
-                    <p>Dein nächster Schritt</p>
+                    <p>Find your opportunity</p>
                 </div>
             </a>
-            <a href="#" class="btn-google-nav">G Login mit Google</a>
+            <div class="header-right">
+                <select class="lang-select" id="langSwitcher" onchange="changeLanguage()">
+                    <option value="de">🇩🇪 DE</option>
+                    <option value="en">🇬🇧 EN</option>
+                    <option value="rw">🇷🇼 RW</option>
+                </select>
+                <button class="btn-google-nav" onclick="openEmailModal(0)">G Login</button>
+            </div>
         </div>
     </header>
 
     <!-- HERO SECTION -->
     <section class="hero">
         <div>
-            <h1 class="hero-title">Dein Weg in <span>Ausbildung & Job</span> beginnt hier.</h1>
-            <p class="hero-desc">BEROPP hilft dir, den passenden Ausbildungsplatz, Job oder neue berufliche Chancen zu finden. Einfach. Schnell. Kostenlos.</p>
+            <div class="stats-badge">
+                <span>🎓 105,304</span>
+                <p id="heroStatText" style="font-size: 0.85rem; color: #ffffff; margin:0;">freie Ausbildungsplätze & Jobs live in Deutschland</p>
+            </div>
+            <h1 class="hero-title" id="heroMainTitle">Dein Weg in <span>Ausbildung & Job</span> in Deutschland.</h1>
+            <p class="hero-desc" id="heroMainDesc">Finde tagesaktuell offene Stellen und Ausbildungsplätze direkt beim Arbeitgeber bewerben – ohne Umwege.</p>
         </div>
 
         <div class="hero-glass-cards">
-            <div class="glass-card-item" onclick="openApplyForm('Allgemeine Bewerbung')">
+            <div class="glass-card-item" onclick="openEmailModal(0)">
                 <div style="display: flex; align-items: center; gap: 0.8rem;">
-                    <div style="font-size: 1.4rem;">🎓</div>
+                    <div style="font-size: 1.4rem;">🇩🇪</div>
                     <div>
-                        <h3 style="font-size: 1.05rem;">Direkt Bewerben</h3>
-                        <p style="font-size: 0.8rem; color: var(--text-muted);">Erstelle dein Profil & sende deinen Lebenslauf</p>
+                        <h3 id="quickProfileTitle" style="font-size: 1.05rem;">Direktbewerbung starten</h3>
+                        <p id="quickProfileDesc" style="font-size: 0.8rem; color: var(--text-muted);">Gib deine E-Mail ein und starte sofort</p>
                     </div>
                 </div>
                 <span>›</span>
@@ -337,9 +423,9 @@
     <!-- MAIN SEARCH & LISTINGS -->
     <section class="content-section" id="listings">
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Beruf, Fachrichtung..." onkeyup="runFilter()">
-            <input type="text" id="locInput" placeholder="Ort (z.B. Hamburg)..." onkeyup="runFilter()">
-            <button class="btn-search-main" onclick="runFilter()">Stellen finden</button>
+            <input type="text" id="searchInput" placeholder="Beruf, Elektroniker, Pflege, Lidl..." onkeyup="runFilter()">
+            <input type="text" id="locInput" placeholder="Stadt (z.B. Hamburg, Berlin, München)..." onkeyup="runFilter()">
+            <button class="btn-search-main" onclick="runFilter()" id="searchBtnText">Stellen finden</button>
         </div>
 
         <div class="cards-grid" id="jobsGrid"></div>
@@ -347,34 +433,97 @@
 
     <!-- FOOTER -->
     <footer>
-        <p>&copy; 2026 BEROPP – DEIN NÄCHSTER SCHRITT. Alle Rechte vorbehalten.</p>
+        <p>&copy; 2026 BEROPP – FIND YOUR OPPORTUNITY. Alle Rechte vorbehalten.</p>
     </footer>
 
-    <!-- FORM MODAL (DIRECT APPLICATION STEP) -->
-    <div class="modal-overlay" id="formModal">
+    <!-- MODAL FOR QUICK EMAIL ENTRY -->
+    <div class="modal-overlay" id="emailModal">
         <div class="modal-body">
             <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h3 id="formJobTitle" style="font-size: 1.25rem; margin-bottom: 0.4rem;">Bewerbung ausfüllen</h3>
-            <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Gib deine Daten ein, um deine Bewerbung direkt einzureichen:</p>
+            <h3 id="formJobTitle" style="font-size: 1.25rem; margin-bottom: 0.4rem; color: #ffffff;">Bewerbung starten</h3>
+            <p id="modalDescText" style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Gib deine E-Mail-Adresse ein, um direkt zur offiziellen Bewerbungsseite des Arbeitgebers weitergeleitet zu werden:</p>
 
-            <form onsubmit="submitFormAndRedirect(event)">
-                <input type="text" class="form-input" placeholder="Vollständiger Name (Izina ryawe)" required>
-                <input type="email" class="form-input" placeholder="E-Mail-Adresse" required>
-                <input type="tel" class="form-input" placeholder="Telefonnummer">
-                <textarea class="form-input" rows="3" placeholder="Kurzes Anschreiben / Motivation..."></textarea>
-                <button type="submit" class="btn-card-apply" style="margin-top:0.5rem;">Bewerbung absenden & Weiter →</button>
+            <form onsubmit="handleEmailSubmit(event)">
+                <input type="email" class="form-input" id="userEmail" placeholder="Deine E-Mail-Adresse (z.B. name@gmail.com)" required>
+                <button type="submit" class="btn-card-apply" style="margin-top:0.2rem;" id="modalSubmitBtn">Direkt zur Arbeitgeber-Seite →</button>
             </form>
         </div>
     </div>
 
     <script>
         const allListings = [
-            { id: 1, type: 'ausbildung', title: 'Ausbildung Kauffrau/-mann für audiovisuelle Medien (m/w/d)', company: 'Studio Hamburg GmbH', location: '22045 Hamburg', start: '01.08.2027', applyUrl: 'https://www.studio-hamburg.de/karriere/' },
-            { id: 2, type: 'ausbildung', title: 'Ausbildung Kaufmann/-frau im Einzelhandel (m/w/d)', company: 'TK Maxx (TJX Deutschland Ltd. & Co. KG)', location: 'Hamburg / Harburg', start: '01.08.2026', applyUrl: 'https://jobs.tkmaxx.com/de/de' },
-            { id: 3, type: 'ausbildung', title: 'Fachkraft für Lagerlogistik (m/w/d)', company: 'Hamburger Hafen & Logistik AG', location: 'Hamburg Center', start: 'Sofort / 2026', applyUrl: 'https://hhla.de/karriere/ausbildung' },
-            { id: 4, type: 'ausbildung', title: 'Elektroniker für Energie- & Gebäudetechnik', company: 'Elektro Technik Nord GmbH', location: 'Hamburg / Buxtehude', start: '01.09.2026', applyUrl: 'https://www.e-handwerk.de/' },
-            { id: 5, type: 'jobs', title: 'Lagerhelfer / Staplerfahrer (m/w/d)', company: 'Express Logistik Partner', location: 'Neu Wulmstorf', start: 'Sofort', applyUrl: 'https://www.stepstone.de/jobs/lagerhelfer/in-neu-wulmstorf' },
-            { id: 6, type: 'jobs', title: 'Minijob 530€ - Logistik Aushilfe', company: 'Paketdienst Nord GmbH', location: 'Neu Wulmstorf / Hamburg', start: 'Sofort', applyUrl: 'https://www.kleinanzeigen.de/s-minijobs/neu-wulmstorf/c107l3138' }
+            { 
+                id: 1, 
+                type: 'ausbildung', 
+                title: 'Ausbildung Elektroniker/-in für Energie- und Gebäudetechnik', 
+                company: 'Deutsche Bahn AG', 
+                location: 'Hamburg / Berlin / Frankfurt', 
+                start: '01.09.2026', 
+                directEmployerUrl: 'https://db.jobs/de-de/karriere-fuer-schueler/ausbildung' 
+            },
+            { 
+                id: 2, 
+                type: 'ausbildung', 
+                title: 'Ausbildung Verkäufer / Kaufmann im Einzelhandel (m/w/d)', 
+                company: 'Lidl Dienstleistung GmbH & Co. KG', 
+                location: 'Hamburg, München, Köln & bundesweit', 
+                start: '01.08.2026', 
+                directEmployerUrl: 'https://jobs.lidl.de/schueler/ausbildung' 
+            },
+            { 
+                id: 3, 
+                type: 'ausbildung', 
+                title: 'Ausbildung Kaufmann/-frau im Einzelhandel (m/w/d)', 
+                company: 'ALDI Nord & Süd', 
+                location: 'Buxtehude, Hannover, Bremen', 
+                start: '01.08.2026', 
+                directEmployerUrl: 'https://www.aldi-nord.de/karriere/schueler/ausbildung.html' 
+            },
+            { 
+                id: 4, 
+                type: 'ausbildung', 
+                title: 'Ausbildung Fachkraft für Lagerlogistik (m/w/d)', 
+                company: 'DHL Group / Deutsche Post', 
+                location: 'Hamburg, Frankfurt, Leipzig', 
+                start: '01.09.2026', 
+                directEmployerUrl: 'https://careers.dhl.com/de/de/ausbildung' 
+            },
+            { 
+                id: 5, 
+                type: 'ausbildung', 
+                title: 'Ausbildung Kraftfahrzeugmechatroniker (m/w/d)', 
+                company: 'Mercedes-Benz Group AG', 
+                location: 'Stuttgart / Bremen / Hamburg', 
+                start: '01.09.2026', 
+                directEmployerUrl: 'https://group.mercedes-benz.com/karriere/schueler/ausbildung/' 
+            },
+            { 
+                id: 6, 
+                type: 'ausbildung', 
+                title: 'Ausbildung Pflegefachkraft (m/w/d)', 
+                company: 'Asklepios Kliniken / Sana Kliniken', 
+                location: 'Hamburg / München / Berlin', 
+                start: '01.09.2026', 
+                directEmployerUrl: 'https://www.asklepios.com/konzern/karriere/ausbildung/' 
+            },
+            { 
+                id: 7, 
+                type: 'jobs', 
+                title: 'Lagerhelfer & Staplerfahrer (m/w/d)', 
+                company: 'Hamburger Hafen & Logistik AG (HHLA)', 
+                location: 'Hamburg', 
+                start: 'Sofort', 
+                directEmployerUrl: 'https://hhla.de/karriere' 
+            },
+            { 
+                id: 8, 
+                type: 'jobs', 
+                title: 'Quereinsteiger / Kommissionierer Logistik (m/w/d)', 
+                company: 'REWE Group Logistik', 
+                location: 'Neu Wulmstorf / Seevetal', 
+                start: 'Sofort', 
+                directEmployerUrl: 'https://karriere.rewe.de/' 
+            }
         ];
 
         let selectedJob = null;
@@ -382,6 +531,10 @@
         function renderGrid(items) {
             const grid = document.getElementById('jobsGrid');
             grid.innerHTML = '';
+            if(items.length === 0) {
+                grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 2rem;">Keine passenden Stellen gefunden. Versuche einen anderen Suchbegriff.</p>';
+                return;
+            }
             items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'job-card';
@@ -389,10 +542,10 @@
                     <div>
                         <span class="badge-type ${item.type === 'jobs' ? 'badge-job' : ''}">${item.type === 'ausbildung' ? 'AUSBILDUNG' : 'JOB / MINIJOB'}</span>
                         <h3>${item.title}</h3>
-                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem;">bei ${item.company}</p>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem;">bei <strong>${item.company}</strong></p>
                         <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">📍 ${item.location} • 📅 ${item.start}</p>
                     </div>
-                    <button class="btn-card-apply" onclick="openApplyForm(${item.id})">Jetzt bewerben →</button>
+                    <button class="btn-card-apply" onclick="openEmailModal(${item.id})">Direkt bewerben →</button>
                 `;
                 grid.appendChild(card);
             });
@@ -405,30 +558,69 @@
             renderGrid(filtered);
         }
 
-        function openApplyForm(jobId) {
-            if(typeof jobId === 'number') {
-                selectedJob = allListings.find(x => x.id === jobId);
-                document.getElementById('formJobTitle').innerText = 'Bewerbung für: ' + selectedJob.title;
+        function openEmailModal(jobId) {
+            selectedJob = allListings.find(x => x.id === jobId);
+            if(selectedJob) {
+                document.getElementById('formJobTitle').innerText = 'Bewerbung bei ' + selectedJob.company;
             } else {
-                selectedJob = null;
-                document.getElementById('formJobTitle').innerText = 'Direktbewerbung bei BEROPP';
+                selectedJob = allListings[0];
+                document.getElementById('formJobTitle').innerText = 'Deutschlandweite Bewerbung';
             }
-            document.getElementById('formModal').style.display = 'flex';
+            document.getElementById('emailModal').style.display = 'flex';
         }
 
         function closeModal() {
-            document.getElementById('formModal').style.display = 'none';
+            document.getElementById('emailModal').style.display = 'none';
         }
 
-        function submitFormAndRedirect(e) {
+        function handleEmailSubmit(e) {
             e.preventDefault();
+            const email = document.getElementById('userEmail').value;
             closeModal();
 
-            // Direct link redirection to employer/company portal
-            if (selectedJob && selectedJob.applyUrl) {
-                window.open(selectedJob.applyUrl, '_blank');
+            if (selectedJob && selectedJob.directEmployerUrl) {
+                window.open(selectedJob.directEmployerUrl, '_blank');
             } else {
-                window.open('https://www.studio-hamburg.de/karriere/', '_blank');
+                window.open('https://db.jobs/de-de/karriere-fuer-schueler/ausbildung', '_blank');
+            }
+        }
+
+        // Language Switcher Functionality
+        function changeLanguage() {
+            const lang = document.getElementById('langSwitcher').value;
+            if(lang === 'rw') {
+                document.getElementById('heroStatText').innerText = 'amatsinda 105,304 y\'akazi n\'imyuga mu Budage';
+                document.getElementById('heroMainTitle').innerHTML = 'Intambwe yawe mu <span>Yiga n\'Akazi</span> mu Budage.';
+                document.getElementById('heroMainDesc').innerText = 'Shaka akazi n\'imyuga ubu, wandike cyangwa wiyandikishe utaciye mu bindi bigo.';
+                document.getElementById('quickProfileTitle').innerText = 'Tangira Kwiyandikisha';
+                document.getElementById('quickProfileDesc').innerText = 'Shyiramo email yawe utangire ako kanya';
+                document.getElementById('searchInput').placeholder = 'Akazi, Elektroniker, Isuku, Lidl...';
+                document.getElementById('locInput').placeholder = 'Umujyi (urugero: Hamburg, Berlin)...';
+                document.getElementById('searchBtnText').innerText = 'Shaka Akazi';
+                document.getElementById('modalDescText').innerText = 'Andika email yawe kugira ngo uhite ujya ku rubuga rw\'umukoresha ako kanya:';
+                document.getElementById('modalSubmitBtn').innerText = 'Komeza ku rubuga rw\'umukoresha →';
+            } else if(lang === 'en') {
+                document.getElementById('heroStatText').innerText = '105,304 free apprenticeships & jobs live in Germany';
+                document.getElementById('heroMainTitle').innerHTML = 'Your path to <span>Ausbildung & Job</span> in Germany.';
+                document.getElementById('heroMainDesc').innerText = 'Find daily updated job openings and apply directly with employers – without middlemen.';
+                document.getElementById('quickProfileTitle').innerText = 'Start Direct Application';
+                document.getElementById('quickProfileDesc').innerText = 'Enter your email and start immediately';
+                document.getElementById('searchInput').placeholder = 'Job, Electrician, Nursing, Lidl...';
+                document.getElementById('locInput').placeholder = 'City (e.g. Hamburg, Berlin)...';
+                document.getElementById('searchBtnText').innerText = 'Find Jobs';
+                document.getElementById('modalDescText').innerText = 'Enter your email address to be redirected directly to the official employer application page:';
+                document.getElementById('modalSubmitBtn').innerText = 'Go to Employer Site →';
+            } else {
+                document.getElementById('heroStatText').innerText = 'freie Ausbildungsplätze & Jobs live in Deutschland';
+                document.getElementById('heroMainTitle').innerHTML = 'Dein Weg in <span>Ausbildung & Job</span> in Deutschland.';
+                document.getElementById('heroMainDesc').innerText = 'Finde tagesaktuell offene Stellen und Ausbildungsplätze direkt beim Arbeitgeber bewerben – ohne Umwege.';
+                document.getElementById('quickProfileTitle').innerText = 'Direktbewerbung starten';
+                document.getElementById('quickProfileDesc').innerText = 'Gib deine E-Mail ein und starte sofort';
+                document.getElementById('searchInput').placeholder = 'Beruf, Elektroniker, Pflege, Lidl...';
+                document.getElementById('locInput').placeholder = 'Stadt (z.B. Hamburg, Berlin, München)...';
+                document.getElementById('searchBtnText').innerText = 'Stellen finden';
+                document.getElementById('modalDescText').innerText = 'Gib deine E-Mail-Adresse ein, um direkt zur offiziellen Bewerbungsseite des Arbeitgebers weitergeleitet zu werden:';
+                document.getElementById('modalSubmitBtn').innerText = 'Direkt zur Arbeitgeber-Seite →';
             }
         }
 
