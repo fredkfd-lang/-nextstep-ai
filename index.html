@@ -3139,7 +3139,8 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
       start:o.eintrittsdatum||o.beginn||'',
       date:o.aktuelleVeroeffentlichungsdatum||o.veroeffentlichungsdatum||'',
       description:o.stellenangebotsBeschreibung||o.beschreibung||'',
-      url:safeB(o.externeUrl||o.externeURL||o.bewerbungUrl||o.bewerbungURL||o.applicationUrl||o.applicationURL),
+      applicationUrl:safeB(o.externeUrl||o.externeURL||o.bewerbungUrl||o.bewerbungURL||o.applicationUrl||o.applicationURL),
+      url:'',
       type:type,source:'Live listing'
     };
   }
@@ -3174,7 +3175,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     }
     for(let i=0;i<Math.min(12,out.length);i+=6){
       await Promise.all(out.slice(i,i+6).map(async o=>{
-        if(!o.url&&o.refnr)o.url=await detailB(o.refnr);
+        if(!o.applicationUrl&&o.refnr)o.applicationUrl=await detailB(o.refnr);
       }));
     }
     return out.slice(0,6);
