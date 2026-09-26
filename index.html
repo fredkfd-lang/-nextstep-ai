@@ -833,28 +833,29 @@ window.beroppOpenLiveResult=function(o){
   return false;
 };
 function renderLiveCareerResults(results){
-  if(!results.length)return '<div class="nsHomeSearchEmpty">No live external result was returned for this search. Try another keyword or location.</div>';
-  return '<div class="nsHomeLive"><div class="nsHomeLiveHead"><strong>⚡ Live opportunities</strong><span>Apply Direct opens the company application page when available.</span></div>'+results.map(o=>{
+  if(!results.length)return '';
+  return '<div class="nsHomeLive"><div class="nsHomeLiveHead"><strong>⚡ Aktuelle Live-Angebote</strong><span>Nur aktuelle Treffer; Apply Direct öffnet die verifizierte Unternehmensbewerbung.</span></div>'+results.map(o=>{
     const data=JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;');
-    return '<div class="nsHomeLiveItem"><strong>💼 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.source)+(o.date?' · '+esc(o.date):'')+'</div>'+(o.url?'<button type="button" class="nsHomeLiveApply" onclick="return beroppOpenLiveResult('+data+')">🏢 Apply / View original →</button>':'<span class="nsHomeLiveNoApply">Company application link unavailable</span>')+'</div>';
+    const apply=(typeof window.__beroppLive6Apply==='function'&&o.applicationUrl)?'<button type="button" class="nsHomeLiveApply" onclick="return window.__beroppLive6Apply('+data+')">🏢 Apply Direct →</button>':'<span class="nsHomeLiveNoApply">Unternehmensbewerbung derzeit nicht verifiziert</span>';
+    return '<div class="nsHomeLiveItem"><strong>'+esc(o.type==='ausbildung'?'🎓 ':'💼 ')+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+(o.start?' · 📅 '+esc(o.start):'')+'</div>'+apply+'</div>';
   }).join('')+'</div>';
 }
 async function runHomeCareerSearch(){
   const q=normalizeLocation($('homeCareerSearch')?.value||''),city=normalizeLocation($('homeCareerLocation')?.value||''),type=$('homeCareerType')?.value||'all',box=$('homeSearchResults'),status=$('homeSearchStatus');
   if(!box)return;
   const rawQ=($('homeCareerSearch')?.value||'').trim(),rawCity=($('homeCareerLocation')?.value||'').trim();
-  if(!rawQ){box.innerHTML='<div class="nsHomeSearchEmpty">🔎 Type what you are looking for first — for example “Lager”, “Elektriker”, “Ausbildung Pflege” or “Remote Developer”.</div>';if(status)status.textContent='Search across BerOpp and live job sources.';return;}
-  if(status)status.textContent='⏳ Searching BerOpp + live job sources...';
+  if(!rawQ&&!rawCity){box.innerHTML='<div class="nsHomeSearchEmpty">🔎 Suche nach Beruf, Unternehmen, Ausbildung oder Ort — z. B. „Fachlagerist“ + „Hamburg“.</div>';if(status)status.textContent='Search across BerOpp and live job sources.';return;}
+  if(status)status.textContent='⏳ Suche läuft…';
   const jobs=(typeof jobOpps!=='undefined'?jobOpps:[]).filter(o=>(!q||normalizeLocation([o.title,o.company,o.place,(o.skills||[]).join(' ')].join(' ')).includes(q))&&(!city||jobLocationMatches(o,city)));
   const aus=(typeof opps!=='undefined'?opps:[]).filter(o=>(!q||normalizeLocation([o.title,o.company,o.place,(o.skills||[]).join(' ')].join(' ')).includes(q))&&(!city||jobLocationMatches(o,city)));
   let rows=[];
-  if(type==='all'||type==='job')rows=rows.concat(jobs.slice(0,4).map(o=>'<div class="nsHomeSearchResult"><strong>💼 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.salary||'Job')+' · BerOpp</div><button class="secondary" onclick="openHomeOpportunity('+o.id+',\'job\')">View Job →</button></div>'));
-  if(type==='all'||type==='ausbildung')rows=rows.concat(aus.slice(0,4).map(o=>'<div class="nsHomeSearchResult"><strong>🎓 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+' · BerOpp</div><button class="secondary" onclick="openHomeOpportunity('+o.id+',\'ausbildung\')">View Ausbildung →</button></div>'));
-  box.innerHTML=(rows.length?rows.join(''):'<div class="nsHomeSearchEmpty">No matching opportunity is currently in BerOpp.</div>');
+  if(type==='all'||type==='job')rows=rows.concat(jobs.slice(0,6).map(o=>'<div class="nsHomeSearchResult"><strong>💼 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · '+esc(o.salary||'Job')+' · BerOpp</div><button class="secondary" onclick="openHomeOpportunity('+o.id+',\'job\')">View Job →</button></div>'));
+  if(type==='all'||type==='ausbildung')rows=rows.concat(aus.slice(0,6).map(o=>'<div class="nsHomeSearchResult"><strong>🎓 '+esc(o.title)+'</strong><div class="nsHomeSearchResultMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+' · 📅 '+esc(o.start)+' · BerOpp</div><button class="secondary" onclick="openHomeOpportunity('+o.id+',\'ausbildung\')">View Ausbildung →</button></div>'));
+  box.innerHTML=(rows.length?rows.join(''):'<div class="nsHomeSearchEmpty">Noch keine passenden BerOpp-Angebote gefunden. Die Live-Suche wird darunter geprüft.</div>');
   try{
     const live=await fetchLiveCareerSources(rawQ,rawCity,type);
-    box.innerHTML+=renderLiveCareerResults(live);
-    if(status)status.textContent=(jobs.length+aus.length)+' BerOpp result(s) + '+live.length+' live external result(s)'+(rawCity?' near '+rawCity:'')+'.';
+    box.innerHTML+=(live.length?renderLiveCareerResults(live):'<div class="nsHomeSearchEmpty">Keine aktuellen Live-Angebote für diese Suche gefunden. Versuch es mit einem anderen Beruf oder Ort.</div>');
+    if(status)status.textContent=(jobs.length+aus.length)+' BerOpp result(s) + '+live.length+' live result(s)'+(rawCity?' · '+rawCity:'')+'.';
   }catch(e){console.error(e);if(status)status.textContent='BerOpp results shown. Live search could not be completed right now.';}
 }
 async function useMyHomeLocation(){
