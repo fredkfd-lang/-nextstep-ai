@@ -3,288 +3,436 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe Quest - Ausbildung & Jobs</title>
+    <title>BEROPP – Dein nächster Schritt in Deutschland</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2563eb;
-            --secondary-color: #1e40af;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --text-light: #64748b;
-            --accent-color: #e11d48;
+            --bg-dark: #0a0f24;
+            --card-glass: rgba(255, 255, 255, 0.07);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --blue-primary: #1a5cff;
+            --text-white: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            background: rgba(10, 15, 36, 0.95);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.8rem 1.5rem;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--blue-primary);
+            color: white;
+            font-weight: 800;
+            font-size: 1.4rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(26, 92, 255, 0.5);
+        }
+
+        .brand-text h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1;
+        }
+
+        .brand-text p {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .btn-google-nav {
+            background: white;
+            color: #1e293b;
+            padding: 0.5rem 1.1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            padding: 3.5rem 1.5rem 4rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        @media (min-width: 900px) {
+            .hero {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                padding: 4.5rem 2rem 5rem;
+            }
+        }
+
+        .hero-title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, #60a5fa, #1a5cff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-glass-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .glass-card-item {
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            padding: 1.3rem;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* SEARCH CONTAINER & CARDS GRID */
+        .content-section {
+            max-width: 1280px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .search-container {
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            padding: 1rem;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 600px) {
+            .search-container { flex-direction: row; }
+        }
+
+        .search-container input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--card-border);
+            padding: 0.9rem 1.2rem;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .btn-search-main {
+            background: var(--blue-primary);
+            color: white;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .job-card {
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .badge-type {
+            background: rgba(26, 92, 255, 0.2);
+            color: #60a5fa;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            width: fit-content;
+            margin-bottom: 0.8rem;
+        }
+
+        .badge-job {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .btn-card-apply {
+            background: var(--blue-primary);
+            color: white;
+            border: none;
+            padding: 0.85rem;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1.2rem;
+            transition: background 0.2s;
+        }
+
+        .btn-card-apply:hover {
+            background: #0040c8;
+        }
+
+        /* MODAL APPLICATION FORM */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 15, 36, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            padding: 1rem;
         }
 
-        .container {
+        .modal-body {
+            background: #111827;
+            border: 1px solid var(--card-border);
+            padding: 2rem;
+            border-radius: 24px;
+            max-width: 500px;
             width: 100%;
-            max-width: 750px;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
         }
 
-        .header-title {
-            text-align: center;
-            color: var(--primary-color);
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .header-subtitle {
-            text-align: center;
-            color: var(--text-light);
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-
-        .page {
-            display: none;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .page h2 {
-            font-size: 18px;
-            color: var(--secondary-color);
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 8px;
-            margin-bottom: 20px;
-        }
-
-        .job-item {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-left: 5px solid var(--primary-color);
-            padding: 16px;
-            margin-bottom: 14px;
-            border-radius: 10px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .job-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .job-item h3 {
-            margin: 0 0 8px 0;
-            font-size: 17px;
-            color: var(--secondary-color);
-        }
-
-        .job-item p {
-            margin: 4px 0;
-            font-size: 14px;
-            color: var(--text-color);
-        }
-
-        .job-item strong {
-            color: var(--text-light);
-        }
-
-        .more-btn {
-            display: block;
-            text-align: center;
-            margin-top: 25px;
-            padding: 12px;
-            font-weight: 600;
-            color: white;
-            background-color: var(--accent-color);
-            border-radius: 8px;
+        .close-modal {
+            font-size: 1.8rem;
             cursor: pointer;
-            font-size: 16px;
-            text-decoration: none;
-            transition: background-color 0.2s ease;
+            color: var(--text-muted);
+            float: right;
         }
 
-        .more-btn:hover {
-            background-color: #be123c;
+        .form-input {
+            width: 100%;
+            padding: 0.85rem;
+            margin-bottom: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        footer {
+            background: #040711;
+            border-top: 1px solid var(--card-border);
+            padding: 3.5rem 1.5rem 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header-title">Vibe Quest Jobs</div>
-    <div class="header-subtitle">Ausbildung und Jobangebote</div>
+    <!-- HEADER -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="brand">
+                <div class="brand-logo">B</div>
+                <div class="brand-text">
+                    <h1>BEROPP</h1>
+                    <p>Dein nächster Schritt</p>
+                </div>
+            </a>
+            <a href="#" class="btn-google-nav">G Login mit Google</a>
+        </div>
+    </header>
 
-    <!-- PAGE 1 -->
-    <div id="page1" class="page active">
-        <h2>Seite 1 (1 - 6)</h2>
-        <div class="job-item">
-            <h3>1. Ausbildung als Pflegefachkraft</h3>
-            <p><strong>Standort:</strong> Berlin, Germany</p>
-            <p><strong>Beschreibung:</strong> Ausbildung und Arbeit in der Krankenpflege mit monatlicher Vergütung.</p>
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div>
+            <h1 class="hero-title">Dein Weg in <span>Ausbildung & Job</span> beginnt hier.</h1>
+            <p class="hero-desc">BEROPP hilft dir, den passenden Ausbildungsplatz, Job oder neue berufliche Chancen zu finden. Einfach. Schnell. Kostenlos.</p>
         </div>
-        <div class="job-item">
-            <h3>2. Bauhelfer</h3>
-            <p><strong>Standort:</strong> Munich, Germany</p>
-            <p><strong>Beschreibung:</strong> Allgemeine Bauarbeiten, keine Vorkenntnisse zwingend erforderlich.</p>
+
+        <div class="hero-glass-cards">
+            <div class="glass-card-item" onclick="openApplyForm('Allgemeine Bewerbung')">
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                    <div style="font-size: 1.4rem;">🎓</div>
+                    <div>
+                        <h3 style="font-size: 1.05rem;">Direkt Bewerben</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Erstelle dein Profil & sende deinen Lebenslauf</p>
+                    </div>
+                </div>
+                <span>›</span>
+            </div>
         </div>
-        <div class="job-item">
-            <h3>3. Ausbildung als Fachinformatiker</h3>
-            <p><strong>Standort:</strong> Frankfurt, Germany</p>
-            <p><strong>Beschreibung:</strong> IT-Ausbildung und Arbeit im Bereich Technologiedienstleistungen.</p>
+    </section>
+
+    <!-- MAIN SEARCH & LISTINGS -->
+    <section class="content-section" id="listings">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Beruf, Fachrichtung..." onkeyup="runFilter()">
+            <input type="text" id="locInput" placeholder="Ort (z.B. Hamburg)..." onkeyup="runFilter()">
+            <button class="btn-search-main" onclick="runFilter()">Stellen finden</button>
         </div>
-        <div class="job-item">
-            <h3>4. Hotelkaufmann/-frau</h3>
-            <p><strong>Standort:</strong> Hamburg, Germany</p>
-            <p><strong>Beschreibung:</strong> Empfang von Gästen und Leitung von Hotelabläufen.</p>
+
+        <div class="cards-grid" id="jobsGrid"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 BEROPP – DEIN NÄCHSTER SCHRITT. Alle Rechte vorbehalten.</p>
+    </footer>
+
+    <!-- FORM MODAL (DIRECT APPLICATION STEP) -->
+    <div class="modal-overlay" id="formModal">
+        <div class="modal-body">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 id="formJobTitle" style="font-size: 1.25rem; margin-bottom: 0.4rem;">Bewerbung ausfüllen</h3>
+            <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Gib deine Daten ein, um deine Bewerbung direkt einzureichen:</p>
+
+            <form onsubmit="submitFormAndRedirect(event)">
+                <input type="text" class="form-input" placeholder="Vollständiger Name (Izina ryawe)" required>
+                <input type="email" class="form-input" placeholder="E-Mail-Adresse" required>
+                <input type="tel" class="form-input" placeholder="Telefonnummer">
+                <textarea class="form-input" rows="3" placeholder="Kurzes Anschreiben / Motivation..."></textarea>
+                <button type="submit" class="btn-card-apply" style="margin-top:0.5rem;">Bewerbung absenden & Weiter →</button>
+            </form>
         </div>
-        <div class="job-item">
-            <h3>5. Ausbildung als Elektroniker</h3>
-            <p><strong>Standort:</strong> Stuttgart, Germany</p>
-            <p><strong>Beschreibung:</strong> Installation und Wartung von elektrischen Anlagen in Gebäuden und Industrie.</p>
-        </div>
-        <div class="job-item">
-            <h3>6. Kraftfahrer</h3>
-            <p><strong>Standort:</strong> Cologne, Germany</p>
-            <p><strong>Beschreibung:</strong> Warentransport im Fern- und Nahverkehr (Führerschein erforderlich).</p>
-        </div>
-        <div class="more-btn" onclick="showPage(2)">(...more)</div>
     </div>
 
-    <!-- PAGE 2 -->
-    <div id="page2" class="page">
-        <h2>Seite 2 (7 - 12)</h2>
-        <div class="job-item">
-            <h3>7. Ausbildung als Tourismuskaufmann/-frau</h3>
-            <p><strong>Standort:</strong> Düsseldorf, Germany</p>
-            <p><strong>Beschreibung:</strong> Reiseplanung und Kundenberatung für Urlaubsangebote.</p>
-        </div>
-        <div class="job-item">
-            <h3>8. Lagerarbeiter</h3>
-            <p><strong>Standort:</strong> Dortmund, Germany</p>
-            <p><strong>Beschreibung:</strong> Kommissionierung und Verpackung von Waren im Logistikzentrum.</p>
-        </div>
-        <div class="job-item">
-            <h3>9. Ausbildung als Bankkaufmann/-frau</h3>
-            <p><strong>Standort:</strong> Leipzig, Germany</p>
-            <p><strong>Beschreibung:</strong> Erlernen von Bankdienstleistungen und Finanzberatung.</p>
-        </div>
-        <div class="job-item">
-            <h3>10. Erzieher / Au-Pair</h3>
-            <p><strong>Standort:</strong> Bremen, Germany</p>
-            <p><strong>Beschreibung:</strong> Betreuung und Unterstützung von Kindern in Familien oder Einrichtungen.</p>
-        </div>
-        <div class="job-item">
-            <h3>11. Ausbildung als Industriemechaniker</h3>
-            <p><strong>Standort:</strong> Essen, Germany</p>
-            <p><strong>Beschreibung:</strong> Wartung und Reparatur von Industriemaschinen.</p>
-        </div>
-        <div class="job-item">
-            <h3>12. Gebäudereiniger</h3>
-            <p><strong>Standort:</strong> Nuremberg, Germany</p>
-            <p><strong>Beschreibung:</strong> Professionelle Reinigung von Gebäuden und Büros.</p>
-        </div>
-        <div class="more-btn" onclick="showPage(3)">(...more)</div>
-    </div>
+    <script>
+        const allListings = [
+            { id: 1, type: 'ausbildung', title: 'Ausbildung Kauffrau/-mann für audiovisuelle Medien (m/w/d)', company: 'Studio Hamburg GmbH', location: '22045 Hamburg', start: '01.08.2027', applyUrl: 'https://www.studio-hamburg.de/karriere/' },
+            { id: 2, type: 'ausbildung', title: 'Ausbildung Kaufmann/-frau im Einzelhandel (m/w/d)', company: 'TK Maxx (TJX Deutschland Ltd. & Co. KG)', location: 'Hamburg / Harburg', start: '01.08.2026', applyUrl: 'https://jobs.tkmaxx.com/de/de' },
+            { id: 3, type: 'ausbildung', title: 'Fachkraft für Lagerlogistik (m/w/d)', company: 'Hamburger Hafen & Logistik AG', location: 'Hamburg Center', start: 'Sofort / 2026', applyUrl: 'https://hhla.de/karriere/ausbildung' },
+            { id: 4, type: 'ausbildung', title: 'Elektroniker für Energie- & Gebäudetechnik', company: 'Elektro Technik Nord GmbH', location: 'Hamburg / Buxtehude', start: '01.09.2026', applyUrl: 'https://www.e-handwerk.de/' },
+            { id: 5, type: 'jobs', title: 'Lagerhelfer / Staplerfahrer (m/w/d)', company: 'Express Logistik Partner', location: 'Neu Wulmstorf', start: 'Sofort', applyUrl: 'https://www.stepstone.de/jobs/lagerhelfer/in-neu-wulmstorf' },
+            { id: 6, type: 'jobs', title: 'Minijob 530€ - Logistik Aushilfe', company: 'Paketdienst Nord GmbH', location: 'Neu Wulmstorf / Hamburg', start: 'Sofort', applyUrl: 'https://www.kleinanzeigen.de/s-minijobs/neu-wulmstorf/c107l3138' }
+        ];
 
-    <!-- PAGE 3 -->
-    <div id="page3" class="page">
-        <h2>Seite 3 (13 - 18)</h2>
-        <div class="job-item">
-            <h3>13. Ausbildung als KFZ-Mechatroniker</h3>
-            <p><strong>Standort:</strong> Hanover, Germany</p>
-            <p><strong>Beschreibung:</strong> Reparatur und Wartung von Kraftfahrzeugen und deren Elektronik.</p>
-        </div>
-        <div class="job-item">
-            <h3>14. Gastronomiehelfer</h3>
-            <p><strong>Standort:</strong> Bonn, Germany</p>
-            <p><strong>Beschreibung:</strong> Unterstützung bei der Speisenzubereitung und im Service in Restaurants.</p>
-        </div>
-        <div class="job-item">
-            <h3>15. Ausbildung als Elektroniker für Energie- und Gebäudetechnik</h3>
-            <p><strong>Standort:</strong> Bremen, Germany</p>
-            <p><strong>Beschreibung:</strong> Planung und Installation von elektrischen Gebäudeanlagen.</p>
-        </div>
-        <div class="job-item">
-            <h3>16. Kommissionierer</h3>
-            <p><strong>Standort:</strong> Duisburg, Germany</p>
-            <p><strong>Beschreibung:</strong> Zusammenstellung von Waren für den Versand an Kunden.</p>
-        </div>
-        <div class="job-item">
-            <h3>17. Ausbildung als Hotelfachmann/-frau</h3>
-            <p><strong>Standort:</strong> Dresden, Germany</p>
-            <p><strong>Beschreibung:</strong> Erlernen von Gästebetreuung, Housekeeping und Restaurantdienst.</p>
-        </div>
-        <div class="job-item">
-            <h3>18. Büroreiniger</h3>
-            <p><strong>Standort:</strong> Nuremberg, Germany</p>
-            <p><strong>Beschreibung:</strong> Reinigung von Büroräumen und Verwaltungsgebäuden.</p>
-        </div>
-        <div class="more-btn" onclick="showPage(4)">(...more)</div>
-    </div>
+        let selectedJob = null;
 
-    <!-- PAGE 4 -->
-    <div id="page4" class="page">
-        <h2>Seite 4 (19 - 24)</h2>
-        <div class="job-item">
-            <h3>19. Ausbildung als Kaufmann/-frau für Büromanagement</h3>
-            <p><strong>Standort:</strong> Leipzig, Germany</p>
-            <p><strong>Beschreibung:</strong> Büroorganisation, Verwaltung und kaufmännische Aufgaben.</p>
-        </div>
-        <div class="job-item">
-            <h3>20. Busfahrer</h3>
-            <p><strong>Standort:</strong> Essen, Germany</p>
-            <p><strong>Beschreibung:</strong> Personenbeförderung im Linien- und Stadtverkehr.</p>
-        </div>
-        <div class="job-item">
-            <h3>21. Ausbildung als Tiefbaufacharbeiter</h3>
-            <p><strong>Standort:</strong> Dortmund, Germany</p>
-            <p><strong>Beschreibung:</strong> Arbeiten im Straßenbau und bei unterirdischen Versorgungsnetzen.</p>
-        </div>
-        <div class="job-item">
-            <h3>22. Altenpflegehelfer</h3>
-            <p><strong>Standort:</strong> Stuttgart, Germany</p>
-            <p><strong>Beschreibung:</strong> Unterstützung und Betreuung von Senioren im Alltag.</p>
-        </div>
-        <div class="job-item">
-            <h3>23. Ausbildung als Konstruktionsmechaniker</h3>
-            <p><strong>Standort:</strong> Düsseldorf, Germany</p>
-            <p><strong>Beschreibung:</strong> Herstellung und Montage von Metallkonstruktionen.</p>
-        </div>
-        <div class="job-item">
-            <h3>24. Lagerhelfer</h3>
-            <p><strong>Standort:</strong> Frankfurt, Germany</p>
-            <p><strong>Beschreibung:</strong> Allgemeine Lagertätigkeiten ohne große Vorkenntnisse.</p>
-        </div>
-        <div class="more-btn" onclick="showPage(1)">(...more)</div>
-    </div>
+        function renderGrid(items) {
+            const grid = document.getElementById('jobsGrid');
+            grid.innerHTML = '';
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'job-card';
+                card.innerHTML = `
+                    <div>
+                        <span class="badge-type ${item.type === 'jobs' ? 'badge-job' : ''}">${item.type === 'ausbildung' ? 'AUSBILDUNG' : 'JOB / MINIJOB'}</span>
+                        <h3>${item.title}</h3>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem;">bei ${item.company}</p>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">📍 ${item.location} • 📅 ${item.start}</p>
+                    </div>
+                    <button class="btn-card-apply" onclick="openApplyForm(${item.id})">Jetzt bewerben →</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
 
-</div>
+        function runFilter() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const l = document.getElementById('locInput').value.toLowerCase();
+            const filtered = allListings.filter(i => (i.title.toLowerCase().includes(q) || i.company.toLowerCase().includes(q)) && i.location.toLowerCase().includes(l));
+            renderGrid(filtered);
+        }
 
-<script>
-    function showPage(pageNumber) {
-        const pages = document.querySelectorAll('.page');
-        pages.forEach(p => p.classList.remove('active'));
-        
-        document.getElementById('page' + pageNumber).classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-</script>
+        function openApplyForm(jobId) {
+            if(typeof jobId === 'number') {
+                selectedJob = allListings.find(x => x.id === jobId);
+                document.getElementById('formJobTitle').innerText = 'Bewerbung für: ' + selectedJob.title;
+            } else {
+                selectedJob = null;
+                document.getElementById('formJobTitle').innerText = 'Direktbewerbung bei BEROPP';
+            }
+            document.getElementById('formModal').style.display = 'flex';
+        }
 
+        function closeModal() {
+            document.getElementById('formModal').style.display = 'none';
+        }
+
+        function submitFormAndRedirect(e) {
+            e.preventDefault();
+            closeModal();
+
+            // Direct link redirection to employer/company portal
+            if (selectedJob && selectedJob.applyUrl) {
+                window.open(selectedJob.applyUrl, '_blank');
+            } else {
+                window.open('https://www.studio-hamburg.de/karriere/', '_blank');
+            }
+        }
+
+        renderGrid(allListings);
+    </script>
 </body>
 </html>
