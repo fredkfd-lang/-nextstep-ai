@@ -3013,7 +3013,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
           url:safeUrl(o.externeUrl||o.externeURL||o.bewerbungUrl||o.bewerbungURL||''),
           type,source:'Live listing'
         });
-        if(out.length>=12)break;
+        if(out.length>=300)break;
       }
       if(rows.length<100)break;
     }
@@ -3241,7 +3241,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   }
   async function load6(type,q,city){
     const out=[],seen=new Set();
-    for(let page=1;page<=3&&out.length<12;page++){
+    for(let page=1;page<=3&&out.length<300;page++){
       const p=new URLSearchParams({
         angebotsart:type==='ausbildung'?'4':'1',
         page:String(page),
@@ -3268,12 +3268,12 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
       }
       if(rows.length<100)break;
     }
-    for(let i=0;i<Math.min(12,out.length);i+=6){
+    for(let i=0;i<Math.min(60,out.length);i+=6){
       await Promise.all(out.slice(i,i+6).map(async o=>{
         if(!o.applicationUrl&&o.refnr)o.applicationUrl=await detailB(o.refnr);
       }));
     }
-    return out.slice(0,6);
+    return out.slice(0,300);
   }
   function companyApplyB(o){
     const candidates=[o&&o.applicationUrl,o&&o.applicationURL,o&&o.bewerbungUrl,o&&o.bewerbungURL];
@@ -3362,7 +3362,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
       const rows=uniq(await load6('ausbildung',q,city));
       window.beroppLiveAusbildungAll=rows;
       if($('berufeCount'))$('berufeCount').textContent=rows.length+' aktuelle Ausbildung-Angebote';
-      box.innerHTML='<div class="card"><h3>🇩🇪 Current Ausbildung — Live Company Listings</h3><p><strong>'+rows.length+' / 6</strong> live Ausbildung offers.</p>'+rows.map(cardB).join('')+'</div>';
+      const first=rows.slice(0,20),rest=rows.slice(20); const moreId='beroppAusMore'; box.innerHTML='<div class="card"><h3>🇩🇪 Current Ausbildung — Live Company Listings</h3><p><strong>'+rows.length+'</strong> aktuelle Ausbildung-Angebote gefunden.</p>'+first.map(cardB).join('')+(rest.length?'<button id="'+moreId+'" type="button" class="secondary" style="display:block;margin:14px auto;font-weight:800">＋ Mehr Ergebnisse laden</button><div id="'+moreId+'Rest" style="display:none">'+rest.map(cardB).join('')+'</div>':'')+'</div>'; const mb=$(moreId),mr=$(moreId+'Rest'); if(mb)mb.onclick=()=>{mr.style.display='block';mb.remove()};
       return rows.length>0;
     }catch(e){const rows=(!q&&!city)?FALLBACK_A:[]; if(rows.length){window.beroppLiveAusbildungAll=rows;if($('berufeCount'))$('berufeCount').textContent='6 aktuelle Ausbildung-Angebote';box.innerHTML='<div class="card"><h3>🇩🇪 Current Ausbildung — Live Company Listings</h3><p><strong>6 / 6</strong> current listings.</p>'+rows.map(cardB).join('')+'</div>';return true} box.innerHTML='<div class="card"><h3>⚠️ Live Ausbildung</h3><p>Current Ausbildung could not be loaded. Try another keyword or location.</p><button class="secondary" onclick="renderBerufe()">↻ Try again</button></div>';return false}
   };
