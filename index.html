@@ -1,613 +1,149 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="rw">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BEROPP – Find your opportunity</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Vibe Quest - Ausbildung na Job</title>
     <style>
-        :root {
-            --bg-dark: #0a0f24;
-            --card-glass: rgba(255, 255, 255, 0.07);
-            --card-border: rgba(255, 255, 255, 0.12);
-            --blue-primary: #1a5cff;
-            --text-white: #ffffff;
-            --text-muted: #94a3b8;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-white);
-            line-height: 1.6;
-            overflow-x: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
         }
-
-        /* HEADER & BANNER */
-        header {
-            background: rgba(10, 15, 36, 0.95);
-            backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--card-border);
-        }
-
-        .header-container {
-            max-width: 1280px;
+        .container {
+            max-width: 800px;
             margin: 0 auto;
-            padding: 0.8rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            text-decoration: none;
-        }
-
-        .brand-logo {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #1a5cff, #60a5fa);
-            color: white;
-            font-weight: 800;
-            font-size: 1.5rem;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(26, 92, 255, 0.5);
-        }
-
-        .brand-text h1 {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: white;
-            line-height: 1;
-            letter-spacing: 0.5px;
-        }
-
-        .brand-text p {
-            font-size: 0.7rem;
-            color: #60a5fa;
-            font-weight: 600;
-            margin-top: 2px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .lang-select {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--card-border);
-            color: white;
-            padding: 0.5rem 0.8rem;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .lang-select option {
-            background: #111827;
-            color: white;
-        }
-
-        .btn-google-nav {
-            background: white;
-            color: #1e293b;
-            padding: 0.5rem 1.2rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-google-nav:hover {
-            background: #f1f5f9;
-        }
-
-        /* HERO SECTION */
-        .hero {
-            position: relative;
-            padding: 3rem 1.5rem 2rem;
-            max-width: 1280px;
-            margin: 0 auto;
+        h1, h2 {
+            color: #2c3e50;
             text-align: center;
         }
-
-        .hero-title {
-            font-size: 2.4rem;
-            font-weight: 800;
-            line-height: 1.15;
-            margin-bottom: 1rem;
-        }
-
-        .hero-title span {
-            background: linear-gradient(135deg, #60a5fa, #1a5cff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-desc {
-            color: var(--text-muted);
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* TABS NAVIGATION (AUSBILDUNG vs JOBS) */
-        .category-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: var(--card-glass);
-            border: 1px solid var(--card-border);
-            color: var(--text-muted);
-            padding: 0.9rem 1.8rem;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .tab-btn.active {
-            background: var(--blue-primary);
-            color: white;
-            border-color: var(--blue-primary);
-            box-shadow: 0 0 20px rgba(26, 92, 255, 0.4);
-        }
-
-        /* SEARCH CONTAINER & CARDS GRID */
-        .content-section {
-            max-width: 1280px;
-            margin: 0 auto 4rem;
-            padding: 0 1.5rem;
-        }
-
-        .search-container {
-            background: var(--card-glass);
-            border: 1px solid var(--card-border);
-            padding: 1rem;
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            margin-bottom: 2rem;
-        }
-
-        @media (min-width: 600px) {
-            .search-container { flex-direction: row; }
-        }
-
-        .search-container input {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--card-border);
-            padding: 0.9rem 1.2rem;
-            border-radius: 12px;
-            color: white;
-            font-size: 0.95rem;
-            outline: none;
-        }
-
-        .search-container input:focus {
-            border-color: var(--blue-primary);
-        }
-
-        .btn-search-main {
-            background: var(--blue-primary);
-            color: white;
-            border: none;
-            padding: 0.9rem 1.8rem;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .job-card {
-            background: var(--card-glass);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-
-        .job-card:hover {
-            border-color: var(--blue-primary);
-            transform: translateY(-4px);
-        }
-
-        .badge-type {
-            background: rgba(26, 92, 255, 0.2);
-            color: #60a5fa;
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 0.3rem 0.7rem;
-            border-radius: 20px;
-            width: fit-content;
-            margin-bottom: 0.8rem;
-        }
-
-        .badge-job {
-            background: rgba(16, 185, 129, 0.2);
-            color: #34d399;
-        }
-
-        .btn-card-apply {
-            background: var(--blue-primary);
-            color: white;
-            border: none;
-            padding: 0.85rem;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 1.2rem;
-            transition: background 0.2s;
-        }
-
-        .btn-card-apply:hover {
-            background: #0040c8;
-        }
-
-        /* MODAL E-MAIL APPLICATION FORM */
-        .modal-overlay {
+        .page {
             display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 15, 36, 0.85);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
         }
-
-        .modal-body {
-            background: #111827;
-            border: 1px solid var(--card-border);
-            padding: 2rem;
-            border-radius: 24px;
-            max-width: 480px;
-            width: 100%;
+        .page.active {
+            display: block;
         }
-
-        .close-modal {
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            float: right;
+        .job-item {
+            background: #fafafa;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
         }
-
-        .form-input {
-            width: 100%;
-            padding: 0.9rem;
-            margin-bottom: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            color: white;
-            font-size: 0.95rem;
-            outline: none;
+        .job-item h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            color: #2980b9;
         }
-
-        footer {
-            background: #040711;
-            border-top: 1px solid var(--card-border);
-            padding: 3.5rem 1.5rem 2rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
+        .job-item p {
+            margin: 3px 0;
+            font-size: 14px;
+        }
+        .more-btn {
             text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .more-btn:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER & BANNER -->
-    <header>
-        <div class="header-container">
-            <a href="#" class="brand">
-                <div class="brand-logo">B</div>
-                <div class="brand-text">
-                    <h1>BEROPP</h1>
-                    <p>Find your opportunity</p>
-                </div>
-            </a>
-            <div class="header-right">
-                <select class="lang-select" id="langSwitcher" onchange="changeLanguage()">
-                    <option value="de">🇩🇪 DE</option>
-                    <option value="en">🇬🇧 EN</option>
-                    <option value="rw">🇷🇼 RW</option>
-                </select>
-                <button class="btn-google-nav" onclick="openEmailModal(0)">G Login</button>
-            </div>
+<div class="container">
+    <h1>Amatsinda y'Amatagazo y'Akazi na Ausbildung</h1>
+
+    <!-- PAGE 1 -->
+    <div id="page1" class="page active">
+        <h2>Page 1 (1 - 6)</h2>
+        <div class="job-item">
+            <h3>1. Ausbildung mu Buvuzi (Pflegefachkraft)</h3>
+            <p><strong>Aho iri:</strong> Berlin, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Kwiga no gukora akazi ko kwita ku barwayi, uhembwa buri kwezi.</p>
         </div>
-    </header>
-
-    <!-- HERO SECTION -->
-    <section class="hero">
-        <h1 class="hero-title" id="heroMainTitle">Deine Chance in <span>Ausbildung & Job</span></h1>
-        <p class="hero-desc" id="heroMainDesc">Hitamo icyo wifuza hagati y'imyuga (Ausbildung) cyangwa akazi (Jobs) mu Budage hose, ubundi wihutishe ubusabe bwawe.</p>
-        
-        <!-- TABS BUTTONS -->
-        <div class="category-tabs">
-            <button class="tab-btn active" id="tabAusbildung" onclick="switchTab('ausbildung')">
-                🎓 Ausbildungen (<span id="countAusbildung">105,304</span>)
-            </button>
-            <button class="tab-btn" id="tabJobs" onclick="switchTab('jobs')">
-                💼 Jobs & Minijobs (<span id="countJobs">45,200</span>)
-            </button>
+        <div class="job-item">
+            <h3>2. Akazi k'Ubwubatsi (Bauhelfer)</h3>
+            <p><strong>Aho iri:</strong> Munich, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Akazi k'ubwubatsi rusange, nta burambe buhanitse busabwa.</p>
         </div>
-    </section>
-
-    <!-- MAIN SEARCH & LISTINGS -->
-    <section class="content-section" id="listings">
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Beruf, Elektroniker, Pflege, Lidl..." onkeyup="runFilter()">
-            <input type="text" id="locInput" placeholder="Stadt (z.B. Hamburg, Berlin, München)..." onkeyup="runFilter()">
-            <button class="btn-search-main" onclick="runFilter()" id="searchBtnText">Suchen</button>
+        <div class="job-item">
+            <h3>3. Ausbildung mu by'Ikoranabuhanga (Fachinformatiker)</h3>
+            <p><strong>Aho iri:</strong> Frankfurt, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Kwiga ibijyanye naeti (IT) no gukora muri serivisi z'ikoranabuhanga.</p>
         </div>
-
-        <div class="cards-grid" id="jobsGrid"></div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <p>&copy; 2026 BEROPP – FIND YOUR OPPORTUNITY. Alle Rechte vorbehalten.</p>
-    </footer>
-
-    <!-- MODAL E-MAIL APPLICATION FORM -->
-    <div class="modal-overlay" id="emailModal">
-        <div class="modal-body">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h3 id="formJobTitle" style="font-size: 1.25rem; margin-bottom: 0.4rem; color: #ffffff;">Bewerbung starten</h3>
-            <p id="modalDescText" style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Gib deine E-Mail-Adresse ein, um direkt zur offiziellen Bewerbungsseite weitergeleitet zu werden:</p>
-
-            <form onsubmit="handleEmailSubmit(event)">
-                <input type="email" class="form-input" id="userEmail" placeholder="Deine E-Mail-Adresse..." required>
-                <button type="submit" class="btn-card-apply" style="margin-top:0.2rem;" id="modalSubmitBtn">Direkt zur Arbeitgeber-Seite →</button>
-            </form>
+        <div class="job-item">
+            <h3>4. Akazi ko mu Mahoteli (Hotelkaufmann/-frau)</h3>
+            <p><strong>Aho iri:</strong> Hamburg, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Gukora mu kwakira abashyitsi no kuyobora ibikorwa y'amahoteli.</p>
         </div>
+        <div class="job-item">
+            <h3>5. Ausbildung mu by'Amashanyarazi (Elektroniker)</h3>
+            <p><strong>Aho iri:</strong> Stuttgart, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Kwiga gukora no gukwirakwiza amashanyarazi mu nzu no mu nganda.</p>
+        </div>
+        <div class="job-item">
+            <h3>6. Akazi ko Gutwara Amakamyo (Kraftfahrer)</h3>
+            <p><strong>Aho iri:</strong> Cologne, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Gutwara ibicuruzwa hirya no hino mu gihugu (ufite uruhushya rwo gutwara ibinyabiziga).</p>
+        </div>
+        <div class="more-btn" onclick="showPage(2)">(...more) - Kanda hano urebe Page 2</div>
     </div>
 
-    <script>
-        // Extended Database containing both Ausbildungen and Jobs
-        const allListings = [
-            // AUSBILDUNGEN
-            { 
-                id: 1, 
-                type: 'ausbildung', 
-                title: 'Ausbildung Elektroniker/-in für Energie- und Gebäudetechnik', 
-                company: 'Deutsche Bahn AG', 
-                location: 'Hamburg / Berlin / Frankfurt', 
-                start: '01.09.2026', 
-                directEmployerUrl: 'https://db.jobs/de-de/karriere-fuer-schueler/ausbildung' 
-            },
-            { 
-                id: 2, 
-                type: 'ausbildung', 
-                title: 'Ausbildung Verkäufer / Kaufmann im Einzelhandel (m/w/d)', 
-                company: 'Lidl Dienstleistung GmbH & Co. KG', 
-                location: 'Hamburg, München, Köln & bundesweit', 
-                start: '01.08.2026', 
-                directEmployerUrl: 'https://jobs.lidl.de/schueler/ausbildung' 
-            },
-            { 
-                id: 3, 
-                type: 'ausbildung', 
-                title: 'Ausbildung Kaufmann/-frau im Einzelhandel (m/w/d)', 
-                company: 'ALDI Nord & Süd', 
-                location: 'Buxtehude, Hannover, Bremen', 
-                start: '01.08.2026', 
-                directEmployerUrl: 'https://www.aldi-nord.de/karriere/schueler/ausbildung.html' 
-            },
-            { 
-                id: 4, 
-                type: 'ausbildung', 
-                title: 'Ausbildung Fachkraft für Lagerlogistik (m/w/d)', 
-                company: 'DHL Group / Deutsche Post', 
-                location: 'Hamburg, Frankfurt, Leipzig', 
-                start: '01.09.2026', 
-                directEmployerUrl: 'https://careers.dhl.com/de/de/ausbildung' 
-            },
-            { 
-                id: 5, 
-                type: 'ausbildung', 
-                title: 'Ausbildung Kraftfahrzeugmechatroniker (m/w/d)', 
-                company: 'Mercedes-Benz Group AG', 
-                location: 'Stuttgart / Bremen / Hamburg', 
-                start: '01.09.2026', 
-                directEmployerUrl: 'https://group.mercedes-benz.com/karriere/schueler/ausbildung/' 
-            },
-            { 
-                id: 6, 
-                type: 'ausbildung', 
-                title: 'Ausbildung Pflegefachkraft (m/w/d)', 
-                company: 'Asklepios Kliniken / Sana Kliniken', 
-                location: 'Hamburg / München / Berlin', 
-                start: '01.09.2026', 
-                directEmployerUrl: 'https://www.asklepios.com/konzern/karriere/ausbildung/' 
-            },
-            // JOBS & MINIJOBS
-            { 
-                id: 7, 
-                type: 'jobs', 
-                title: 'Lagerhelfer & Staplerfahrer (m/w/d)', 
-                company: 'Hamburger Hafen & Logistik AG (HHLA)', 
-                location: 'Hamburg', 
-                start: 'Sofort', 
-                directEmployerUrl: 'https://hhla.de/karriere' 
-            },
-            { 
-                id: 8, 
-                type: 'jobs', 
-                title: 'Quereinsteiger / Kommissionierer Logistik (m/w/d)', 
-                company: 'REWE Group Logistik', 
-                location: 'Neu Wulmstorf / Seevetal', 
-                start: 'Sofort', 
-                directEmployerUrl: 'https://karriere.rewe.de/' 
-            },
-            { 
-                id: 9, 
-                type: 'jobs', 
-                title: 'Aushilfe / Verkauf im Supermarkt (m/w/d)', 
-                company: 'Edeka Handelsgesellschaft', 
-                location: 'Hamburg / Harburg', 
-                start: 'Sofort', 
-                directEmployerUrl: 'https://www.verbund.edeka/karriere/' 
-            },
-            { 
-                id: 10, 
-                type: 'jobs', 
-                title: 'Paketzusteller / Kurier (m/w/d)', 
-                company: 'Amazon Logistics', 
-                location: 'Achim / Hamburg', 
-                start: 'Sofort', 
-                directEmployerUrl: 'https://www.amazon.jobs/' 
-            }
-        ];
+    <!-- PAGE 2 -->
+    <div id="page2" class="page">
+        <h2>Page 2 (7 - 12)</h2>
+        <div class="job-item">
+            <h3>7. Ausbildung mu by'Ubukerarugendo (Tourismuskaufmann)</h3>
+            <p><strong>Aho iri:</strong> Düsseldorf, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Gutegura ingendo no gufasha abakiriya mu bijyanye n'ibiruhuko.</p>
+        </div>
+        <div class="job-item">
+            <h3>8. Akazi ko mu Nzu z'Ubusugire (Lagerarbeiter)</h3>
+            <p><strong>Aho iri:</strong> Dortmund, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Gupakira no gupakurura ibicuruzwa mu bubiko bw'ibicuruzwa.</p>
+        </div>
+        <div class="job-item">
+            <h3>9. Ausbildung mu by'Imari na Banki (Bankkaufmann/-frau)</h3>
+            <p><strong>Aho iri:</strong> Leipzig, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Kwiga serivisi za banki no gufasha abakiriya mu by'imari.</p>
+        </div>
+        <div class="job-item">
+            <h3>10. Akazi ko Kwita ku Bana (Erzieher / Au-Pair)</h3>
+            <p><strong>Aho iri:</strong> Bremen, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Gufasha mu kurera no kwita ku bana bato mu miryango cyangwa mu bigo.</p>
+        </div>
+        <div class="job-item">
+            <h3>11. Ausbildung mu by'Ubwubatsi bw'Inganda (Industriemechaniker)</h3>
+            <p><strong>Aho iri:</strong> Essen, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Gusakaza no gusana imashini zikoreshwa mu nganda zikomeye.</p>
+        </div>
+        <div class="job-item">
+            <h3>12. Akazi ko mu by'Isuku (Gebäudereiniger)</h3>
+            <p><strong>Aho iri:</strong> Nuremberg, Germany</p>
+            <p><strong>Ibisobanuro:</strong> Isuku y'inyubako n'ibigo bitandukanye.</p>
+        </div>
+        <div class="more-btn" onclick="showPage(3)">(...more) - Kanda hano urebe Page 3</div>
+    </div>
 
-        let currentCategory = 'ausbildung'; // default view
-        let selectedJob = null;
+    <!-- PAGE 3 -->
+    <div id="page3" class="page">
+        <h2>Page 3 (13 - 18Muraho! Kugira ngo nshobore kugufasha neza, urashobora kumbwira amakuru arambuye kuri icyo kibazo? 
 
-        function switchTab(category) {
-            currentCategory = category;
-            document.getElementById('tabAusbildung').classList.toggle('active', category === 'ausbildung');
-            document.getElementById('tabJobs').classList.toggle('active', category === 'jobs');
-            runFilter();
-        }
+* Ni ubuhe butumwa bw'ikosa (**error message**) GitHub cyangwa terminal yaguhaye?
+* Wari ugerageza gukora iki (urugero: `git push`, gukoresha GitHub Actions, cyangwa ni code ya porogaramu yagize ikibazo)?
 
-        function renderGrid(items) {
-            const grid = document.getElementById('jobsGrid');
-            grid.innerHTML = '';
-            if(items.length === 0) {
-                grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 2rem;">Keine Stellen gefunden.</p>';
-                return;
-            }
-            items.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'job-card';
-                card.innerHTML = `
-                    <div>
-                        <span class="badge-type ${item.type === 'jobs' ? 'badge-job' : ''}">${item.type === 'ausbildung' ? 'AUSBILDUNG' : 'JOB / MINIJOB'}</span>
-                        <h3>${item.title}</h3>
-                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem;">bei <strong>${item.company}</strong></p>
-                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">📍 ${item.location} • 📅 ${item.start}</p>
-                    </div>
-                    <button class="btn-card-apply" onclick="openEmailModal(${item.id})">Direkt bewerben →</button>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function runFilter() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            const l = document.getElementById('locInput').value.toLowerCase();
-            
-            // Filter by selected tab category (ausbildung vs jobs) AND search terms
-            const filtered = allListings.filter(i => 
-                i.type === currentCategory && 
-                (i.title.toLowerCase().includes(q) || i.company.toLowerCase().includes(q)) && 
-                i.location.toLowerCase().includes(l)
-            );
-            renderGrid(filtered);
-        }
-
-        function openEmailModal(jobId) {
-            selectedJob = allListings.find(x => x.id === jobId);
-            if(selectedJob) {
-                document.getElementById('formJobTitle').innerText = 'Bewerbung bei ' + selectedJob.company;
-            }
-            document.getElementById('emailModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('emailModal').style.display = 'none';
-        }
-
-        function handleEmailSubmit(e) {
-            e.preventDefault();
-            closeModal();
-            if (selectedJob && selectedJob.directEmployerUrl) {
-                window.open(selectedJob.directEmployerUrl, '_blank');
-            }
-        }
-
-        function changeLanguage() {
-            const lang = document.getElementById('langSwitcher').value;
-            if(lang === 'rw') {
-                document.getElementById('heroMainTitle').innerHTML = 'Hitamo mu <span>Yiga n\'Akazi (Ausbildung & Jobs)</span>';
-                document.getElementById('heroMainDesc').innerText = 'Koresha utubuto turi munsi kugira ngo uhite uhitamo niba ushaka Ausbildung cyangwa Jobs mu Budage.';
-                document.getElementById('tabAusbildung').innerHTML = '🎓 Imyuga (105,304)';
-                document.getElementById('tabJobs').innerHTML = '💼 Akazi (45,200)';
-                document.getElementById('searchInput').placeholder = 'Shaka umwuga, akazi, Lidl...';
-                document.getElementById('locInput').placeholder = 'Umujyi (urugero: Hamburg)...';
-                document.getElementById('searchBtnText').innerText = 'Shaka';
-            } else if(lang === 'en') {
-                document.getElementById('heroMainTitle').innerHTML = 'Your Choice: <span>Ausbildung & Jobs</span>';
-                document.getElementById('heroMainDesc').innerText = 'Easily switch between apprenticeships and job openings across Germany.';
-                document.getElementById('tabAusbildung').innerHTML = '🎓 Ausbildungen (105,304)';
-                document.getElementById('tabJobs').innerHTML = '💼 Jobs (45,200)';
-                document.getElementById('searchInput').placeholder = 'Search job, title, company...';
-                document.getElementById('locInput').placeholder = 'City (e.g. Hamburg)...';
-                document.getElementById('searchBtnText').innerText = 'Search';
-            } else {
-                document.getElementById('heroMainTitle').innerHTML = 'Deine Chance in <span>Ausbildung & Job</span>';
-                document.getElementById('heroMainDesc').innerText = 'Wähle ganz einfach zwischen Ausbildungsplätzen und Jobs in ganz Deutschland.';
-                document.getElementById('tabAusbildung').innerHTML = '🎓 Ausbildungen (105,304)';
-                document.getElementById('tabJobs').innerHTML = '💼 Jobs & Minijobs (45,200)';
-                document.getElementById('searchInput').placeholder = 'Beruf, Elektroniker, Pflege, Lidl...';
-                document.getElementById('locInput').placeholder = 'Stadt (z.B. Hamburg, Berlin, München)...';
-                document.getElementById('searchBtnText').innerText = 'Suchen';
-            }
-        }
-
-        // Initialize view        runFilter();
-    </script>
-</body>
-</html>
+Nyandikira ubutumwa cyangwa error yose wabonye, nzakwereka ako kanya uko wayikemura!
