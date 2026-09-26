@@ -375,17 +375,31 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
 <script id="beropp-next-page-featured-js">
 (function(){
   function escF(v){return typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-  function renderFeatured(){
+  function renderFeatured(A,J){
     const a=document.getElementById('ausbildungFeatured'),j=document.getElementById('jobsFeatured');
-    const A=Array.isArray(window.beroppHomeLiveAusbildung)?window.beroppHomeLiveAusbildung.slice(0,4):[];
-    const J=Array.isArray(window.beroppHomeLiveJobs)?window.beroppHomeLiveJobs.slice(0,4):[];
-    const card=o=>'<article class="boFeaturedCard"><span class="badge">✓ LIVE</span><h3>'+escF(o.type==='ausbildung'?'🎓 ':'💼 ')+escF(o.title)+'</h3><div class="boFeaturedMeta">🏢 '+escF(o.company)+'<br>📍 '+escF(o.place)+(o.start?'<br>📅 '+escF(o.start):'')+'</div>'+(typeof companyApplyB==='function'&&companyApplyB(o)?'<button class="secondary" type="button" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'')+'</article>';
-    if(a&&A.length)a.innerHTML=A.map(card).join('');
-    if(j&&J.length)j.innerHTML=J.map(card).join('');
+    const card=o=>'<article class="boFeaturedCard"><span class="badge">✓ LIVE</span><h3>'+escF(o.type==='ausbildung'?'🎓 ':'💼 ')+escF(o.title)+'</h3><div class="boFeaturedMeta">🏢 '+escF(o.company)+'<br>📍 '+escF(o.place)+(o.start?'<br>📅 '+escF(o.start):'')+'</div>'+(typeof companyApplyB==='function'&&companyApplyB(o)?'<button class="secondary" type="button" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span class="status">Company application link unavailable</span>')+'</article>';
+    if(a)a.innerHTML=A.length?A.slice(0,4).map(card).join(''):'<div class="boFeaturedEmpty">⚠️ No current Ausbildung found. Try again.</div>';
+    if(j)j.innerHTML=J.length?J.slice(0,4).map(card).join(''):'<div class="boFeaturedEmpty">⚠️ No current Jobs found. Try again.</div>';
   }
-  window.addEventListener('load',()=>setTimeout(renderFeatured,1800));
-  const old=window.renderHomePreviews;
-  window.addEventListener('beropp:live-updated',renderFeatured);
+  async function loadFeatured(){
+    const a=document.getElementById('ausbildungFeatured'),j=document.getElementById('jobsFeatured');
+    if(!a&&!j)return;
+    if(a)a.innerHTML='<div class="boFeaturedEmpty">⏳ Current Ausbildung werden geladen…</div>';
+    if(j)j.innerHTML='<div class="boFeaturedEmpty">⏳ Current Jobs werden geladen…</div>';
+    try{
+      if(typeof window.fetchLiveCareerSources!=='function')throw new Error('Live career source not ready');
+      const [A,J]=await Promise.all([
+        window.fetchLiveCareerSources('','', 'ausbildung'),
+        window.fetchLiveCareerSources('','', 'job')
+      ]);
+      renderFeatured(Array.isArray(A)?A:[],Array.isArray(J)?J:[]);
+    }catch(e){
+      console.warn('BerOpp featured live load failed',e);
+      if(a)a.innerHTML='<div class="boFeaturedEmpty">⚠️ Ausbildung konnte gerade nicht geladen werden. ↻ Aktualisieren.</div>';
+      if(j)j.innerHTML='<div class="boFeaturedEmpty">⚠️ Jobs konnten gerade nicht geladen werden. ↻ Aktualisieren.</div>';
+    }
+  }
+  window.addEventListener('load',()=>setTimeout(loadFeatured,1400));
 })();
 </script></head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
 <section id="auth" class="hidden">
