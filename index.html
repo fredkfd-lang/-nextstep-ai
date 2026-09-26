@@ -1,149 +1,290 @@
 <!DOCTYPE html>
-<html lang="rw">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe Quest - Ausbildung na Job</title>
+    <title>Vibe Quest - Ausbildung & Jobs</title>
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --accent-color: #e11d48;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
+
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
         }
-        h1, h2 {
-            color: #2c3e50;
+
+        .header-title {
             text-align: center;
+            color: var(--primary-color);
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
+
+        .header-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
         .page {
             display: none;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
+            animation: fadeIn 0.4s ease-in-out;
         }
+
         .page.active {
             display: block;
         }
-        .job-item {
-            background: #fafafa;
-            border-left: 4px solid #3498db;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 4px;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .job-item h3 {
-            margin: 0 0 5px 0;
+
+        .page h2 {
             font-size: 18px;
-            color: #2980b9;
+            color: var(--secondary-color);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
         }
+
+        .job-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid var(--primary-color);
+            padding: 16px;
+            margin-bottom: 14px;
+            border-radius: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .job-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .job-item h3 {
+            margin: 0 0 8px 0;
+            font-size: 17px;
+            color: var(--secondary-color);
+        }
+
         .job-item p {
-            margin: 3px 0;
+            margin: 4px 0;
             font-size: 14px;
+            color: var(--text-color);
         }
+
+        .job-item strong {
+            color: var(--text-light);
+        }
+
         .more-btn {
+            display: block;
             text-align: center;
-            margin-top: 15px;
-            font-weight: bold;
-            color: #e74c3c;
+            margin-top: 25px;
+            padding: 12px;
+            font-weight: 600;
+            color: white;
+            background-color: var(--accent-color);
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
         }
+
         .more-btn:hover {
-            text-decoration: underline;
+            background-color: #be123c;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Amatsinda y'Amatagazo y'Akazi na Ausbildung</h1>
+    <div class="header-title">Vibe Quest Jobs</div>
+    <div class="header-subtitle">Ausbildung und Jobangebote</div>
 
     <!-- PAGE 1 -->
     <div id="page1" class="page active">
-        <h2>Page 1 (1 - 6)</h2>
+        <h2>Seite 1 (1 - 6)</h2>
         <div class="job-item">
-            <h3>1. Ausbildung mu Buvuzi (Pflegefachkraft)</h3>
-            <p><strong>Aho iri:</strong> Berlin, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Kwiga no gukora akazi ko kwita ku barwayi, uhembwa buri kwezi.</p>
+            <h3>1. Ausbildung als Pflegefachkraft</h3>
+            <p><strong>Standort:</strong> Berlin, Germany</p>
+            <p><strong>Beschreibung:</strong> Ausbildung und Arbeit in der Krankenpflege mit monatlicher Vergütung.</p>
         </div>
         <div class="job-item">
-            <h3>2. Akazi k'Ubwubatsi (Bauhelfer)</h3>
-            <p><strong>Aho iri:</strong> Munich, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Akazi k'ubwubatsi rusange, nta burambe buhanitse busabwa.</p>
+            <h3>2. Bauhelfer</h3>
+            <p><strong>Standort:</strong> Munich, Germany</p>
+            <p><strong>Beschreibung:</strong> Allgemeine Bauarbeiten, keine Vorkenntnisse zwingend erforderlich.</p>
         </div>
         <div class="job-item">
-            <h3>3. Ausbildung mu by'Ikoranabuhanga (Fachinformatiker)</h3>
-            <p><strong>Aho iri:</strong> Frankfurt, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Kwiga ibijyanye naeti (IT) no gukora muri serivisi z'ikoranabuhanga.</p>
+            <h3>3. Ausbildung als Fachinformatiker</h3>
+            <p><strong>Standort:</strong> Frankfurt, Germany</p>
+            <p><strong>Beschreibung:</strong> IT-Ausbildung und Arbeit im Bereich Technologiedienstleistungen.</p>
         </div>
         <div class="job-item">
-            <h3>4. Akazi ko mu Mahoteli (Hotelkaufmann/-frau)</h3>
-            <p><strong>Aho iri:</strong> Hamburg, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Gukora mu kwakira abashyitsi no kuyobora ibikorwa y'amahoteli.</p>
+            <h3>4. Hotelkaufmann/-frau</h3>
+            <p><strong>Standort:</strong> Hamburg, Germany</p>
+            <p><strong>Beschreibung:</strong> Empfang von Gästen und Leitung von Hotelabläufen.</p>
         </div>
         <div class="job-item">
-            <h3>5. Ausbildung mu by'Amashanyarazi (Elektroniker)</h3>
-            <p><strong>Aho iri:</strong> Stuttgart, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Kwiga gukora no gukwirakwiza amashanyarazi mu nzu no mu nganda.</p>
+            <h3>5. Ausbildung als Elektroniker</h3>
+            <p><strong>Standort:</strong> Stuttgart, Germany</p>
+            <p><strong>Beschreibung:</strong> Installation und Wartung von elektrischen Anlagen in Gebäuden und Industrie.</p>
         </div>
         <div class="job-item">
-            <h3>6. Akazi ko Gutwara Amakamyo (Kraftfahrer)</h3>
-            <p><strong>Aho iri:</strong> Cologne, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Gutwara ibicuruzwa hirya no hino mu gihugu (ufite uruhushya rwo gutwara ibinyabiziga).</p>
+            <h3>6. Kraftfahrer</h3>
+            <p><strong>Standort:</strong> Cologne, Germany</p>
+            <p><strong>Beschreibung:</strong> Warentransport im Fern- und Nahverkehr (Führerschein erforderlich).</p>
         </div>
-        <div class="more-btn" onclick="showPage(2)">(...more) - Kanda hano urebe Page 2</div>
+        <div class="more-btn" onclick="showPage(2)">(...more)</div>
     </div>
 
     <!-- PAGE 2 -->
     <div id="page2" class="page">
-        <h2>Page 2 (7 - 12)</h2>
+        <h2>Seite 2 (7 - 12)</h2>
         <div class="job-item">
-            <h3>7. Ausbildung mu by'Ubukerarugendo (Tourismuskaufmann)</h3>
-            <p><strong>Aho iri:</strong> Düsseldorf, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Gutegura ingendo no gufasha abakiriya mu bijyanye n'ibiruhuko.</p>
+            <h3>7. Ausbildung als Tourismuskaufmann/-frau</h3>
+            <p><strong>Standort:</strong> Düsseldorf, Germany</p>
+            <p><strong>Beschreibung:</strong> Reiseplanung und Kundenberatung für Urlaubsangebote.</p>
         </div>
         <div class="job-item">
-            <h3>8. Akazi ko mu Nzu z'Ubusugire (Lagerarbeiter)</h3>
-            <p><strong>Aho iri:</strong> Dortmund, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Gupakira no gupakurura ibicuruzwa mu bubiko bw'ibicuruzwa.</p>
+            <h3>8. Lagerarbeiter</h3>
+            <p><strong>Standort:</strong> Dortmund, Germany</p>
+            <p><strong>Beschreibung:</strong> Kommissionierung und Verpackung von Waren im Logistikzentrum.</p>
         </div>
         <div class="job-item">
-            <h3>9. Ausbildung mu by'Imari na Banki (Bankkaufmann/-frau)</h3>
-            <p><strong>Aho iri:</strong> Leipzig, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Kwiga serivisi za banki no gufasha abakiriya mu by'imari.</p>
+            <h3>9. Ausbildung als Bankkaufmann/-frau</h3>
+            <p><strong>Standort:</strong> Leipzig, Germany</p>
+            <p><strong>Beschreibung:</strong> Erlernen von Bankdienstleistungen und Finanzberatung.</p>
         </div>
         <div class="job-item">
-            <h3>10. Akazi ko Kwita ku Bana (Erzieher / Au-Pair)</h3>
-            <p><strong>Aho iri:</strong> Bremen, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Gufasha mu kurera no kwita ku bana bato mu miryango cyangwa mu bigo.</p>
+            <h3>10. Erzieher / Au-Pair</h3>
+            <p><strong>Standort:</strong> Bremen, Germany</p>
+            <p><strong>Beschreibung:</strong> Betreuung und Unterstützung von Kindern in Familien oder Einrichtungen.</p>
         </div>
         <div class="job-item">
-            <h3>11. Ausbildung mu by'Ubwubatsi bw'Inganda (Industriemechaniker)</h3>
-            <p><strong>Aho iri:</strong> Essen, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Gusakaza no gusana imashini zikoreshwa mu nganda zikomeye.</p>
+            <h3>11. Ausbildung als Industriemechaniker</h3>
+            <p><strong>Standort:</strong> Essen, Germany</p>
+            <p><strong>Beschreibung:</strong> Wartung und Reparatur von Industriemaschinen.</p>
         </div>
         <div class="job-item">
-            <h3>12. Akazi ko mu by'Isuku (Gebäudereiniger)</h3>
-            <p><strong>Aho iri:</strong> Nuremberg, Germany</p>
-            <p><strong>Ibisobanuro:</strong> Isuku y'inyubako n'ibigo bitandukanye.</p>
+            <h3>12. Gebäudereiniger</h3>
+            <p><strong>Standort:</strong> Nuremberg, Germany</p>
+            <p><strong>Beschreibung:</strong> Professionelle Reinigung von Gebäuden und Büros.</p>
         </div>
-        <div class="more-btn" onclick="showPage(3)">(...more) - Kanda hano urebe Page 3</div>
+        <div class="more-btn" onclick="showPage(3)">(...more)</div>
     </div>
 
     <!-- PAGE 3 -->
     <div id="page3" class="page">
-        <h2>Page 3 (13 - 18Muraho! Kugira ngo nshobore kugufasha neza, urashobora kumbwira amakuru arambuye kuri icyo kibazo? 
+        <h2>Seite 3 (13 - 18)</h2>
+        <div class="job-item">
+            <h3>13. Ausbildung als KFZ-Mechatroniker</h3>
+            <p><strong>Standort:</strong> Hanover, Germany</p>
+            <p><strong>Beschreibung:</strong> Reparatur und Wartung von Kraftfahrzeugen und deren Elektronik.</p>
+        </div>
+        <div class="job-item">
+            <h3>14. Gastronomiehelfer</h3>
+            <p><strong>Standort:</strong> Bonn, Germany</p>
+            <p><strong>Beschreibung:</strong> Unterstützung bei der Speisenzubereitung und im Service in Restaurants.</p>
+        </div>
+        <div class="job-item">
+            <h3>15. Ausbildung als Elektroniker für Energie- und Gebäudetechnik</h3>
+            <p><strong>Standort:</strong> Bremen, Germany</p>
+            <p><strong>Beschreibung:</strong> Planung und Installation von elektrischen Gebäudeanlagen.</p>
+        </div>
+        <div class="job-item">
+            <h3>16. Kommissionierer</h3>
+            <p><strong>Standort:</strong> Duisburg, Germany</p>
+            <p><strong>Beschreibung:</strong> Zusammenstellung von Waren für den Versand an Kunden.</p>
+        </div>
+        <div class="job-item">
+            <h3>17. Ausbildung als Hotelfachmann/-frau</h3>
+            <p><strong>Standort:</strong> Dresden, Germany</p>
+            <p><strong>Beschreibung:</strong> Erlernen von Gästebetreuung, Housekeeping und Restaurantdienst.</p>
+        </div>
+        <div class="job-item">
+            <h3>18. Büroreiniger</h3>
+            <p><strong>Standort:</strong> Nuremberg, Germany</p>
+            <p><strong>Beschreibung:</strong> Reinigung von Büroräumen und Verwaltungsgebäuden.</p>
+        </div>
+        <div class="more-btn" onclick="showPage(4)">(...more)</div>
+    </div>
 
-* Ni ubuhe butumwa bw'ikosa (**error message**) GitHub cyangwa terminal yaguhaye?
-* Wari ugerageza gukora iki (urugero: `git push`, gukoresha GitHub Actions, cyangwa ni code ya porogaramu yagize ikibazo)?
+    <!-- PAGE 4 -->
+    <div id="page4" class="page">
+        <h2>Seite 4 (19 - 24)</h2>
+        <div class="job-item">
+            <h3>19. Ausbildung als Kaufmann/-frau für Büromanagement</h3>
+            <p><strong>Standort:</strong> Leipzig, Germany</p>
+            <p><strong>Beschreibung:</strong> Büroorganisation, Verwaltung und kaufmännische Aufgaben.</p>
+        </div>
+        <div class="job-item">
+            <h3>20. Busfahrer</h3>
+            <p><strong>Standort:</strong> Essen, Germany</p>
+            <p><strong>Beschreibung:</strong> Personenbeförderung im Linien- und Stadtverkehr.</p>
+        </div>
+        <div class="job-item">
+            <h3>21. Ausbildung als Tiefbaufacharbeiter</h3>
+            <p><strong>Standort:</strong> Dortmund, Germany</p>
+            <p><strong>Beschreibung:</strong> Arbeiten im Straßenbau und bei unterirdischen Versorgungsnetzen.</p>
+        </div>
+        <div class="job-item">
+            <h3>22. Altenpflegehelfer</h3>
+            <p><strong>Standort:</strong> Stuttgart, Germany</p>
+            <p><strong>Beschreibung:</strong> Unterstützung und Betreuung von Senioren im Alltag.</p>
+        </div>
+        <div class="job-item">
+            <h3>23. Ausbildung als Konstruktionsmechaniker</h3>
+            <p><strong>Standort:</strong> Düsseldorf, Germany</p>
+            <p><strong>Beschreibung:</strong> Herstellung und Montage von Metallkonstruktionen.</p>
+        </div>
+        <div class="job-item">
+            <h3>24. Lagerhelfer</h3>
+            <p><strong>Standort:</strong> Frankfurt, Germany</p>
+            <p><strong>Beschreibung:</strong> Allgemeine Lagertätigkeiten ohne große Vorkenntnisse.</p>
+        </div>
+        <div class="more-btn" onclick="showPage(1)">(...more)</div>
+    </div>
 
-Nyandikira ubutumwa cyangwa error yose wabonye, nzakwereka ako kanya uko wayikemura!
+</div>
+
+<script>
+    function showPage(pageNumber) {
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(p => p.classList.remove('active'));
+        
+        document.getElementById('page' + pageNumber).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
