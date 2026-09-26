@@ -435,14 +435,32 @@
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
+function submitFinalForm(e) {
+    e.preventDefault();
+    closeModal('formModal');
+    
+    // Yerekanisha Success Message mu gishushanyo cya Dark Mode aho gukoresha Browser Alert
+    const successBox = document.createElement('div');
+    successBox.style.position = 'fixed';
+    successBox.style.top = '50%';
+    successBox.style.left = '50%';
+    successBox.style.transform = 'translate(-50%, -50%)';
+    successBox.style.background = '#111827';
+    successBox.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+    successBox.style.padding = '2rem';
+    successBox.style.borderRadius = '20px';
+    successBox.style.boxShadow = '0 25px 50px rgba(0,0,0,0.7)';
+    successBox.style.zIndex = '3000';
+    successBox.style.textAlign = 'center';
+    successBox.style.maxWidth = '400px';
+    successBox.style.width = '90%';
 
-        function submitFinalForm(e) {
-            e.preventDefault();
-            alert('Vielen Dank! Deine Bewerbung für "' + selectedJobTitle + '" wurde erfolgreich direkt übermittelt.');
-            closeModal('formModal');
-        }
+    successBox.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
+        <h3 style="color: #ffffff; font-size: 1.3rem; margin-bottom: 0.5rem;">Vielen Dank!</h3>
+        <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem;">Deine Bewerbung für <strong>"${selectedJobTitle}"</strong> wurde erfolgreich gesendet.</p>
+        <button onclick="this.parentElement.remove()" style="background: #1a5cff; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%;">Zurück zur Startseite</button>
+    `;
 
-        renderGrid(allListings);
-    </script>
-</body>
-</html>
+    document.body.appendChild(successBox);
+}
