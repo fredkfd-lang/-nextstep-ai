@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BEROPP – Find your opportunity</title>
+    <title>BEROPP – Dein nächster Schritt in Deutschland</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,7 +14,6 @@
             --card-border: rgba(255, 255, 255, 0.12);
             --blue-primary: #1a5cff;
             --blue-gradient: linear-gradient(135deg, #1a5cff 0%, #0040c8 100%);
-            --purple-accent: #8b5cf6;
             --text-white: #ffffff;
             --text-muted: #94a3b8;
         }
@@ -46,7 +45,7 @@
         .header-container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0.8rem 1.2rem;
+            padding: 0.8rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -60,12 +59,12 @@
         }
 
         .brand-logo {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             background: var(--blue-primary);
             color: white;
             font-weight: 800;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -74,7 +73,7 @@
         }
 
         .brand-text h1 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 800;
             color: white;
             line-height: 1;
@@ -85,77 +84,213 @@
             color: var(--text-muted);
         }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .nav-links {
+            display: none;
+            gap: 1.8rem;
+            list-style: none;
         }
+
+        @media (min-width: 900px) {
+            .nav-links { display: flex; }
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active { color: white; }
 
         .btn-google-nav {
             background: white;
             color: #1e293b;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 1.1rem;
             border-radius: 30px;
             text-decoration: none;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
             gap: 0.4rem;
         }
 
-        /* HERO - AUSBILDUNG.DE STRUCTURE IN BEROPP DARK STYLE */
+        /* HERO SECTION */
         .hero {
-            padding: 3rem 1.2rem 4rem;
-            max-width: 900px;
+            position: relative;
+            padding: 3.5rem 1.5rem 5rem;
+            max-width: 1280px;
             margin: 0 auto;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
         }
 
-        .hero-subtitle {
-            font-size: 0.9rem;
-            font-weight: 700;
+        @media (min-width: 900px) {
+            .hero {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                padding: 4.5rem 2rem 6rem;
+            }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(26, 92, 255, 0.15);
+            border: 1px solid rgba(26, 92, 255, 0.3);
             color: #60a5fa;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
         }
 
-        .hero h1 {
-            font-size: 2.2rem;
+        .hero-title {
+            font-size: 2.4rem;
             font-weight: 800;
-            line-height: 1.25;
-            margin-bottom: 1.5rem;
+            line-height: 1.15;
+            margin-bottom: 1.2rem;
         }
 
-        @media (min-width: 768px) {
-            .hero h1 { font-size: 3.2rem; }
+        @media (min-width: 900px) {
+            .hero-title { font-size: 3.2rem; }
         }
 
-        .hero h1 span {
-            background: linear-gradient(135deg, #a78bfa, #60a5fa);
+        .hero-title span {
+            background: linear-gradient(135deg, #60a5fa, #1a5cff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* SEARCH BOX */
-        .search-box-card {
-            background: var(--card-glass);
-            border: 1px solid var(--card-border);
-            backdrop-filter: blur(16px);
-            padding: 1.2rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        .hero-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
         }
 
         @media (min-width: 600px) {
-            .search-box-card { flex-direction: row; }
+            .hero-buttons { flex-direction: row; }
         }
 
-        .search-box-card input {
+        .btn-primary-google {
+            background: var(--blue-primary);
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 25px rgba(26, 92, 255, 0.4);
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--card-border);
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        /* HERO GLASS CARDS */
+        .hero-glass-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .glass-card-item {
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            padding: 1.3rem;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.2s, background 0.2s;
+            cursor: pointer;
+        }
+
+        .glass-card-item:hover {
+            transform: translateX(6px);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .glass-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        /* FEATURE STRIP */
+        .feature-strip {
+            background: #060919;
+            border-top: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+            padding: 2.5rem 1.5rem;
+        }
+
+        .feature-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 900px) {
+            .feature-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .feature-item { text-align: center; }
+        .feature-item h4 { font-size: 1rem; margin: 0.5rem 0 0.2rem; }
+        .feature-item p { color: var(--text-muted); font-size: 0.85rem; }
+
+        /* MAIN SEARCH & LISTINGS */
+        .content-section {
+            max-width: 1280px;
+            margin: 3.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .search-container {
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            padding: 1rem;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (min-width: 600px) {
+            .search-container { flex-direction: row; }
+        }
+
+        .search-container input {
             flex: 1;
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--card-border);
@@ -166,7 +301,7 @@
             outline: none;
         }
 
-        .btn-search {
+        .btn-search-main {
             background: var(--blue-primary);
             color: white;
             border: none;
@@ -174,88 +309,55 @@
             border-radius: 12px;
             font-weight: 700;
             cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.2s;
         }
 
-        .btn-search:hover { background: #0040c8; }
-
-        /* TAGS (BELIEBTE SUCHEN) */
-        .popular-tags {
-            margin-top: 1.5rem;
+        .category-tabs {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.5rem;
+            gap: 0.8rem;
+            overflow-x: auto;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
         }
 
-        .tag-btn {
+        .tab-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--card-border);
             color: var(--text-muted);
-            padding: 0.4rem 0.9rem;
+            padding: 0.5rem 1.2rem;
             border-radius: 20px;
-            font-size: 0.8rem;
             font-weight: 600;
+            font-size: 0.85rem;
             cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s;
+            white-space: nowrap;
         }
 
-        .tag-btn:hover {
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--blue-primary);
             color: white;
             border-color: var(--blue-primary);
-            background: rgba(26, 92, 255, 0.15);
         }
 
-        /* MAIN SECTION */
-        .main-container {
-            max-width: 1280px;
-            margin: 2rem auto 5rem;
-            padding: 0 1.2rem;
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
         }
 
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        /* SLIDER CAROUSEL (SWIPE) */
-        .slider-wrapper {
-            display: flex;
-            gap: 1.2rem;
-            overflow-x: auto;
-            padding-bottom: 1.5rem;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .slider-wrapper::-webkit-scrollbar { height: 6px; }
-        .slider-wrapper::-webkit-scrollbar-thumb {
-            background: var(--card-border);
-            border-radius: 10px;
-        }
-
-        .listing-card {
-            min-width: 280px;
-            max-width: 330px;
+        .job-card {
             background: var(--card-glass);
             border: 1px solid var(--card-border);
             border-radius: 20px;
             padding: 1.5rem;
-            scroll-snap-align: start;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            flex-shrink: 0;
-            transition: transform 0.2s;
+            transition: transform 0.2s, border-color 0.2s;
         }
 
-        .listing-card:hover { transform: translateY(-4px); }
+        .job-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--blue-primary);
+        }
 
         .badge-type {
             background: rgba(26, 92, 255, 0.2);
@@ -273,8 +375,8 @@
             color: #34d399;
         }
 
-        .listing-card h3 {
-            font-size: 1.15rem;
+        .job-card h3 {
+            font-size: 1.2rem;
             font-weight: 700;
             margin-bottom: 0.4rem;
         }
@@ -285,57 +387,21 @@
             margin-bottom: 0.8rem;
         }
 
-        .btn-apply {
-            background: var(--blue-primary);
+        .btn-card-details {
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            border: none;
+            border: 1px solid var(--card-border);
             padding: 0.75rem;
             border-radius: 10px;
             font-weight: 700;
             cursor: pointer;
             width: 100%;
             margin-top: 1.2rem;
+            transition: background 0.2s;
         }
 
-        /* FEATURED CATEGORY CARDS (LIKE AUSBILDUNG.DE) */
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .cat-card {
-            background: var(--card-glass);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 1.5rem;
-        }
-
-        .cat-card h4 {
-            font-size: 1.2rem;
-            margin-bottom: 0.8rem;
-            color: #a78bfa;
-        }
-
-        .cat-list {
-            list-style: none;
-            margin-bottom: 1.2rem;
-        }
-
-        .cat-list li {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 0.4rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .cat-list li::before {
-            content: "✓";
-            color: var(--blue-primary);
-            font-weight: bold;
+        .btn-card-details:hover {
+            background: var(--blue-primary);
         }
 
         /* MODAL POPUP */
@@ -344,7 +410,7 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(10, 15, 36, 0.85);
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
             z-index: 2000;
             justify-content: center;
             align-items: center;
@@ -354,54 +420,67 @@
         .modal-body {
             background: #111827;
             border: 1px solid var(--card-border);
-            padding: 1.8rem;
-            border-radius: 20px;
-            max-width: 450px;
+            padding: 2rem;
+            border-radius: 24px;
+            max-width: 550px;
             width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        .form-input {
-            width: 100%;
-            padding: 0.8rem;
-            margin-bottom: 0.8rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            color: white;
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-modal {
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .detail-section {
+            margin-bottom: 1.2rem;
+        }
+
+        .detail-section h4 {
+            font-size: 0.95rem;
+            color: #60a5fa;
+            margin-bottom: 0.4rem;
+        }
+
+        .detail-section p {
             font-size: 0.9rem;
-            outline: none;
+            color: #cbd5e1;
         }
 
-        /* FOOTER */
+        .btn-apply-direct {
+            background: var(--blue-primary);
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1.5rem;
+            font-size: 1rem;
+        }
+
         footer {
             background: #040711;
             border-top: 1px solid var(--card-border);
-            padding: 3rem 1.2rem 2rem;
+            padding: 3.5rem 1.5rem 2rem;
             color: var(--text-muted);
             font-size: 0.85rem;
             text-align: center;
-        }
-
-        /* AI FLOATING BOT */
-        .ai-bot {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--blue-primary);
-            color: white;
-            padding: 0.8rem 1.2rem;
-            border-radius: 30px;
-            box-shadow: 0 10px 25px rgba(26, 92, 255, 0.5);
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            z-index: 999;
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
     <header>
         <div class="header-container">
             <a href="#" class="brand">
@@ -412,177 +491,231 @@
                 </div>
             </a>
 
-            <div class="header-actions">
-                <a href="#" class="btn-google-nav">G Login mit Google</a>
-            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active">Start</a></li>
+                <li><a href="#listings">Ausbildung</a></li>
+                <li><a href="#listings">Jobs</a></li>
+                <li><a href="#">CV</a></li>
+                <li><a href="#">Über uns</a></li>
+            </ul>
+
+            <a href="#" class="btn-google-nav">G Login mit Google</a>
         </div>
     </header>
 
-    <!-- HERO SECTION -->
     <section class="hero">
-        <p class="hero-subtitle">Find your opportunity</p>
-        <h1>Finde deine Ausbildung oder Jobs<br><span>Deine Zukunft startet jetzt!</span></h1>
-
-        <div class="search-box-card">
-            <input type="text" id="searchInput" placeholder="Ausbildung, Jobs oder Begriff..." onkeyup="filterListings()">
-            <input type="text" id="locInput" placeholder="Ort (z.B. Hamburg)..." onkeyup="filterListings()">
-            <button class="btn-search" onclick="filterListings()">Stellen finden</button>
+        <div>
+            <span class="hero-badge">BEROPP – Karriere. Bildung. Zukunft.</span>
+            <h1 class="hero-title">Dein Weg in <span>Ausbildung & Job</span> beginnt hier.</h1>
+            <p class="hero-desc">BEROPP hilft dir, den passenden Ausbildungsplatz, Job oder neue berufliche Chancen zu finden. Einfach. Schnell. Kostenlos.</p>
+            
+            <div class="hero-buttons">
+                <a href="#" class="btn-primary-google">G Mit Google anmelden →</a>
+                <a href="#listings" class="btn-secondary">► Mehr erfahren</a>
+            </div>
         </div>
 
-        <div class="popular-tags">
-            <span style="width: 100%; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Beliebte Suchen:</span>
-            <button class="tag-btn" onclick="quickSearch('Pflege')">Pflegefachmann/-frau</button>
-            <button class="tag-btn" onclick="quickSearch('Mechatroniker')">Kfz-Mechatroniker/in</button>
-            <button class="tag-btn" onclick="quickSearch('Lagerlogistik')">Lagerlogistik</button>
-            <button class="tag-btn" onclick="quickSearch('Elektroniker')">Elektroniker/in</button>
-            <button class="tag-btn" onclick="quickSearch('Minijob')">Minijob 530€</button>
+        <div class="hero-glass-cards">
+            <div class="glass-card-item" onclick="filterTab('ausbildung')">
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                    <div class="glass-icon" style="background: rgba(26, 92, 255, 0.2); color: #60a5fa;">🎓</div>
+                    <div>
+                        <h3 style="font-size: 1.05rem;">Ausbildung</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Alle Ausbildungsplätze in Deutschland</p>
+                    </div>
+                </div>
+                <span>›</span>
+            </div>
+
+            <div class="glass-card-item" onclick="filterTab('jobs')">
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                    <div class="glass-icon" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">💼</div>
+                    <div>
+                        <h3 style="font-size: 1.05rem;">Jobs & Minijobs</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Entdecke aktuelle Stellen und Chancen</p>
+                    </div>
+                </div>
+                <span>›</span>
+            </div>
+
+            <div class="glass-card-item" onclick="openDetail(1)">
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                    <div class="glass-icon" style="background: rgba(236, 72, 153, 0.2); color: #f472b6;">📄</div>
+                    <div>
+                        <h3 style="font-size: 1.05rem;">CV & Bewerbung</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Lebenslauf hochladen & Profil erstellen</p>
+                    </div>
+                </div>
+                <span>›</span>
+            </div>
         </div>
     </section>
 
-    <!-- MAIN SECTION -->
-    <main class="main-container">
-        
-        <!-- SLIDER LISTINGS -->
-        <div class="section-title">
-            <span>🔥 Aktuelle Angebote (Slide ➔)</span>
-        </div>
-
-        <div class="slider-wrapper" id="listingsSlider"></div>
-
-        <!-- CATEGORIES (AUSBILDUNG.DE STYLE) -->
-        <h3 style="margin-top: 4rem; font-size: 1.4rem;">💡 Berufsfelder entdecken</h3>
-        <div class="categories-grid">
-            <div class="cat-card">
-                <h4>Berufe für Soziale & Pflege</h4>
-                <ul class="cat-list">
-                    <li>Pflegefachmann / Pflegefachfrau</li>
-                    <li>Medizinische/r Fachangestellte/r</li>
-                    <li>Erzieher / Erzieherin</li>
-                </ul>
-                <button class="btn-apply" style="background: rgba(255,255,255,0.1);" onclick="quickSearch('Pflege')">Mehr Berufe</button>
+    <section class="feature-strip">
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div style="font-size: 1.8rem;">🎯</div>
+                <h4>Passende Angebote</h4>
+                <p>Top Stellenangebote in deiner Region</p>
             </div>
-
-            <div class="cat-card">
-                <h4>Technik & Handwerk</h4>
-                <ul class="cat-list">
-                    <li>Elektroniker für Gebäude</li>
-                    <li>Kfz-Mechatroniker (m/w/d)</li>
-                    <li>Anlagenmechaniker</li>
-                </ul>
-                <button class="btn-apply" style="background: rgba(255,255,255,0.1);" onclick="quickSearch('Elektroniker')">Mehr Berufe</button>
+            <div class="feature-item">
+                <div style="font-size: 1.8rem;">📄</div>
+                <h4>CV hochladen</h4>
+                <p>Einfach vom Handy oder Laptop</p>
             </div>
-
-            <div class="cat-card">
-                <h4>Logistik & Transport</h4>
-                <ul class="cat-list">
-                    <li>Fachkraft für Lagerlogistik</li>
-                    <li>Gabelstaplerfahrer / Lagerhelfer</li>
-                    <li>Berufskraftfahrer</li>
-                </ul>
-                <button class="btn-apply" style="background: rgba(255,255,255,0.1);" onclick="quickSearch('Lager')">Mehr Berufe</button>
+            <div class="feature-item">
+                <div style="font-size: 1.8rem;">🛡️</div>
+                <h4>Sicher & Kostenlos</h4>
+                <p>100% Kostenfrei für Bewerber</p>
+            </div>
+            <div class="feature-item">
+                <div style="font-size: 1.8rem;">📱</div>
+                <h4>Überall verfügbar</h4>
+                <p>Optimal auf jedem Gerät</p>
             </div>
         </div>
+    </section>
 
-    </main>
+    <section class="content-section" id="listings">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Beruf, Fachrichtung oder Stichwort..." onkeyup="runFilter()">
+            <input type="text" id="locInput" placeholder="Ort oder PLZ (z.B. Hamburg)..." onkeyup="runFilter()">
+            <button class="btn-search-main" onclick="runFilter()">Stellen finden</button>
+        </div>
 
-    <!-- FOOTER -->
+        <div class="category-tabs">
+            <button class="tab-btn active" onclick="filterTab('all')" id="tab-all">Alle Angebote</button>
+            <button class="tab-btn" onclick="filterTab('ausbildung')" id="tab-ausbildung">🎓 Ausbildung</button>
+            <button class="tab-btn" onclick="filterTab('jobs')" id="tab-jobs">💼 Jobs & Minijobs</button>
+            <button class="tab-btn" onclick="filterTab('logistik')" id="tab-logistik">📦 Logistik</button>
+            <button class="tab-btn" onclick="filterTab('pflege')" id="tab-pflege">🏥 Pflege & Medizin</button>
+            <button class="tab-btn" onclick="filterTab('technik')" id="tab-technik">⚡ Technik & Handwerk</button>
+        </div>
+
+        <div class="cards-grid" id="jobsGrid"></div>
+    </section>
+
     <footer>
         <p>&copy; 2026 BEROPP – DEIN NÄCHSTER SCHRITT. Alle Rechte vorbehalten.</p>
     </footer>
 
-    <!-- AI FLOATING ASSISTANT -->
-    <div class="ai-bot" onclick="openModal('BEROPP AI Support')">
-        🤖 Hey! Ich bin BEROPP AI. Brauchst du Hilfe?
-    </div>
-
-    <!-- APPLICATION MODAL -->
-    <div class="modal-overlay" id="applyModal">
+    <div class="modal-overlay" id="detailModal">
         <div class="modal-body">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
-                <h3 id="modalTitle" style="font-size: 1.1rem;">Jetzt bewerben</h3>
-                <span style="font-size: 1.5rem; cursor: pointer; color: var(--text-muted);" onclick="closeModal()">&times;</span>
+            <div class="modal-header">
+                <div>
+                    <span class="badge-type" id="modalBadge">AUSBILDUNG</span>
+                    <h3 id="modalJobTitle" style="font-size: 1.3rem; margin-top: 0.4rem;">Job Titel</h3>
+                    <p id="modalCompany" style="color: var(--text-muted); font-size: 0.9rem;">Firma • Ort</p>
+                </div>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
             </div>
-            <form onsubmit="handleFormSubmit(event)">
-                <input type="text" class="form-input" placeholder="Vollständiger Name" required>
-                <input type="email" class="form-input" placeholder="E-Mail-Adresse" required>
-                <input type="tel" class="form-input" placeholder="Telefonnummer">
-                <textarea class="form-input" rows="3" placeholder="Kurze Nachricht an den Arbeitgeber..."></textarea>
-                <button type="submit" class="btn-apply">Bewerbung absenden</button>
-            </form>
+
+            <div class="detail-section">
+                <h4>Beschreibung & Aufgaben:</h4>
+                <p id="modalDesc">Details werden geladen...</p>
+            </div>
+
+            <div class="detail-section">
+                <h4>Voraussetzungen:</h4>
+                <p id="modalReqs">Deutsch B1/B2, Motivation und Engagement.</p>
+            </div>
+
+            <div class="detail-section">
+                <h4>Vergütung / Gehalt:</h4>
+                <p id="modalSalary">Tarifliche Vergütung + Zusatzleistungen.</p>
+            </div>
+
+            <button class="btn-apply-direct" onclick="submitApplication()">Direkt beim Arbeitgeber bewerben →</button>
         </div>
     </div>
 
-    <!-- JAVASCRIPT DATA & LOGIC -->
     <script>
-        const jobsData = [
-            { id: 1, type: 'ausbildung', title: 'Fachkraft für Lagerlogistik', company: 'Logistik Zenteum Hamburg', location: 'Hamburg', desc: 'Lerne die Organisation und Logistik in modernen Lagern. Deutsch B1.' },
-            { id: 2, type: 'ausbildung', title: 'Elektroniker für Gebäude', company: 'Elektro Technik Nord', location: 'Hamburg / Buxtehude', desc: 'Installation und Wartung elektrischer Anlagen.' },
-            { id: 3, type: 'ausbildung', title: 'Kraftfahrzeugmechatroniker', company: 'Auto Service AG', location: 'Stuttgart / Hamburg', desc: 'Wartung und Reparatur von PKW und Nutzfahrzeugen.' },
-            { id: 4, type: 'ausbildung', title: 'Pflegefachmann / Pflegefachfrau', company: 'Klinikum Harburg', location: 'Hamburg', desc: 'Verantwortungsvolle Ausbildung im medizinischen Bereich.' },
-            { id: 5, type: 'jobs', title: 'Lagerhelfer / Staplerfahrer (m/w/d)', company: 'Express Logistik', location: 'Neu Wulmstorf', desc: 'Be- und Entladen von LKW, innerbetrieblicher Transport mit Staplerschein.' },
-            { id: 6, type: 'jobs', title: 'Minijob 530€ - Logistik Aushilfe', company: 'Paketdienst Nord', location: 'Hamburg / Neu Wulmstorf', desc: 'Flexible Arbeitszeiten im Sortierbereich.' }
+        const allListings = [
+            { id: 1, type: 'ausbildung', cat: 'logistik', title: 'Fachkraft für Lagerlogistik (m/w/d)', company: 'Hamburger Logistik GmbH', location: 'Hamburg / Harburg', desc: 'Organisation, Güterannahme und Kommissionierung in modernen Logistikzentren.', reqs: 'Hauptschulabschluss / MSA, Deutsch mindestens B1.', salary: '1. Ausbildungsjahr: ~1.050 € / Monat' },
+            { id: 2, type: 'ausbildung', cat: 'technik', title: 'Elektroniker für Energie- & Gebäudetechnik', company: 'Elektro Technik Nord', location: 'Hamburg / Buxtehude', desc: 'Installation, Wartung und Planung intelligenter Gebäudetechnik.', reqs: 'Technisches Verständnis, Deutsch B1/B2.', salary: '1. Ausbildungsjahr: ~980 € / Monat' },
+            { id: 3, type: 'ausbildung', cat: 'technik', title: 'Kraftfahrzeugmechatroniker (m/w/d)', company: 'Auto Service Nord AG', location: 'Stuttgart / Hamburg', desc: 'Diagnose, Wartung und Reparatur von PKW und modernen E-Fahrzeugen.', reqs: 'MSA, Handwerkliches Geschick.', salary: '1. Ausbildungsjahr: ~1.020 € / Monat' },
+            { id: 4, type: 'ausbildung', cat: 'pflege', title: 'Pflegefachmann / Pflegefachfrau (m/w/d)', company: 'Klinikum Harburg gGmbH', location: 'Hamburg', desc: 'Betreuung, Pflege und medizinische Versorgung von Patienten.', reqs: 'B2 Deutsch, Empathie und Teamfähigkeit.', salary: '1. Ausbildungsjahr: ~1.340 € / Monat' },
+            { id: 5, type: 'jobs', cat: 'logistik', title: 'Lagerhelfer / Staplerfahrer (m/w/d)', company: 'Express Logistik Partner', location: 'Neu Wulmstorf', desc: 'Be- und Entladung von LKW sowie innerbetrieblicher Transport mit Gabelstapler.', reqs: 'Staplerschein von Vorteil, Deutschkenntnisse.', salary: '14,50 € - 16,80 € / Stunde' },
+            { id: 6, type: 'jobs', cat: 'logistik', title: 'Minijob 530€ - Logistik Aushilfe', company: 'Paketdienst Nord GmbH', location: 'Neu Wulmstorf / Hamburg', desc: 'Paketsortierung und Vorbereitung für den Versand in den Abendstunden.', reqs: 'Zuverlässigkeit und körperliche Belastbarkeit.', salary: 'Bis zu 530 € steuerfrei' },
+            { id: 7, type: 'ausbildung', cat: 'it', title: 'Fachinformatiker für Anwendungsentwicklung', company: 'Tech Solutions Germany', location: 'Hamburg Center', desc: 'Entwicklung intelligenter Softwarelösungen und Webapplikationen.', reqs: 'Abitur / Realschulabschluss, Gute Englisch- & Deutschkenntnisse.', salary: '1. Ausbildungsjahr: ~1.150 € / Monat' },
+            { id: 8, type: 'ausbildung', cat: 'kaufmann', title: 'Kaufmann / -frau im Einzelhandel', company: 'Supermarkt Gruppe Nord', location: 'Buxtehude / Neu Wulmstorf', desc: 'Kundenberatung, Warendisposition und Kassenführung.', reqs: 'Freude am Umgang mit Menschen.', salary: '1. Ausbildungsjahr: ~1.000 € / Monat' }
         ];
 
-        function renderListings(items) {
-            const container = document.getElementById('listingsSlider');
-            container.innerHTML = '';
+        let activeTab = 'all';
 
-            if(items.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted); padding: 1rem;">Keine passenden Angebote gefunden.</p>';
+        function renderGrid(items) {
+            const grid = document.getElementById('jobsGrid');
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">Keine passenden Angebote gefunden.</p>';
                 return;
             }
 
             items.forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'listing-card';
+                card.className = 'job-card';
                 card.innerHTML = `
                     <div>
                         <span class="badge-type ${item.type === 'jobs' ? 'badge-job' : ''}">${item.type === 'ausbildung' ? 'AUSBILDUNG' : 'JOB / MINIJOB'}</span>
                         <h3>${item.title}</h3>
                         <p class="company-info">🏢 ${item.company} • 📍 ${item.location}</p>
-                        <p style="font-size: 0.85rem; color: #cbd5e1;">${item.desc}</p>
+                        <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">${item.desc}</p>
                     </div>
-                    <button class="btn-apply" onclick="openModal('${item.title}')">Jetzt bewerben</button>
+                    <button class="btn-card-details" onclick="openDetail(${item.id})">Mehr Infos & Bewerben →</button>
                 `;
-                container.appendChild(card);
+                grid.appendChild(card);
             });
         }
 
-        function filterListings() {
+        function filterTab(tab) {
+            activeTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            const btn = document.getElementById('tab-' + tab);
+            if (btn) btn.classList.add('active');
+
+            runFilter();
+        }
+
+        function runFilter() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const loc = document.getElementById('locInput').value.toLowerCase();
 
-            const filtered = jobsData.filter(item => {
+            const filtered = allListings.filter(item => {
+                const matchTab = (activeTab === 'all') || (item.type === activeTab) || (item.cat === activeTab);
                 const matchQ = item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query);
                 const matchL = item.location.toLowerCase().includes(loc);
-                return matchQ && matchL;
+                return matchTab && matchQ && matchL;
             });
 
-            renderListings(filtered);
+            renderGrid(filtered);
         }
 
-        function quickSearch(keyword) {
-            document.getElementById('searchInput').value = keyword;
-            filterListings();
-        }
+        function openDetail(id) {
+            const item = allListings.find(x => x.id === id);
+            if(!item) return;
 
-        function openModal(title) {
-            document.getElementById('modalTitle').innerText = 'Bewerbung: ' + title;
-            document.getElementById('applyModal').style.display = 'flex';
+            document.getElementById('modalJobTitle').innerText = item.title;
+            document.getElementById('modalCompany').innerText = item.company + ' • 📍 ' + item.location;
+            document.getElementById('modalBadge').innerText = item.type.toUpperCase();
+            document.getElementById('modalBadge').className = 'badge-type ' + (item.type === 'jobs' ? 'badge-job' : '');
+            document.getElementById('modalDesc').innerText = item.desc;
+            document.getElementById('modalReqs').innerText = item.reqs;
+            document.getElementById('modalSalary').innerText = item.salary;
+
+            document.getElementById('detailModal').style.display = 'flex';
         }
 
         function closeModal() {
-            document.getElementById('applyModal').style.display = 'none';
+            document.getElementById('detailModal').style.display = 'none';
         }
 
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            alert('Vielen Dank für deine Bewerbung! Wir melden uns kurzfristig bei dir.');
+        function submitApplication() {
+            alert('Vielen Dank! Deine Bewerbung wurde erfolgreich direkt übermittelt.');
             closeModal();
         }
 
-        // Initialize
-        renderListings(jobsData);
+        renderGrid(allListings);
     </script>
 </body>
-                                                                                                              </html>
+    </html>
