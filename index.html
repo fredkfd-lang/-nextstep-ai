@@ -401,7 +401,24 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
   }
   window.addEventListener('load',()=>setTimeout(loadFeatured,1400));
 })();
-</script></head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
+</script><style id="beropp-home-additions">
+/* Added from the supplied BerOpp homepage concept — existing Home remains untouched */
+.boConceptSection{margin:22px 0;padding:22px;border-radius:24px;background:#fff;border:1px solid #dbeafe;box-shadow:0 10px 28px rgba(37,99,235,.06)}
+.boConceptHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-bottom:14px}
+.boConceptHead h2{margin:0;color:#17324d;font-size:22px}.boConceptHead p{margin:5px 0 0;color:#64748b;font-size:13px}
+.boConceptGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.boConceptTile{border:1px solid #dbeafe;background:#f8fbff;border-radius:17px;padding:15px;text-align:left;cursor:pointer;transition:.18s;min-height:112px}
+.boConceptTile:hover{transform:translateY(-2px);border-color:#93c5fd;box-shadow:0 8px 20px rgba(37,99,235,.10)}
+.boConceptIcon{font-size:25px}.boConceptTile strong{display:block;margin-top:7px;color:#17324d}.boConceptTile span{display:block;margin-top:3px;color:#64748b;font-size:11px}
+.boTipsGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.boTip{padding:15px;border:1px solid #e0e7ff;border-radius:17px;background:#fafbff}
+.boTip h3{margin:0 0 6px;color:#2563eb;font-size:15px}.boTip p{margin:0;color:#64748b;font-size:12px;line-height:1.5}
+body.dark-mode .boConceptSection{background:#111827;border-color:#334155}.dark-mode .boConceptHead h2,.dark-mode .boConceptTile strong{color:#e0f2fe}
+body.dark-mode .boConceptHead p,.dark-mode .boConceptTile span,.dark-mode .boTip p{color:#94a3b8}
+body.dark-mode .boConceptTile,.dark-mode .boTip{background:#0f172a;border-color:#334155}
+@media(max-width:800px){.boConceptGrid{grid-template-columns:repeat(2,1fr)}.boTipsGrid{grid-template-columns:1fr}}
+@media(max-width:520px){.boConceptGrid{grid-template-columns:1fr 1fr}.boConceptSection{padding:16px}}
+</style></head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
 <section id="auth" class="hidden">
 <div class="card nsAuthCard">
   <div class="nsAuthLogo" aria-hidden="true"><div class="brandMark"><svg viewBox="0 0 64 64"><defs><linearGradient id="authG2" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#authG2)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div></div>
@@ -556,7 +573,28 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
   <div class="boSection boAccount">
     <div><span class="boKicker">DEIN KONTO</span><h2>Mach BerOpp zu deinem persönlichen Begleiter</h2><p>Speichere Chancen, verwalte dein Profil und bereite deine Bewerbungen schneller vor.</p><button onclick="requireAuth('profile')">Kostenlos registrieren →</button></div>
   </div>
+<div class="boConceptSection" id="homeConceptCategories">
+  <div class="boConceptHead">
+    <div><h2>Beliebte Kategorien</h2><p>Schnell zu den Bereichen, die du suchst.</p></div>
+  </div>
+  <div class="boConceptGrid">
+    <button type="button" class="boConceptTile" onclick="document.getElementById('homeCareerSearch').value='Lager & Logistik';runHomeCareerSearch()"><span class="boConceptIcon">📦</span><strong>Lager & Logistik</strong><span>Ausbildung & Jobs</span></button>
+    <button type="button" class="boConceptTile" onclick="document.getElementById('homeCareerSearch').value='Elektrotechnik';runHomeCareerSearch()"><span class="boConceptIcon">⚡</span><strong>Elektrotechnik</strong><span>Ausbildung & Handwerk</span></button>
+    <button type="button" class="boConceptTile" onclick="document.getElementById('homeCareerSearch').value='Mechatronik';runHomeCareerSearch()"><span class="boConceptIcon">⚙️</span><strong>Mechatronik</strong><span>Technik & Industrie</span></button>
+    <button type="button" class="boConceptTile" onclick="document.getElementById('homeCareerSearch').value='Minijob';document.getElementById('homeCareerType').value='job';runHomeCareerSearch()"><span class="boConceptIcon">🕐</span><strong>Minijobs & Aushilfe</strong><span>Flexibel suchen</span></button>
+  </div>
 </div>
+
+<div class="boConceptSection" id="homeConceptTips">
+  <div class="boConceptHead">
+    <div><h2>Bewerbungstipps & Ratgeber</h2><p>Praktische Hinweise für deinen nächsten Bewerbungsschritt.</p></div>
+  </div>
+  <div class="boTipsGrid">
+    <div class="boTip"><h3>📄 Der perfekte Lebenslauf</h3><p>Strukturiere Ausbildung, Berufserfahrung, Kenntnisse und Sprachkenntnisse übersichtlich.</p></div>
+    <div class="boTip"><h3>✉️ Das Anschreiben</h3><p>Zeige kurz deine Motivation, deine Erfahrung und warum die Stelle zu dir passt.</p></div>
+    <div class="boTip"><h3>🗣️ Sprachniveau</h3><p>Prüfe bei jeder Stelle die angegebenen Deutschkenntnisse und Anforderungen.</p></div>
+  </div>
+</div></div>
 </section><section id="profile" class="hidden">
 <div class="card nsProfileCard">
 <h2 id="profileTitle">👤 My Profile</h2>
