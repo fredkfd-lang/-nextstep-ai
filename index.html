@@ -133,27 +133,17 @@
         /* HERO SECTION */
         .hero {
             position: relative;
-            padding: 3.5rem 1.5rem 4rem;
+            padding: 3rem 1.5rem 2rem;
             max-width: 1280px;
             margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-        }
-
-        @media (min-width: 900px) {
-            .hero {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                padding: 4.5rem 2rem 5rem;
-            }
+            text-align: center;
         }
 
         .hero-title {
             font-size: 2.4rem;
             font-weight: 800;
             line-height: 1.15;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
 
         .hero-title span {
@@ -166,54 +156,46 @@
             color: var(--text-muted);
             font-size: 1rem;
             margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .stats-badge {
-            background: rgba(26, 92, 255, 0.15);
-            border: 1px solid rgba(26, 92, 255, 0.3);
-            padding: 0.8rem 1.2rem;
-            border-radius: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .stats-badge span {
-            font-weight: 800;
-            color: #60a5fa;
-            font-size: 1.1rem;
-        }
-
-        .hero-glass-cards {
+        /* TABS NAVIGATION (AUSBILDUNG vs JOBS) */
+        .category-tabs {
             display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
 
-        .glass-card-item {
+        .tab-btn {
             background: var(--card-glass);
             border: 1px solid var(--card-border);
-            backdrop-filter: blur(10px);
-            padding: 1.3rem;
-            border-radius: 18px;
+            color: var(--text-muted);
+            padding: 0.9rem 1.8rem;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            text-decoration: none;
-            color: white;
-            cursor: pointer;
-            transition: border-color 0.2s;
+            gap: 0.5rem;
         }
 
-        .glass-card-item:hover {
+        .tab-btn.active {
+            background: var(--blue-primary);
+            color: white;
             border-color: var(--blue-primary);
+            box-shadow: 0 0 20px rgba(26, 92, 255, 0.4);
         }
 
         /* SEARCH CONTAINER & CARDS GRID */
         .content-section {
             max-width: 1280px;
-            margin: 3rem auto;
+            margin: 0 auto 4rem;
             padding: 0 1.5rem;
         }
 
@@ -256,10 +238,6 @@
             font-weight: 700;
             cursor: pointer;
             transition: background 0.2s;
-        }
-
-        .btn-search-main:hover {
-            background: #0040c8;
         }
 
         .cards-grid {
@@ -358,10 +336,6 @@
             outline: none;
         }
 
-        .form-input:focus {
-            border-color: var(--blue-primary);
-        }
-
         footer {
             background: #040711;
             border-top: 1px solid var(--card-border);
@@ -397,26 +371,17 @@
 
     <!-- HERO SECTION -->
     <section class="hero">
-        <div>
-            <div class="stats-badge">
-                <span>🎓 105,304</span>
-                <p id="heroStatText" style="font-size: 0.85rem; color: #ffffff; margin:0;">freie Ausbildungsplätze & Jobs live in Deutschland</p>
-            </div>
-            <h1 class="hero-title" id="heroMainTitle">Dein Weg in <span>Ausbildung & Job</span> in Deutschland.</h1>
-            <p class="hero-desc" id="heroMainDesc">Finde tagesaktuell offene Stellen und Ausbildungsplätze direkt beim Arbeitgeber bewerben – ohne Umwege.</p>
-        </div>
-
-        <div class="hero-glass-cards">
-            <div class="glass-card-item" onclick="openEmailModal(0)">
-                <div style="display: flex; align-items: center; gap: 0.8rem;">
-                    <div style="font-size: 1.4rem;">🇩🇪</div>
-                    <div>
-                        <h3 id="quickProfileTitle" style="font-size: 1.05rem;">Direktbewerbung starten</h3>
-                        <p id="quickProfileDesc" style="font-size: 0.8rem; color: var(--text-muted);">Gib deine E-Mail ein und starte sofort</p>
-                    </div>
-                </div>
-                <span>›</span>
-            </div>
+        <h1 class="hero-title" id="heroMainTitle">Deine Chance in <span>Ausbildung & Job</span></h1>
+        <p class="hero-desc" id="heroMainDesc">Hitamo icyo wifuza hagati y'imyuga (Ausbildung) cyangwa akazi (Jobs) mu Budage hose, ubundi wihutishe ubusabe bwawe.</p>
+        
+        <!-- TABS BUTTONS -->
+        <div class="category-tabs">
+            <button class="tab-btn active" id="tabAusbildung" onclick="switchTab('ausbildung')">
+                🎓 Ausbildungen (<span id="countAusbildung">105,304</span>)
+            </button>
+            <button class="tab-btn" id="tabJobs" onclick="switchTab('jobs')">
+                💼 Jobs & Minijobs (<span id="countJobs">45,200</span>)
+            </button>
         </div>
     </section>
 
@@ -425,7 +390,7 @@
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Beruf, Elektroniker, Pflege, Lidl..." onkeyup="runFilter()">
             <input type="text" id="locInput" placeholder="Stadt (z.B. Hamburg, Berlin, München)..." onkeyup="runFilter()">
-            <button class="btn-search-main" onclick="runFilter()" id="searchBtnText">Stellen finden</button>
+            <button class="btn-search-main" onclick="runFilter()" id="searchBtnText">Suchen</button>
         </div>
 
         <div class="cards-grid" id="jobsGrid"></div>
@@ -436,22 +401,24 @@
         <p>&copy; 2026 BEROPP – FIND YOUR OPPORTUNITY. Alle Rechte vorbehalten.</p>
     </footer>
 
-    <!-- MODAL FOR QUICK EMAIL ENTRY -->
+    <!-- MODAL E-MAIL APPLICATION FORM -->
     <div class="modal-overlay" id="emailModal">
         <div class="modal-body">
             <span class="close-modal" onclick="closeModal()">&times;</span>
             <h3 id="formJobTitle" style="font-size: 1.25rem; margin-bottom: 0.4rem; color: #ffffff;">Bewerbung starten</h3>
-            <p id="modalDescText" style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Gib deine E-Mail-Adresse ein, um direkt zur offiziellen Bewerbungsseite des Arbeitgebers weitergeleitet zu werden:</p>
+            <p id="modalDescText" style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Gib deine E-Mail-Adresse ein, um direkt zur offiziellen Bewerbungsseite weitergeleitet zu werden:</p>
 
             <form onsubmit="handleEmailSubmit(event)">
-                <input type="email" class="form-input" id="userEmail" placeholder="Deine E-Mail-Adresse (z.B. name@gmail.com)" required>
+                <input type="email" class="form-input" id="userEmail" placeholder="Deine E-Mail-Adresse..." required>
                 <button type="submit" class="btn-card-apply" style="margin-top:0.2rem;" id="modalSubmitBtn">Direkt zur Arbeitgeber-Seite →</button>
             </form>
         </div>
     </div>
 
     <script>
+        // Extended Database containing both Ausbildungen and Jobs
         const allListings = [
+            // AUSBILDUNGEN
             { 
                 id: 1, 
                 type: 'ausbildung', 
@@ -506,6 +473,7 @@
                 start: '01.09.2026', 
                 directEmployerUrl: 'https://www.asklepios.com/konzern/karriere/ausbildung/' 
             },
+            // JOBS & MINIJOBS
             { 
                 id: 7, 
                 type: 'jobs', 
@@ -523,16 +491,42 @@
                 location: 'Neu Wulmstorf / Seevetal', 
                 start: 'Sofort', 
                 directEmployerUrl: 'https://karriere.rewe.de/' 
+            },
+            { 
+                id: 9, 
+                type: 'jobs', 
+                title: 'Aushilfe / Verkauf im Supermarkt (m/w/d)', 
+                company: 'Edeka Handelsgesellschaft', 
+                location: 'Hamburg / Harburg', 
+                start: 'Sofort', 
+                directEmployerUrl: 'https://www.verbund.edeka/karriere/' 
+            },
+            { 
+                id: 10, 
+                type: 'jobs', 
+                title: 'Paketzusteller / Kurier (m/w/d)', 
+                company: 'Amazon Logistics', 
+                location: 'Achim / Hamburg', 
+                start: 'Sofort', 
+                directEmployerUrl: 'https://www.amazon.jobs/' 
             }
         ];
 
+        let currentCategory = 'ausbildung'; // default view
         let selectedJob = null;
+
+        function switchTab(category) {
+            currentCategory = category;
+            document.getElementById('tabAusbildung').classList.toggle('active', category === 'ausbildung');
+            document.getElementById('tabJobs').classList.toggle('active', category === 'jobs');
+            runFilter();
+        }
 
         function renderGrid(items) {
             const grid = document.getElementById('jobsGrid');
             grid.innerHTML = '';
             if(items.length === 0) {
-                grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 2rem;">Keine passenden Stellen gefunden. Versuche einen anderen Suchbegriff.</p>';
+                grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 2rem;">Keine Stellen gefunden.</p>';
                 return;
             }
             items.forEach(item => {
@@ -554,7 +548,13 @@
         function runFilter() {
             const q = document.getElementById('searchInput').value.toLowerCase();
             const l = document.getElementById('locInput').value.toLowerCase();
-            const filtered = allListings.filter(i => (i.title.toLowerCase().includes(q) || i.company.toLowerCase().includes(q)) && i.location.toLowerCase().includes(l));
+            
+            // Filter by selected tab category (ausbildung vs jobs) AND search terms
+            const filtered = allListings.filter(i => 
+                i.type === currentCategory && 
+                (i.title.toLowerCase().includes(q) || i.company.toLowerCase().includes(q)) && 
+                i.location.toLowerCase().includes(l)
+            );
             renderGrid(filtered);
         }
 
@@ -562,9 +562,6 @@
             selectedJob = allListings.find(x => x.id === jobId);
             if(selectedJob) {
                 document.getElementById('formJobTitle').innerText = 'Bewerbung bei ' + selectedJob.company;
-            } else {
-                selectedJob = allListings[0];
-                document.getElementById('formJobTitle').innerText = 'Deutschlandweite Bewerbung';
             }
             document.getElementById('emailModal').style.display = 'flex';
         }
@@ -575,56 +572,43 @@
 
         function handleEmailSubmit(e) {
             e.preventDefault();
-            const email = document.getElementById('userEmail').value;
             closeModal();
-
             if (selectedJob && selectedJob.directEmployerUrl) {
                 window.open(selectedJob.directEmployerUrl, '_blank');
-            } else {
-                window.open('https://db.jobs/de-de/karriere-fuer-schueler/ausbildung', '_blank');
             }
         }
 
-        // Language Switcher Functionality
         function changeLanguage() {
             const lang = document.getElementById('langSwitcher').value;
             if(lang === 'rw') {
-                document.getElementById('heroStatText').innerText = 'amatsinda 105,304 y\'akazi n\'imyuga mu Budage';
-                document.getElementById('heroMainTitle').innerHTML = 'Intambwe yawe mu <span>Yiga n\'Akazi</span> mu Budage.';
-                document.getElementById('heroMainDesc').innerText = 'Shaka akazi n\'imyuga ubu, wandike cyangwa wiyandikishe utaciye mu bindi bigo.';
-                document.getElementById('quickProfileTitle').innerText = 'Tangira Kwiyandikisha';
-                document.getElementById('quickProfileDesc').innerText = 'Shyiramo email yawe utangire ako kanya';
-                document.getElementById('searchInput').placeholder = 'Akazi, Elektroniker, Isuku, Lidl...';
-                document.getElementById('locInput').placeholder = 'Umujyi (urugero: Hamburg, Berlin)...';
-                document.getElementById('searchBtnText').innerText = 'Shaka Akazi';
-                document.getElementById('modalDescText').innerText = 'Andika email yawe kugira ngo uhite ujya ku rubuga rw\'umukoresha ako kanya:';
-                document.getElementById('modalSubmitBtn').innerText = 'Komeza ku rubuga rw\'umukoresha →';
+                document.getElementById('heroMainTitle').innerHTML = 'Hitamo mu <span>Yiga n\'Akazi (Ausbildung & Jobs)</span>';
+                document.getElementById('heroMainDesc').innerText = 'Koresha utubuto turi munsi kugira ngo uhite uhitamo niba ushaka Ausbildung cyangwa Jobs mu Budage.';
+                document.getElementById('tabAusbildung').innerHTML = '🎓 Imyuga (105,304)';
+                document.getElementById('tabJobs').innerHTML = '💼 Akazi (45,200)';
+                document.getElementById('searchInput').placeholder = 'Shaka umwuga, akazi, Lidl...';
+                document.getElementById('locInput').placeholder = 'Umujyi (urugero: Hamburg)...';
+                document.getElementById('searchBtnText').innerText = 'Shaka';
             } else if(lang === 'en') {
-                document.getElementById('heroStatText').innerText = '105,304 free apprenticeships & jobs live in Germany';
-                document.getElementById('heroMainTitle').innerHTML = 'Your path to <span>Ausbildung & Job</span> in Germany.';
-                document.getElementById('heroMainDesc').innerText = 'Find daily updated job openings and apply directly with employers – without middlemen.';
-                document.getElementById('quickProfileTitle').innerText = 'Start Direct Application';
-                document.getElementById('quickProfileDesc').innerText = 'Enter your email and start immediately';
-                document.getElementById('searchInput').placeholder = 'Job, Electrician, Nursing, Lidl...';
-                document.getElementById('locInput').placeholder = 'City (e.g. Hamburg, Berlin)...';
-                document.getElementById('searchBtnText').innerText = 'Find Jobs';
-                document.getElementById('modalDescText').innerText = 'Enter your email address to be redirected directly to the official employer application page:';
-                document.getElementById('modalSubmitBtn').innerText = 'Go to Employer Site →';
+                document.getElementById('heroMainTitle').innerHTML = 'Your Choice: <span>Ausbildung & Jobs</span>';
+                document.getElementById('heroMainDesc').innerText = 'Easily switch between apprenticeships and job openings across Germany.';
+                document.getElementById('tabAusbildung').innerHTML = '🎓 Ausbildungen (105,304)';
+                document.getElementById('tabJobs').innerHTML = '💼 Jobs (45,200)';
+                document.getElementById('searchInput').placeholder = 'Search job, title, company...';
+                document.getElementById('locInput').placeholder = 'City (e.g. Hamburg)...';
+                document.getElementById('searchBtnText').innerText = 'Search';
             } else {
-                document.getElementById('heroStatText').innerText = 'freie Ausbildungsplätze & Jobs live in Deutschland';
-                document.getElementById('heroMainTitle').innerHTML = 'Dein Weg in <span>Ausbildung & Job</span> in Deutschland.';
-                document.getElementById('heroMainDesc').innerText = 'Finde tagesaktuell offene Stellen und Ausbildungsplätze direkt beim Arbeitgeber bewerben – ohne Umwege.';
-                document.getElementById('quickProfileTitle').innerText = 'Direktbewerbung starten';
-                document.getElementById('quickProfileDesc').innerText = 'Gib deine E-Mail ein und starte sofort';
+                document.getElementById('heroMainTitle').innerHTML = 'Deine Chance in <span>Ausbildung & Job</span>';
+                document.getElementById('heroMainDesc').innerText = 'Wähle ganz einfach zwischen Ausbildungsplätzen und Jobs in ganz Deutschland.';
+                document.getElementById('tabAusbildung').innerHTML = '🎓 Ausbildungen (105,304)';
+                document.getElementById('tabJobs').innerHTML = '💼 Jobs & Minijobs (45,200)';
                 document.getElementById('searchInput').placeholder = 'Beruf, Elektroniker, Pflege, Lidl...';
                 document.getElementById('locInput').placeholder = 'Stadt (z.B. Hamburg, Berlin, München)...';
-                document.getElementById('searchBtnText').innerText = 'Stellen finden';
-                document.getElementById('modalDescText').innerText = 'Gib deine E-Mail-Adresse ein, um direkt zur offiziellen Bewerbungsseite des Arbeitgebers weitergeleitet zu werden:';
-                document.getElementById('modalSubmitBtn').innerText = 'Direkt zur Arbeitgeber-Seite →';
+                document.getElementById('searchBtnText').innerText = 'Suchen';
             }
         }
 
-        renderGrid(allListings);
+        // Initialize view
+        runFilter();
     </script>
 </body>
 </html>
