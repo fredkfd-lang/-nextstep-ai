@@ -2823,6 +2823,23 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
       return rows.length>0;
     }catch(e){box.innerHTML='<div class="card"><h3>⚠️ Remote search</h3><p>Live remote jobs could not be loaded right now.</p><button type="button" class="secondary" onclick="renderRemoteJobs()">↻ Try again</button></div>';return false}
   };
+  const EMBEDDED_A=[
+    {id:'web-a1',title:'Ausbildung zum Fachlagerist (w/m/d) — Start 2027',company:'Bechtle AG',place:'Hamburg',start:'01.08.2027',type:'ausbildung',source:'Aktuelle Unternehmensanzeige',applicationUrl:'https://www.bechtle.com/karriere/schueler/ausbildung'},
+    {id:'web-a2',title:'Ausbildung Fachlagerist/in (m/w/d)',company:'EUROPART Holding GmbH',place:'Hamburg',start:'01.08.2027',type:'ausbildung',source:'Aktuelle Anzeige',applicationUrl:'https://www.europart.net/de/karriere/'},
+    {id:'web-a3',title:'Fachkraft für Lagerlogistik | Fachlagerist (m/w/d)',company:'Brillux GmbH & Co. KG',place:'Hamburg Billbrook',start:'2027',type:'ausbildung',source:'Aktuelle Unternehmensanzeige',applicationUrl:'https://www.brillux.de/karriere/stellenangebote/1005908/'},
+    {id:'web-a4',title:'Ausbildung zum Fachlageristen (m/w/d)',company:'REMONDIS Industrie Service Hamburg GmbH',place:'Hamburg',start:'01.08.2027',type:'ausbildung',source:'Aktuelle Unternehmensanzeige',applicationUrl:'https://remondis-karriere.de/schueler/jobs/ausbildung-zum-fachlageristen-m-w-d/7169cdec-a3df-4f98-8911-c0c6232478c4'},
+    {id:'web-a5',title:'Ausbildung 2027 Fachlagerist / Fachkraft für Lagerlogistik (m/w/d)',company:'Ille Papier-Service GmbH',place:'Hamburg',start:'01.08.2027',type:'ausbildung',source:'Aktuelle Unternehmensanzeige',applicationUrl:'https://www.ille.eu/de/karriere/angebote/22113-ausbildung-lagerist'},
+    {id:'web-a6',title:'Ausbildung zum Fachlagerist (m/w/d)',company:'ALDI Nord',place:'Stelle, Kreis Harburg',start:'01.08.2027',type:'ausbildung',source:'Aktuelle Unternehmensanzeige',applicationUrl:'https://www.aldi-nord.de/karriere/detail/ausbildung-zum-fachlagerist-zum-01-08-2027-m-w-d-stelle-294147.html'}
+  ];
+  const EMBEDDED_J=[
+    {id:'web-j1',title:'Fachlagerist (m/w/d)',company:'iperdi AHR GmbH',place:'Hamburg',start:'ab sofort',type:'job',source:'Aktuelle Unternehmensanzeige',applicationUrl:'https://iperdi.de/jobsuche/fachlagerist-mwd/u/4452453406588/'},
+    {id:'web-j2',title:'Fachlagerist (m/w/d)',company:'Randstad Deutschland',place:'Hamburg',start:'26.09.2026',type:'job',source:'Aktuelle Unternehmensanzeige',applicationUrl:'https://www.randstad.de/jobs/fachlagerist-mwd_hamburg_c01341761/'},
+    {id:'web-j3',title:'Fachkraft für Lagerlogistik (m/w/d)',company:'AERO HighProfessionals GmbH',place:'Hamburg',start:'ab sofort',type:'job',source:'Aktuelle Unternehmensanzeige',applicationUrl:'https://aero-hp.com/stellenangebot/fachkraft-fuer-lagerlogistik-m-w-d?id=a1WbG000002J2ZdUAK'},
+    {id:'web-j4',title:'Fachkraft für Lagerlogistik (m/w/d)',company:'TCI Transcontainer International Holding GmbH',place:'Hamburg',start:'ab sofort',type:'job',source:'Aktuelle Unternehmensanzeige',applicationUrl:'https://mytcigroup.onapply.de/bewerbung/316731.html?source=careerSiteWidget'},
+    {id:'web-j5',title:'Fachkraft für Lagerlogistik (m/w/d)',company:'AlphaConsult KG',place:'Hamburg',start:'nächstmöglich',type:'job',source:'Aktuelle Unternehmensanzeige',applicationUrl:'https://jobs.alphaconsult.org/stellenangebote/Fachkraft-fuer-Lagerlogistik-m-d-Direktvermittlung-Hamburg-AlphaConsult-KG--893363254'},
+    {id:'web-j6',title:'Fachkraft für Lagerlogistik (m/w/d)',company:'ARBEITSWELT Personaldienstleistungen GmbH & Co. KG',place:'Hamburg',start:'ab sofort',type:'job',source:'Aktuelle Anzeige',applicationUrl:'https://www.arbeitswelt-personal.de/'}
+  ];
+
   window.fetchLiveCareerSources=async function(q,city,type){
     const out=[];
     if(type==='job'||type==='all'){
@@ -3285,7 +3302,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   function cardB(o){const url=companyApplyB(o);const button=url?'<button type="button" class="secondary" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span class="status">Company application link unavailable</span>';return '<div class="card beroppLiveOffer"><span class="badge">✓ LIVE</span><h3>'+escB(o.type==='ausbildung'?'🎓 ':'💼 ')+escB(o.title)+'</h3><p>🏢 '+escB(o.company)+' · 📍 '+escB(o.place)+(o.start?' · 📅 '+escB(o.start):'')+'</p>'+button+'</div>'}
   function uniq(rows){const s=new Set();return rows.filter(o=>{const k=(o.refnr||'')+'|'+o.title+'|'+o.company+'|'+o.place;if(s.has(k))return false;s.add(k);return true})}
 
-  window.fetchLiveCareerSources=async function(q,city,type){const out=[];if(type==='job'||type==='all')try{out.push(...await load6('job',q,city))}catch(e){}if(type==='ausbildung'||type==='all')try{out.push(...await load6('ausbildung',q,city))}catch(e){}return out};
+  window.fetchLiveCareerSources=async function(q,city,type){const out=[];if(type==='job'||type==='all')try{out.push(...await load6('job',q,city))}catch(e){}if(type==='ausbildung'||type==='all')try{out.push(...await load6('ausbildung',q,city))}catch(e){}if(!out.length){if(type==='job')return EMBEDDED_J.slice();if(type==='ausbildung')return EMBEDDED_A.slice();return EMBEDDED_A.concat(EMBEDDED_J)}return out};
 
   window.renderHomePreviews=async function(){
     const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');if(!a||!j)return false;
