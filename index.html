@@ -793,8 +793,8 @@ async function renderHomePreviews(){
     const aus=unique(ausLive),jobs=unique(jobLive);
     window.beroppHomeLiveAusbildung=aus;
     window.beroppHomeLiveJobs=jobs;
-    a.innerHTML=aus.length?aus.map((o,i)=>'<div class="nsPreviewItem"><strong>🎓 '+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+(o.date?' · 📅 '+esc(o.date):'')+'</div>'+(o.url?'<button class="secondary" onclick="return beroppOpenHomeLive('+i+',\'ausbildung\')">⚡ Apply Direct →</button>':'<span>Company application link unavailable</span>')+'</div>').join(''):'<div class="nsPreviewItem"><strong>No current Ausbildung found.</strong><div class="nsPreviewMeta">Try the live Ausbildung search.</div></div>';
-    j.innerHTML=jobs.length?jobs.map((o,i)=>'<div class="nsPreviewItem"><strong>💼 '+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+(o.date?' · 📅 '+esc(o.date):'')+'</div>'+(o.url?'<button class="secondary" onclick="return beroppOpenHomeLive('+i+',\'job\')">⚡ Original / Bewerben →</button>':'<span>Company application link unavailable</span>')+'</div>').join(''):'<div class="nsPreviewItem"><strong>No current jobs found.</strong><div class="nsPreviewMeta">Try Find Jobs for a new live search.</div></div>';
+    a.innerHTML=aus.length?aus.map((o,i)=>'<div class="nsPreviewItem"><strong>🎓 '+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+(o.date?' · 📅 '+esc(o.date):'')+'</div>'+((typeof companyApplyB==='function'&&companyApplyB(o))?'<button class="secondary" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span>Company application link unavailable</span>')+'</div>').join(''):'<div class="nsPreviewItem"><strong>No current Ausbildung found.</strong><div class="nsPreviewMeta">Try the live Ausbildung search.</div></div>';
+    j.innerHTML=jobs.length?jobs.map((o,i)=>'<div class="nsPreviewItem"><strong>💼 '+esc(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+esc(o.company)+' · 📍 '+esc(o.place)+(o.date?' · 📅 '+esc(o.date):'')+'</div>'+((typeof companyApplyB==='function'&&companyApplyB(o))?'<button class="secondary" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span>Company application link unavailable</span>')+'</div>').join(''):'<div class="nsPreviewItem"><strong>No current jobs found.</strong><div class="nsPreviewMeta">Try Find Jobs for a new live search.</div></div>';
   }catch(e){
     console.warn('Home live previews unavailable',e);
     a.innerHTML='<div class="nsPreviewItem"><strong>⚠️ Live-Ausbildung ist momentan nicht erreichbar.</strong><div class="nsPreviewMeta">Open Alle Ausbildung for another live search.</div></div>';
@@ -3092,7 +3092,12 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
         const r=await fetch(u,{headers:{Accept:'application/json'}});
         if(r.ok){
           const d=await r.json();
+          if(Array.isArray(d))return {stellenangebote:d};
           if(d&&Array.isArray(d.stellenangebote))return d;
+          if(d&&Array.isArray(d.angebote))return {stellenangebote:d.angebote,...d};
+          if(d&&Array.isArray(d.jobs))return {stellenangebote:d.jobs,...d};
+          if(d&&Array.isArray(d.results))return {stellenangebote:d.results,...d};
+          if(d&&d.data&&Array.isArray(d.data))return {stellenangebote:d.data,...d};
         }
         last=new Error('Worker '+r.status);
       }catch(e){last=e}
@@ -3131,7 +3136,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
       start:o.eintrittsdatum||o.beginn||'',
       date:o.aktuelleVeroeffentlichungsdatum||o.veroeffentlichungsdatum||'',
       description:o.stellenangebotsBeschreibung||o.beschreibung||'',
-      applicationUrl:safeB(o.externeUrl||o.externeURL||o.bewerbungUrl||o.bewerbungURL||o.applicationUrl||o.applicationURL),
+      applicationUrl:'',
       url:'',
       type:type,source:'Live listing'
     };
