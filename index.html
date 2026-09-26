@@ -3,455 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BerOpp - Finde deine Ausbildung & Jobs</title>
+    <title>BerOpp - Find your opportunity</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #0046ad;
-            --primary-dark: #00317a;
-            --accent: #ffcb05;
-            --accent-hover: #e6b800;
-            --bg-light: #f4f7fa;
-            --text-dark: #111827;
-            --text-muted: #4b5563;
-            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-            --radius: 12px;
+            --purple: #6b21a8;
+            --purple-light: #f3e8ff;
+            --purple-dark: #581c87;
+            --text-main: #1e293b;
+            --bg-gray: #f8fafc;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.5;
+            background-color: var(--bg-gray);
+            color: var(--text-main);
         }
 
         /* HEADER */
         header {
             background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-container {
-            max-width: 1240px;
-            margin: 0 auto;
             padding: 1rem 1.5rem;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .brand-logo {
+        .logo {
             font-size: 1.8rem;
             font-weight: 800;
-            color: var(--primary);
+            color: var(--purple);
             text-decoration: none;
-            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #ec4899;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 0.3rem;
-        }
-
-        .brand-logo span {
-            color: var(--accent);
-            background: var(--primary);
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 1.2rem;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: color 0.2s;
+            justify-content: center;
             cursor: pointer;
+            font-weight: bold;
         }
 
-        .nav-menu a:hover, .nav-menu a.active {
-            color: var(--primary);
-        }
-
-        /* HERO SECTION - AUSBILDUNG.DE STYLE */
+        /* HERO SECTION */
         .hero {
-            background: linear-gradient(135deg, #00378a 0%, #0056d6 100%);
-            color: #ffffff;
-            padding: 4rem 1.5rem 5rem;
+            background: #ffffff;
+            padding: 2.5rem 1.5rem 3rem;
             text-align: center;
-            position: relative;
         }
 
-        .hero h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
-        }
-
-        .search-box {
-            background: #ffffff;
-            padding: 0.6rem;
-            border-radius: 16px;
-            max-width: 850px;
-            margin: 0 auto;
-            display: flex;
-            gap: 0.5rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-        }
-
-        .search-input-group {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 0 1rem;
-        }
-
-        .search-input-group input {
-            width: 100%;
-            padding: 0.9rem 0.5rem;
-            border: none;
-            background: transparent;
+        .hero-subtitle {
             font-size: 1rem;
-            outline: none;
-            color: var(--text-dark);
-        }
-
-        .btn-search {
-            background: var(--accent);
-            color: var(--text-dark);
-            font-weight: 700;
-            font-size: 1rem;
-            padding: 0.9rem 2rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-search:hover {
-            background: var(--accent-hover);
-        }
-
-        /* MAIN CONTENT */
-        .main-container {
-            max-width: 1240px;
-            margin: -2rem auto 4rem;
-            padding: 0 1.5rem;
-            position: relative;
-            z-index: 10;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .section-header h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        /* CARDS GRID */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .job-card {
-            background: #ffffff;
-            border-radius: var(--radius);
-            padding: 1.8rem;
-            box-shadow: var(--card-shadow);
-            border: 1px solid #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .job-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-type {
-            display: inline-block;
-            background: #eef2ff;
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            margin-bottom: 0.8rem;
-            width: fit-content;
-        }
-
-        .job-card h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-dark);
+            font-weight: 600;
+            color: #64748b;
             margin-bottom: 0.5rem;
         }
 
-        .job-card .company {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: #0f172a;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(to right, #6b21a8, #ec4899, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* SEARCH CONTAINER */
+        .search-card {
+            background: #ffffff;
+            border: 2px solid #e9d5ff;
+            border-radius: 20px;
+            padding: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 10px 25px -5px rgba(107, 33, 168, 0.1);
+        }
+
+        .input-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.8rem;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
         }
 
-        .job-card .description {
-            font-size: 0.95rem;
-            color: #4b5563;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .btn-apply {
-            display: block;
-            width: 100%;
-            text-align: center;
-            background: var(--primary);
-            color: #ffffff;
-            font-weight: 600;
-            padding: 0.8rem;
-            border-radius: 8px;
-            text-decoration: none;
+        .input-box input {
             border: none;
-            cursor: pointer;
-            transition: background 0.2s;
+            background: transparent;
+            width: 100%;
+            outline: none;
+            font-size: 0.95rem;
         }
 
-        .btn-apply:hover {
-            background: var(--primary-dark);
+        .btn-submit {
+            background: var(--purple);
+            color: white;
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: var(--purple-dark);
+        }
+
+        /* TAGS */
+        .popular-tags {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: #f1f5f9;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+            text-decoration: none;
+        }
+
+        /* BANNER CARD */
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .featured-card {
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            border: 1px solid #f1f5f9;
+        }
+
+        .featured-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #cbd5e1;
+        }
+
+        .featured-content {
+            padding: 1.5rem;
+        }
+
+        .featured-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .checklist {
+            list-style: none;
+            margin-bottom: 1.2rem;
+        }
+
+        .checklist li {
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            color: var(--purple);
+            font-weight: bold;
+        }
+
+        .btn-outline {
+            display: block;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            padding: 0.7rem;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
         }
 
         /* FOOTER */
         footer {
-            background: #0b1329;
-            color: #94a3b8;
-            padding: 3rem 1.5rem;
-            text-align: center;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            padding: 3rem 1.5rem 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .footer-col h4 {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col ul li a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 500;
             font-size: 0.9rem;
         }
 
-        footer a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-
-        /* MODAL */
-        .modal-overlay {
-            display: none;
+        /* CHATBOT FLOATING ICON */
+        .ai-chat-btn {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-body {
-            background: #ffffff;
-            padding: 2rem;
-            border-radius: 16px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        .modal-header {
+            bottom: 20px;
+            right: 20px;
+            background: var(--purple);
+            color: white;
+            padding: 0.8rem 1.2rem;
+            border-radius: 30px;
+            box-shadow: 0 10px 20px rgba(107, 33, 168, 0.3);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .close-modal {
-            font-size: 1.5rem;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
             cursor: pointer;
-            color: var(--text-muted);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.8rem;
-            margin-bottom: 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 0.95rem;
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-container">
-            <a href="#" class="brand-logo" onclick="filterCategory('all')">BerOpp <span>DE</span></a>
-            <ul class="nav-menu">
-                <li><a onclick="filterCategory('all')" id="nav-all" class="active">Startseite</a></li>
-                <li><a onclick="filterCategory('ausbildung')" id="nav-ausbildung">Ausbildung</a></li>
-                <li><a onclick="filterCategory('jobs')" id="nav-jobs">Jobs & Minijobs</a></li>
-            </ul>
+        <a href="#" class="logo">BerOpp<span>.de</span></a>
+        <div class="nav-icons">
+            <button class="icon-btn">🔍</button>
+            <button class="icon-btn">☰</button>
         </div>
     </header>
 
     <section class="hero">
-        <h1>Finde deine Wunsch-Ausbildung</h1>
-        <p>Tausende freie Ausbildungsplätze & Jobs in ganz Deutschland</p>
-        
-        <div class="search-box">
-            <div class="search-input-group">
-                <input type="text" id="searchInput" placeholder="Beruf, Fachrichtung oder Suchbegriff..." onkeyup="runFilter()">
+        <p class="hero-subtitle">Find your opportunity</p>
+        <h1>Finde deine Ausbildung oder Jobs<br><span>Deine Zukunft startet jetzt!</span></h1>
+
+        <div class="search-card">
+            <div class="input-box">
+                🔍 <input type="text" id="searchInput" placeholder="Ausbildung, Jobs oder Begriff...">
             </div>
-            <div class="search-input-group">
-                <input type="text" id="locationInput" placeholder="Ort oder PLZ..." onkeyup="runFilter()">
+            <div class="input-box">
+                📍 <input type="text" id="locationInput" placeholder="Hamburg, Berlin...">
             </div>
-            <button class="btn-search" onclick="runFilter()">Finden</button>
+            <button class="btn-submit" onclick="searchJobs()">Stellen finden</button>
+        </div>
+
+        <div class="popular-tags">
+            <span style="width: 100%; font-size: 0.85rem; color: #64748b; margin-bottom: 0.2rem;">Beliebte Suchen:</span>
+            <a href="#" class="tag">Pflegefachmann/-frau</a>
+            <a href="#" class="tag">Kfz-Mechatroniker/in</a>
+            <a href="#" class="tag">Fachkraft für Lagerlogistik</a>
+            <a href="#" class="tag">Elektroniker/in</a>
         </div>
     </section>
 
-    <main class="main-container">
-        <div class="section-header">
-            <h2 id="sectionTitle">Top Ausbildungsplätze & Jobs</h2>
+    <div class="container">
+        
+        <!-- FEATURED CARD (LIKE AUSBILDUNG.DE) -->
+        <div class="featured-card">
+            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80" class="featured-img" alt="Soziale Berufe">
+            <div class="featured-content">
+                <h3>Berufe für Soziale & Pflege</h3>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.8rem;">Das könntest du werden:</p>
+                <ul class="checklist">
+                    <li>Pflegefachmann / Pflegefachfrau</li>
+                    <li>Medizinische/r Fachangestellte/r</li>
+                    <li>Erzieher / Erzieherin</li>
+                </ul>
+                <a href="#" class="btn-outline">→ Mehr Berufe</a>
+            </div>
         </div>
 
-        <div class="cards-grid" id="cardsGrid"></div>
-    </main>
+    </div>
 
     <footer>
-        <p>&copy; 2026 BerOpp.de – Partner für Ausbildung & Karriere in Deutschland.</p>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Über uns</h4>
+                <ul>
+                    <li><a href="#">Kontakt</a></li>
+                    <li><a href="#">Karriere</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Für dich</h4>
+                <ul>
+                    <li><a href="#">Inserieren</a></li>
+                    <li><a href="#">Anmelden</a></li>
+                </ul>
+            </div>
+        </div>
+        <p style="text-align: center; font-size: 0.8rem; color: #94a3b8;">&copy; 2026 BerOpp.de – All rights reserved.</p>
     </footer>
 
-    <div class="modal-overlay" id="applyModal">
-        <div class="modal-body">
-            <div class="modal-header">
-                <h3 id="modalTitle" style="font-size: 1.2rem; font-weight:700;">Jetzt bewerben</h3>
-                <span class="close-modal" onclick="closeModal()">&times;</span>
-            </div>
-            <form onsubmit="submitForm(event)">
-                <input type="text" class="form-input" placeholder="Vollständiger Name" required>
-                <input type="email" class="form-input" placeholder="E-Mail-Adresse" required>
-                <input type="tel" class="form-input" placeholder="Telefonnummer (optional)">
-                <textarea class="form-input" rows="4" placeholder="Kurze Nachricht an den Arbeitgeber..."></textarea>
-                <button type="submit" class="btn-apply">Bewerbung jetzt absenden</button>
-            </form>
-        </div>
+    <!-- AI ASSISTANT FLOATING BUTTON -->
+    <div class="ai-chat-btn">
+        🤖 Hey! Ich bin BerOpp AI. Kann ich dir helfen?
     </div>
 
     <script>
-        const database = [
-            { id: 1, category: 'ausbildung', title: 'Fachkraft für Lagerlogistik (m/w/d)', company: 'Logistik Zentrum Hamburg', location: 'Hamburg', desc: 'Lerne die perfekte Organisation von Gütern, Lagerung und Versand in einem modernen Logistikzentrum.' },
-            { id: 2, category: 'ausbildung', title: 'Elektroniker für Energie- & Gebäudetechnik', company: 'Elektro Technik GmbH', location: 'Hamburg / Buxtehude', desc: 'Plane und installiere elektrotechnische Anlagen sowie moderne Energieversorgungssysteme.' },
-            { id: 3, category: 'ausbildung', title: 'Kraftfahrzeugmechatroniker (m/w/d)', company: 'Auto Service Nord', location: 'Stuttgart / Hamburg', desc: 'Wartung, Diagnose und Reparatur modernster Fahrzeuge und Elektroniksysteme.' },
-            { id: 4, category: 'ausbildung', title: 'Pflegefachmann / Pflegefachfrau', company: 'Klinikum Harburg', location: 'Hamburg', desc: 'Verantwortungsvolle Ausbildung im medizinischen Bereich mit erstklassigen Zukunftschancen.' },
-            { id: 5, category: 'jobs', title: 'Lagerhelfer / Staplerfahrer (m/w/d)', company: 'Express Logistik', location: 'Hamburg / Neu Wulmstorf', desc: 'Be- und Entladung von LKW, innerbetrieblicher Transport mit dem Gabelstapler (Staplerschein erforderlich).' },
-            { id: 6, category: 'jobs', title: 'Minijob 530€ - Aushilfe Sortierung', company: 'Paketdienst Nord', location: 'Neu Wulmstorf', desc: 'Flexible Arbeitszeiten im Sortier- und Verpackungsbereich. Perfekt als Nebenverdienst.' }
-        ];
-
-        let activeCat = 'all';
-
-        function renderCards(data) {
-            const grid = document.getElementById('cardsGrid');
-            grid.innerHTML = '';
-
-            if (data.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 2rem;">Keine passenden Angebote gefunden.</p>';
-                return;
-            }
-
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'job-card';
-                card.innerHTML = `
-                    <div>
-                        <span class="card-type">${item.category === 'ausbildung' ? 'Ausbildungsplatz' : 'Job / Minijob'}</span>
-                        <h3>${item.title}</h3>
-                        <div class="company">🏢 ${item.company} • 📍 ${item.location}</div>
-                        <p class="description">${item.desc}</p>
-                    </div>
-                    <button class="btn-apply" onclick="openModal('${item.title}')">Jetzt bewerben</button>
-                `;
-                grid.appendChild(card);
-            });
+        function searchJobs() {
+            const q = document.getElementById('searchInput').value;
+            const l = document.getElementById('locationInput').value;
+            alert('Suche nach: ' + q + ' in ' + l);
         }
-
-        function filterCategory(cat) {
-            activeCat = cat;
-            document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
-            if(cat === 'all') document.getElementById('nav-all').classList.add('active');
-            if(cat === 'ausbildung') document.getElementById('nav-ausbildung').classList.add('active');
-            if(cat === 'jobs') document.getElementById('nav-jobs').classList.add('active');
-
-            runFilter();
-        }
-
-        function runFilter() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const loc = document.getElementById('locationInput').value.toLowerCase();
-
-            const filtered = database.filter(item => {
-                const matchCat = (activeCat === 'all') || (item.category === activeCat);
-                const matchQuery = item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query);
-                const matchLoc = item.location.toLowerCase().includes(loc);
-                return matchCat && matchQuery && matchLoc;
-            });
-
-            renderCards(filtered);
-        }
-
-        function openModal(title) {
-            document.getElementById('modalTitle').innerText = 'Bewerbung: ' + title;
-            document.getElementById('applyModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('applyModal').style.display = 'none';
-        }
-
-        function submitForm(e) {
-            e.preventDefault();
-            alert('Vielen Dank! Deine Bewerbung wurde erfolgreich übermittelt.');
-            closeModal();
-        }
-
-        // Initialize
-        renderCards(database);
     </script>
 </body>
-                        </html>
+</html>
