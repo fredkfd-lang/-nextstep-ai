@@ -640,7 +640,7 @@ function initBerOppAuth(){
         if((saved&&((saved.target==='ausbildungDirect')||(saved.target==='jobDirect')||(saved.target==='homeOpportunity'))&&saved.url) || ((pendingTarget==='ausbildungDirect'||pendingTarget==='jobDirect')&&pendingId!=null)){
           const directUrl=(saved&&saved.url)?saved.url:(()=>{
             const o=opps.concat(jobOpps).find(x=>String(x.id)===String(pendingId));
-            return o?(o.applicationUrl||o.applyUrl||o.url||''):'';
+            return o?(o.applicationUrl||((o.applyUrl&&beroppIsExternal(o.applyUrl))?o.applyUrl:'')||o.url||''):'';
           })();
           localStorage.removeItem('beropp_pending_apply');
           beroppPendingTarget='';beroppPendingOpportunityId=null;beroppPendingOpportunityType='';
@@ -1277,7 +1277,7 @@ renderHomePreviews();
 </script><script>
 function beroppGetProfile(){return window.nsProfile||{}}
 function beroppIsExternal(url){if(!url)return true;try{return /indeed\.|arbeitsagentur\.|azubi\.|ausbildung\./.test(new URL(url,location.href).hostname.toLowerCase())}catch(e){return true}}
-function beroppApplicationMode(o){if(!o)return'UNAVAILABLE';if(o.applicationUrl)return'DIRECT_PORTAL';if(o.applicationEmail)return'DIRECT_EMAIL';if(o.applyUrl)return'DIRECT_PORTAL';return'EXTERNAL_LISTING'}
+function beroppApplicationMode(o){if(!o)return'UNAVAILABLE';if(o.applicationUrl)return'DIRECT_PORTAL';if(o.applicationEmail)return'DIRECT_EMAIL';if(o.applyUrl&&!beroppIsExternal(o.applyUrl))return'DIRECT_PORTAL';return'EXTERNAL_LISTING'}
 function beroppGetApplicationUrl(o){return o.applicationUrl||((o.applyUrl&&!beroppIsExternal(o.applyUrl))?o.applyUrl:'')}
 function beroppBuildLetter(o,p){const name=[p.firstName,p.lastName].filter(Boolean).join(' ')||p.name||'Bewerber/in';return'Bewerbung als '+(o.title||'Auszubildende/r')+' bei '+(o.company||'Ihrem Unternehmen')+'\n\nSehr geehrte Damen und Herren,\n\nmit großem Interesse bewerbe ich mich für '+(o.title||'die ausgeschriebene Position')+' bei '+(o.company||'Ihrem Unternehmen')+'. Meine bisherigen Erfahrungen, insbesondere '+(p.experience||'meine praktische Berufserfahrung')+', sowie meine Kenntnisse in '+(p.skills||'Zuverlässigkeit und Motivation')+' möchte ich gerne in Ihr Unternehmen einbringen.\n\nMeine Deutschkenntnisse: '+(p.german||'nicht angegeben')+'. Ich bin motiviert, mich fachlich weiterzuentwickeln und zuverlässig im Team zu arbeiten.\n\nÜber die Einladung zu einem persönlichen Gespräch freue ich mich sehr.\n\nMit freundlichen Grüßen\n'+name}
 function beroppFindOpportunityById(id){
@@ -3180,14 +3180,16 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     return out.slice(0,6);
   }
   function applyB(o){
-    if(!o||!o.url)return false;
+    if(!o)return false;
+    const url=safeB(o.url||'');
+    if(!url)return false;
     if(!window.beroppUser){
-      localStorage.setItem('beropp_pending_apply',JSON.stringify({target:o.type==='job'?'jobDirect':'ausbildungDirect',id:o.id,type:o.type,url:o.url,title:o.title||'',company:o.company||''}));
+      localStorage.setItem('beropp_pending_apply',JSON.stringify({target:o.type==='job'?'jobDirect':'ausbildungDirect',id:o.id,type:o.type,url:url,title:o.title||'',company:o.company||''}));
       if(typeof show==='function')show('auth');
       if(typeof setAuthStatus==='function')setAuthStatus('🔐 Sign in first. After login, BerOpp opens the original company application page.');
       return false;
     }
-    window.location.assign(o.url);return false;
+    window.location.assign(url);return false;
   }
   window.__beroppLive6Apply=applyB;
 
