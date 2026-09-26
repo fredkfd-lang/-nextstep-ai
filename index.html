@@ -211,6 +211,12 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .job-card:hover {
+            border-color: var(--blue-primary);
+            transform: translateY(-4px);
         }
 
         .badge-type {
@@ -246,7 +252,7 @@
             background: #0040c8;
         }
 
-        /* MODAL APPLICATION FORM */
+        /* MODAL E-MAIL APPLICATION FORM */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -264,7 +270,7 @@
             border: 1px solid var(--card-border);
             padding: 2rem;
             border-radius: 24px;
-            max-width: 500px;
+            max-width: 480px;
             width: 100%;
         }
 
@@ -277,14 +283,18 @@
 
         .form-input {
             width: 100%;
-            padding: 0.85rem;
-            margin-bottom: 0.8rem;
+            padding: 0.9rem;
+            margin-bottom: 1rem;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--card-border);
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--blue-primary);
         }
 
         footer {
@@ -317,16 +327,16 @@
     <section class="hero">
         <div>
             <h1 class="hero-title">Dein Weg in <span>Ausbildung & Job</span> beginnt hier.</h1>
-            <p class="hero-desc">BEROPP hilft dir, den passenden Ausbildungsplatz, Job oder neue berufliche Chancen zu finden. Einfach. Schnell. Kostenlos.</p>
+            <p class="hero-desc">BEROPP hilft dir, den passenden Ausbildungsplatz oder Job zu finden. Direkt beim Arbeitgeber bewerben – ohne Zwischenhändler.</p>
         </div>
 
         <div class="hero-glass-cards">
-            <div class="glass-card-item" onclick="openApplyForm('Allgemeine Bewerbung')">
+            <div class="glass-card-item" onclick="openEmailModal('Direktbewerbung BerOpp')">
                 <div style="display: flex; align-items: center; gap: 0.8rem;">
                     <div style="font-size: 1.4rem;">🎓</div>
                     <div>
-                        <h3 style="font-size: 1.05rem;">Direkt Bewerben</h3>
-                        <p style="font-size: 0.8rem; color: var(--text-muted);">Erstelle dein Profil & sende deinen Lebenslauf</p>
+                        <h3 style="font-size: 1.05rem;">Profil erstellen</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Nutze deine E-Mail für schnelle Bewerbungen</p>
                     </div>
                 </div>
                 <span>›</span>
@@ -337,7 +347,7 @@
     <!-- MAIN SEARCH & LISTINGS -->
     <section class="content-section" id="listings">
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Beruf, Fachrichtung..." onkeyup="runFilter()">
+            <input type="text" id="searchInput" placeholder="Job, Unternehmen (z.B. Lidl, DHL)..." onkeyup="runFilter()">
             <input type="text" id="locInput" placeholder="Ort (z.B. Hamburg)..." onkeyup="runFilter()">
             <button class="btn-search-main" onclick="runFilter()">Stellen finden</button>
         </div>
@@ -350,31 +360,68 @@
         <p>&copy; 2026 BEROPP – DEIN NÄCHSTER SCHRITT. Alle Rechte vorbehalten.</p>
     </footer>
 
-    <!-- FORM MODAL (DIRECT APPLICATION STEP) -->
-    <div class="modal-overlay" id="formModal">
+    <!-- MODAL FOR QUICK EMAIL ENTRY -->
+    <div class="modal-overlay" id="emailModal">
         <div class="modal-body">
             <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h3 id="formJobTitle" style="font-size: 1.25rem; margin-bottom: 0.4rem;">Bewerbung ausfüllen</h3>
-            <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Gib deine Daten ein, um deine Bewerbung direkt einzureichen:</p>
+            <h3 id="formJobTitle" style="font-size: 1.25rem; margin-bottom: 0.4rem; color: #ffffff;">Bewerbung starten</h3>
+            <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Gib deine E-Mail-Adresse ein, um direkt zur Ausbildungsseite des Arbeitgebers weitergeleitet zu werden:</p>
 
-            <form onsubmit="submitFormAndRedirect(event)">
-                <input type="text" class="form-input" placeholder="Vollständiger Name (Izina ryawe)" required>
-                <input type="email" class="form-input" placeholder="E-Mail-Adresse" required>
-                <input type="tel" class="form-input" placeholder="Telefonnummer">
-                <textarea class="form-input" rows="3" placeholder="Kurzes Anschreiben / Motivation..."></textarea>
-                <button type="submit" class="btn-card-apply" style="margin-top:0.5rem;">Bewerbung absenden & Weiter →</button>
+            <form onsubmit="handleEmailSubmit(event)">
+                <input type="email" class="form-input" id="userEmail" placeholder="Deine E-Mail-Adresse (z.B. name@gmail.com)" required>
+                <button type="submit" class="btn-card-apply" style="margin-top:0.2rem;">Jetzt zur Arbeitgeber-Seite →</button>
             </form>
         </div>
     </div>
 
     <script>
+        // Directly Linking Employers (Official Careers Pages)
         const allListings = [
-            { id: 1, type: 'ausbildung', title: 'Ausbildung Kauffrau/-mann für audiovisuelle Medien (m/w/d)', company: 'Studio Hamburg GmbH', location: '22045 Hamburg', start: '01.08.2027', applyUrl: 'https://www.studio-hamburg.de/karriere/' },
-            { id: 2, type: 'ausbildung', title: 'Ausbildung Kaufmann/-frau im Einzelhandel (m/w/d)', company: 'TK Maxx (TJX Deutschland Ltd. & Co. KG)', location: 'Hamburg / Harburg', start: '01.08.2026', applyUrl: 'https://jobs.tkmaxx.com/de/de' },
-            { id: 3, type: 'ausbildung', title: 'Fachkraft für Lagerlogistik (m/w/d)', company: 'Hamburger Hafen & Logistik AG', location: 'Hamburg Center', start: 'Sofort / 2026', applyUrl: 'https://hhla.de/karriere/ausbildung' },
-            { id: 4, type: 'ausbildung', title: 'Elektroniker für Energie- & Gebäudetechnik', company: 'Elektro Technik Nord GmbH', location: 'Hamburg / Buxtehude', start: '01.09.2026', applyUrl: 'https://www.e-handwerk.de/' },
-            { id: 5, type: 'jobs', title: 'Lagerhelfer / Staplerfahrer (m/w/d)', company: 'Express Logistik Partner', location: 'Neu Wulmstorf', start: 'Sofort', applyUrl: 'https://www.stepstone.de/jobs/lagerhelfer/in-neu-wulmstorf' },
-            { id: 6, type: 'jobs', title: 'Minijob 530€ - Logistik Aushilfe', company: 'Paketdienst Nord GmbH', location: 'Neu Wulmstorf / Hamburg', start: 'Sofort', applyUrl: 'https://www.kleinanzeigen.de/s-minijobs/neu-wulmstorf/c107l3138' }
+            { 
+                id: 1, 
+                type: 'ausbildung', 
+                title: 'Ausbildung Verkäufer / Kaufmann im Einzelhandel (m/w/d)', 
+                company: 'Lidl Dienstleistung GmbH & Co. KG', 
+                location: 'Hamburg / Neu Wulmstorf', 
+                start: '01.08.2026', 
+                directEmployerUrl: 'https://jobs.lidl.de/schueler/ausbildung' 
+            },
+            { 
+                id: 2, 
+                type: 'ausbildung', 
+                title: 'Ausbildung Kaufmann/-frau im Einzelhandel (m/w/d)', 
+                company: 'ALDI Nord', 
+                location: 'Buxtehude / Neu Wulmstorf', 
+                start: '01.08.2026', 
+                directEmployerUrl: 'https://www.aldi-nord.de/karriere/schueler/ausbildung.html' 
+            },
+            { 
+                id: 3, 
+                type: 'ausbildung', 
+                title: 'Ausbildung Fachkraft für Lagerlogistik (m/w/d)', 
+                company: 'DHL Group / Deutsche Post', 
+                location: 'Hamburg / Harburg', 
+                start: '01.09.2026', 
+                directEmployerUrl: 'https://careers.dhl.com/de/de/ausbildung' 
+            },
+            { 
+                id: 4, 
+                type: 'ausbildung', 
+                title: 'Ausbildung Kauffrau/-mann für audiovisuelle Medien (m/w/d)', 
+                company: 'Studio Hamburg GmbH', 
+                location: '22045 Hamburg', 
+                start: '01.08.2027', 
+                directEmployerUrl: 'https://www.studio-hamburg.de/karriere/' 
+            },
+            { 
+                id: 5, 
+                type: 'jobs', 
+                title: 'Lagerhelfer / Staplerfahrer (m/w/d)', 
+                company: 'Hamburger Hafen & Logistik AG (HHLA)', 
+                location: 'Hamburg Center', 
+                start: 'Sofort', 
+                directEmployerUrl: 'https://hhla.de/karriere' 
+            }
         ];
 
         let selectedJob = null;
@@ -389,10 +436,10 @@
                     <div>
                         <span class="badge-type ${item.type === 'jobs' ? 'badge-job' : ''}">${item.type === 'ausbildung' ? 'AUSBILDUNG' : 'JOB / MINIJOB'}</span>
                         <h3>${item.title}</h3>
-                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem;">bei ${item.company}</p>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem;">bei <strong>${item.company}</strong></p>
                         <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">📍 ${item.location} • 📅 ${item.start}</p>
                     </div>
-                    <button class="btn-card-apply" onclick="openApplyForm(${item.id})">Jetzt bewerben →</button>
+                    <button class="btn-card-apply" onclick="openEmailModal(${item.id})">Direkt bei ${item.company.split(' ')[0]} bewerben →</button>
                 `;
                 grid.appendChild(card);
             });
@@ -405,30 +452,28 @@
             renderGrid(filtered);
         }
 
-        function openApplyForm(jobId) {
-            if(typeof jobId === 'number') {
-                selectedJob = allListings.find(x => x.id === jobId);
-                document.getElementById('formJobTitle').innerText = 'Bewerbung für: ' + selectedJob.title;
-            } else {
-                selectedJob = null;
-                document.getElementById('formJobTitle').innerText = 'Direktbewerbung bei BEROPP';
+        function openEmailModal(jobId) {
+            selectedJob = allListings.find(x => x.id === jobId);
+            if(selectedJob) {
+                document.getElementById('formJobTitle').innerText = 'Bewerbung bei ' + selectedJob.company;
             }
-            document.getElementById('formModal').style.display = 'flex';
+            document.getElementById('emailModal').style.display = 'flex';
         }
 
         function closeModal() {
-            document.getElementById('formModal').style.display = 'none';
+            document.getElementById('emailModal').style.display = 'none';
         }
 
-        function submitFormAndRedirect(e) {
+        function handleEmailSubmit(e) {
             e.preventDefault();
+            const email = document.getElementById('userEmail').value;
             closeModal();
 
-            // Direct link redirection to employer/company portal
-            if (selectedJob && selectedJob.applyUrl) {
-                window.open(selectedJob.applyUrl, '_blank');
+            // Redirects directly to the official employer's application system
+            if (selectedJob && selectedJob.directEmployerUrl) {
+                window.open(selectedJob.directEmployerUrl, '_blank');
             } else {
-                window.open('https://www.studio-hamburg.de/karriere/', '_blank');
+                window.open('https://jobs.lidl.de/schueler/ausbildung', '_blank');
             }
         }
 
