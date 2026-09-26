@@ -3264,7 +3264,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
         const key=o.refnr||o.title+'|'+o.company+'|'+o.place;
         if(seen.has(key))continue;
         seen.add(key);out.push(o);
-        if(out.length>=12)break;
+        if(out.length>=300)break;
       }
       if(rows.length<100)break;
     }
@@ -3345,7 +3345,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   window.findMatches=async function(){
     const box=$('results');if(!box)return false;
     const q=($('oppSearch')?.value||'').trim(),city=($('oppCity')?.value||'').trim();
-    box.innerHTML='<div class="card"><h3>💼 Current Jobs</h3><p>⏳ Loading 6 live jobs…</p></div>';
+    box.innerHTML='<div class="card"><h3>💼 Current Jobs</h3><p>⏳ Loading current live jobs…</p></div>';
     try{
       const rows=uniq(await load6('job',q,city));
       window.beroppLiveJobsAll=rows;
@@ -3357,7 +3357,7 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   window.renderBerufe=async function(){
     const box=$('berufeList');if(!box)return false;
     const q=($('berufSearch')?.value||'').trim(),city=($('oppCity')?.value||'').trim();
-    box.innerHTML='<div class="card"><h3>🎓 Current Ausbildung</h3><p>⏳ Loading 6 live Ausbildung…</p></div>';
+    box.innerHTML='<div class="card"><h3>🎓 Current Ausbildung</h3><p>⏳ Loading current live Ausbildung…</p></div>';
     try{
       const rows=uniq(await load6('ausbildung',q,city));
       window.beroppLiveAusbildungAll=rows;
