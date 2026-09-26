@@ -3088,7 +3088,8 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
     ["Fachkraft für Lagerlogistik (m/w/d)","Aviation Industry Personnel Services GmbH","Hamburg","","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=jobs&was=Lagerlogistik&wo=Hamburg"],
     ["Lagerhelfer (D/M/W) mit Staplertätigkeit für die Airbus Logistik GmbH","Airbus Logistik GmbH","Hamburg","01.10.2026","https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=jobs&was=logistik&wo=Hamburg"]
   ].map((x,i)=>({id:"ba-fallback-j-"+i,refnr:"",title:x[0],company:x[1],place:x[2],start:x[3],url:x[4],type:"job",source:"Bundesagentur für Arbeit"}));
-\n  const WORKERS=['https://beropp-ai.fredkfd.workers.dev','https://fredkfd.workers.dev'];
+
+  const WORKERS=['https://beropp-ai.fredkfd.workers.dev','https://fredkfd.workers.dev'];
   const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs';
   const KEY='jobboerse-jobsuche';
 
@@ -3145,10 +3146,22 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
   async function load6(type,q,city){
     const out=[],seen=new Set();
     for(let page=1;page<=3&&out.length<12;page++){
-      const p=new URLSearchParams({angebotsart:type==='ausbildung'?'4':'1',page:String(page),size:'100',pav:'false',veroeffentlichtseit:'100',zeitarbeit:'true'});
+      const p=new URLSearchParams({
+        angebotsart:type==='ausbildung'?'4':'1',
+        page:String(page),
+        size:'100',
+        veroeffentlichtseit:'100'
+      });
       if(q)p.set('was',q);
       if(city){p.set('wo',city);p.set('umkreis','200')}
-      const d=await getB('/ausbildung',p);
+      let d;
+      try{
+        d=await getB('/ausbildung',p);
+      }catch(e){
+        // Some worker versions expect the original BA parameter set.
+        p.set('zeitarbeit','true');
+        d=await getB('/ausbildung',p);
+      }
       const rows=Array.isArray(d.stellenangebote)?d.stellenangebote:[];
       for(const raw of rows){
         const o=mapB(raw,type,out.length);
@@ -3160,7 +3173,9 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
       if(rows.length<100)break;
     }
     for(let i=0;i<Math.min(12,out.length);i+=6){
-      await Promise.all(out.slice(i,i+6).map(async o=>{if(!o.url&&o.refnr)o.url=await detailB(o.refnr)}));
+      await Promise.all(out.slice(i,i+6).map(async o=>{
+        if(!o.url&&o.refnr)o.url=await detailB(o.refnr);
+      }));
     }
     return out.slice(0,6);
   }
