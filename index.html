@@ -332,7 +332,44 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
 .boAusStyle{background:#fff}.boAusStyle .boHomeHero{margin-top:0;border-radius:0 0 24px 24px}.boAusStyle .boHomeHeroInner{padding-top:48px;padding-bottom:42px}.boOrientation{padding-top:32px}.boThreeCards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.boThreeCards button{margin:0;text-align:left;background:#fff;border:1px solid #dce9f5;border-radius:17px;padding:20px;box-shadow:0 5px 18px rgba(26,82,122,.06);color:#163c59}.boThreeCards button span{display:block;font-size:27px;margin-bottom:10px}.boThreeCards b,.boThreeCards small{display:block}.boThreeCards small{margin-top:6px;color:#6c8293;line-height:1.45}.boCompanies{background:#f8fbfe;margin:20px 0;padding:30px 20px;border-radius:22px}.boCompanyGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.boCompanyGrid button{margin:0;background:#fff;border:1px solid #dce9f5;border-radius:13px;padding:18px 12px;text-align:center;color:#173e5b}.boCompanyGrid b{display:block;font-size:18px}.boCompanyGrid small{display:block;color:#718596;margin-top:5px;font-size:11px}.boAusStyle .boSectionHead{margin-bottom:18px}.boAusStyle .boKicker{font-size:11px}.boAusStyle .boLiveSection{padding-top:30px}
 @media(max-width:900px){.boCompanyGrid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.boThreeCards{grid-template-columns:1fr}.boCompanyGrid{grid-template-columns:repeat(2,1fr)}.boCompanies{padding:22px 12px}}
-</style></head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
+</style><style id="beropp-home-slider-final">
+.boHomeSlider{position:relative;min-height:330px;margin:0 0 34px;border-radius:22px;overflow:hidden;background:#123c60;box-shadow:0 14px 34px rgba(18,60,96,.16)}
+.boSlide{position:absolute;inset:0;display:grid;grid-template-columns:1.05fr .95fr;opacity:0;pointer-events:none;transition:opacity .5s ease}
+.boSlide.isActive{opacity:1;pointer-events:auto}
+.boSlideImage{min-height:330px;background-size:cover;background-position:center}
+.boSlide1{background-image:url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=82')}
+.boSlide2{background-image:url('https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=82')}
+.boSlide3{background-image:url('https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=82')}
+.boSlideContent{padding:42px 38px;background:linear-gradient(135deg,#0f4c75,#1769aa);color:#fff;display:flex;flex-direction:column;justify-content:center}
+.boSlideContent span{font-size:12px;font-weight:800;letter-spacing:.12em;opacity:.9}
+.boSlideContent h3{font-size:clamp(27px,3.3vw,43px);line-height:1.08;margin:12px 0 10px}
+.boSlideContent p{font-size:15px;line-height:1.55;color:#dcefff;max-width:480px}
+.boSlideContent button{align-self:flex-start;margin:10px 0 0;background:#fff;color:#155b8d;box-shadow:none}
+.boSliderDots{position:absolute;left:calc(52.5% + 38px);bottom:18px;display:flex;gap:6px;z-index:5}
+.boSliderDots button{width:9px;height:9px;padding:0;margin:0;border-radius:50%;background:#ffffff66;border:0;box-shadow:none}
+.boSliderDots button.active{background:#fff;transform:scale(1.25)}
+.boCompanyRow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.boCompanyRow button{margin:0;background:#fff;border:1px solid #dbeafe;border-radius:16px;padding:18px 12px;text-align:center;color:#173e5b;box-shadow:0 7px 20px rgba(37,99,235,.06)}
+.boCompanyRow button:hover{transform:translateY(-2px);border-color:#93c5fd}
+.boCompanyLogo{width:54px;height:54px;margin:0 auto 10px;border-radius:14px;display:grid;place-items:center;background:#eff6ff;color:#1d4ed8;font-weight:900;font-size:20px}
+.boCompanyRow b,.boCompanyRow small{display:block}.boCompanyRow small{margin-top:4px;color:#718596;font-size:11px}
+@media(max-width:800px){.boSlide{grid-template-columns:1fr}.boSlideImage{min-height:145px}.boSlideContent{padding:24px 22px 42px}.boHomeSlider{min-height:500px}.boSliderDots{left:22px;bottom:16px}.boCompanyRow{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.boHomeSlider{min-height:540px}.boSlideContent h3{font-size:29px}.boPhotoGrid{grid-template-columns:1fr!important}.boCompanyRow{grid-template-columns:1fr 1fr}}
+</style>
+<script id="beropp-home-slider-final-js">
+(function(){
+  let n=0,t=null;
+  window.boGoSlide=function(i){
+    const slides=document.querySelectorAll('.boHomeSlider .boSlide'),dots=document.querySelectorAll('.boHomeSlider .boSliderDots button');
+    if(!slides.length)return;
+    n=(i+slides.length)%slides.length;
+    slides.forEach((s,k)=>s.classList.toggle('isActive',k===n));
+    dots.forEach((d,k)=>d.classList.toggle('active',k===n));
+  };
+  function auto(){clearInterval(t);t=setInterval(()=>window.boGoSlide(n+1),5500)}
+  window.addEventListener('load',()=>{auto();const s=document.querySelector('.boHomeSlider');if(s){s.addEventListener('mouseenter',()=>clearInterval(t));s.addEventListener('mouseleave',auto)}});
+})();
+</script></head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
 <section id="auth" class="hidden">
 <div class="card nsAuthCard">
   <div class="nsAuthLogo" aria-hidden="true"><div class="brandMark"><svg viewBox="0 0 64 64"><defs><linearGradient id="authG2" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#authG2)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div></div>
@@ -394,6 +431,22 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
     </div>
   </div>
 
+  <div class="boHomeSlider" aria-label="BerOpp Highlights">
+    <div class="boSlide isActive">
+      <div class="boSlideImage boSlide1"></div>
+      <div class="boSlideContent"><span>🎓 AUSBILDUNG</span><h3>Finde den Beruf, der zu dir passt.</h3><p>Entdecke aktuelle Ausbildungsmöglichkeiten und starte deinen nächsten Schritt.</p><button onclick="requireAuth('ausbildung')">Ausbildung finden →</button></div>
+    </div>
+    <div class="boSlide">
+      <div class="boSlideImage boSlide2"></div>
+      <div class="boSlideContent"><span>💼 JOBS</span><h3>Deine nächste Chance wartet.</h3><p>Suche nach aktuellen Jobs in deiner Stadt und finde passende Arbeitgeber.</p><button onclick="requireAuth('matches')">Jobs finden →</button></div>
+    </div>
+    <div class="boSlide">
+      <div class="boSlideImage boSlide3"></div>
+      <div class="boSlideContent"><span>🤖 NEXTSTEP AI</span><h3>Von der Suche bis zur Bewerbung.</h3><p>BerOpp hilft dir bei CV, Bewerbung und deinen nächsten Karriereschritten.</p><button onclick="show('ai')">NextStep AI öffnen →</button></div>
+    </div>
+    <div class="boSliderDots"><button class="active" onclick="boGoSlide(0)" aria-label="Slide 1"></button><button onclick="boGoSlide(1)" aria-label="Slide 2"></button><button onclick="boGoSlide(2)" aria-label="Slide 3"></button></div>
+  </div>
+
   <div class="boTrust">
     <div><strong>🎯 Finden</strong><span>Jobs & Ausbildung an einem Ort</span></div>
     <div><strong>📄 Vorbereiten</strong><span>CV und Bewerbung mit BerOpp</span></div>
@@ -405,13 +458,13 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
       <div><span class="boKicker">ENTDECKEN</span><h2>Berufe zum Stöbern</h2><p>Entdecke Bereiche, in denen du deinen nächsten Schritt machen kannst.</p></div>
       <button class="secondary" onclick="requireAuth('ausbildung')">Alle Ausbildung →</button>
     </div>
-    <div class="boCareerGrid">
-      <button onclick="document.getElementById('homeCareerSearch').value='Lagerlogistik';runHomeCareerSearch()"><span>📦</span><b>Lager & Logistik</b><small>Fachlagerist · Lagerlogistik</small></button>
-      <button onclick="document.getElementById('homeCareerSearch').value='Elektriker';runHomeCareerSearch()"><span>⚡</span><b>Elektrotechnik</b><small>Elektriker · Energietechnik</small></button>
-      <button onclick="document.getElementById('homeCareerSearch').value='Kaufmann';runHomeCareerSearch()"><span>💼</span><b>Kaufmännisch</b><small>Büro · Handel · Spedition</small></button>
-      <button onclick="document.getElementById('homeCareerSearch').value='IT';runHomeCareerSearch()"><span>💻</span><b>IT & Technik</b><small>Informatik · Technik · Support</small></button>
-      <button onclick="document.getElementById('homeCareerSearch').value='Pflege';runHomeCareerSearch()"><span>❤️</span><b>Gesundheit & Pflege</b><small>Pflege · Medizin · Betreuung</small></button>
-      <button onclick="document.getElementById('homeCareerSearch').value='Verkauf';runHomeCareerSearch()"><span>🛍️</span><b>Handel & Verkauf</b><small>Einzelhandel · Verkauf</small></button>
+    <div class="boPhotoGrid">
+      <button class="boPhotoCard boPhoto1" onclick="document.getElementById('homeCareerSearch').value='Lagerlogistik';runHomeCareerSearch()"><span>📦</span><b>Lager & Logistik</b><small>Fachlagerist · Lagerlogistik</small></button>
+      <button class="boPhotoCard boPhoto2" onclick="document.getElementById('homeCareerSearch').value='Elektriker';runHomeCareerSearch()"><span>⚡</span><b>Elektrotechnik</b><small>Elektriker · Energietechnik</small></button>
+      <button class="boPhotoCard boPhoto3" onclick="document.getElementById('homeCareerSearch').value='Kaufmann';runHomeCareerSearch()"><span>💼</span><b>Kaufmännische Berufe</b><small>Büro · Handel · Spedition</small></button>
+      <button class="boPhotoCard boPhoto4" onclick="document.getElementById('homeCareerSearch').value='IT';runHomeCareerSearch()"><span>💻</span><b>IT & Technik</b><small>Informatik · Technik · Support</small></button>
+      <button class="boPhotoCard boPhoto5" onclick="document.getElementById('homeCareerSearch').value='Pflege';runHomeCareerSearch()"><span>❤️</span><b>Gesundheit & Pflege</b><small>Pflege · Medizin · Betreuung</small></button>
+      <button class="boPhotoCard boPhoto6" onclick="document.getElementById('homeCareerSearch').value='Verkauf';runHomeCareerSearch()"><span>🛍️</span><b>Handel & Verkauf</b><small>Einzelhandel · Verkauf</small></button>
     </div>
   </div>
 
@@ -432,6 +485,17 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
     <div class="boLiveGrid">
       <div class="boLivePanel"><div class="boPanelTitle"><span>🎓</span><div><b>Ausbildung</b><small>Starte deine berufliche Zukunft</small></div></div><div id="homeAusbildungPreview" class="nsPreviewList"><div class="nsPreviewItem"><strong>Live-Ausbildung wird geladen…</strong></div></div></div>
       <div class="boLivePanel"><div class="boPanelTitle"><span>💼</span><div><b>Jobs</b><small>Finde deine nächste Chance</small></div></div><div id="homeJobsPreview" class="nsPreviewList"><div class="nsPreviewItem"><strong>Live-Jobs werden geladen…</strong></div></div></div>
+    </div>
+  </div>
+
+  <div class="boSection boCompanySection">
+    <div class="boSectionHead"><div><span class="boKicker">UNTERNEHMEN</span><h2>Ausbildende Unternehmen</h2><p>Entdecke bekannte Arbeitgeber und suche direkt nach passenden Chancen.</p></div><button class="secondary" onclick="requireAuth('ausbildung')">Alle Unternehmen →</button></div>
+    <div class="boCompanyRow">
+      <button onclick="document.getElementById('homeCareerSearch').value='DHL';runHomeCareerSearch()"><span class="boCompanyLogo">DHL</span><b>DHL</b><small>Logistik · Ausbildung</small></button>
+      <button onclick="document.getElementById('homeCareerSearch').value='Lidl';runHomeCareerSearch()"><span class="boCompanyLogo">L</span><b>Lidl</b><small>Handel · Ausbildung</small></button>
+      <button onclick="document.getElementById('homeCareerSearch').value='Siemens';runHomeCareerSearch()"><span class="boCompanyLogo">S</span><b>Siemens</b><small>Technik · Ausbildung</small></button>
+      <button onclick="document.getElementById('homeCareerSearch').value='Deutsche Bahn';runHomeCareerSearch()"><span class="boCompanyLogo">DB</span><b>Deutsche Bahn</b><small>Verkehr · Ausbildung</small></button>
+      <button onclick="document.getElementById('homeCareerSearch').value='Kaufland';runHomeCareerSearch()"><span class="boCompanyLogo">K</span><b>Kaufland</b><small>Handel · Ausbildung</small></button>
     </div>
   </div>
 
