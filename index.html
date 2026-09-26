@@ -344,6 +344,10 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
 .boInternational{display:flex;justify-content:space-between;gap:20px;align-items:center;background:#f6fbff;border:1px solid #dbeafe;border-radius:20px;padding:24px}.boInternational h2{margin:5px 0 7px}.boInternational p{color:#627b90;max-width:650px;line-height:1.5}.boInternationalBtns{display:flex;gap:8px;flex-wrap:wrap}.boInternationalBtns a{display:inline-block;text-decoration:none;background:#fff;border:1px solid #bfdbfe;color:#1769aa;font-weight:700;padding:11px 13px;border-radius:11px}.boAccount{background:#fff;border:1px solid #dbeafe;border-radius:20px;padding:26px;margin-top:10px}.boAccount h2{margin:6px 0}.boAccount p{color:#647b8d}.boAccount button{margin:0}
 @media(max-width:850px){.boHomeSearch{grid-template-columns:1fr 1fr}.boSearchBtn{grid-column:1/-1}.boCareerGrid{grid-template-columns:repeat(2,1fr)}.boTools{grid-template-columns:repeat(2,1fr)}.boAi{align-items:flex-start;flex-direction:column}.boInternational{align-items:flex-start;flex-direction:column}}
 @media(max-width:600px){.boHomeHeroInner{padding:38px 16px 28px}.boHomeHero h2{font-size:36px}.boHomeSearch{grid-template-columns:1fr;padding:11px}.boSearchBtn{grid-column:auto;width:100%}.boTrust{grid-template-columns:1fr}.boSection{padding:21px 0}.boSectionHead{align-items:flex-start;flex-direction:column}.boCareerGrid,.boLiveGrid,.boTools{grid-template-columns:1fr}.boAi{padding:20px}.boInternational{padding:20px}.boHome{padding-left:10px;padding-right:10px}}
+</style><style id="beropp-home-ausbildung-order">
+.boAusStyle{background:#fff}.boAusStyle .boHomeHero{margin-top:0;border-radius:0 0 24px 24px}.boAusStyle .boHomeHeroInner{padding-top:48px;padding-bottom:42px}.boOrientation{padding-top:32px}.boThreeCards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.boThreeCards button{margin:0;text-align:left;background:#fff;border:1px solid #dce9f5;border-radius:17px;padding:20px;box-shadow:0 5px 18px rgba(26,82,122,.06);color:#163c59}.boThreeCards button span{display:block;font-size:27px;margin-bottom:10px}.boThreeCards b,.boThreeCards small{display:block}.boThreeCards small{margin-top:6px;color:#6c8293;line-height:1.45}.boCompanies{background:#f8fbfe;margin:20px 0;padding:30px 20px;border-radius:22px}.boCompanyGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.boCompanyGrid button{margin:0;background:#fff;border:1px solid #dce9f5;border-radius:13px;padding:18px 12px;text-align:center;color:#173e5b}.boCompanyGrid b{display:block;font-size:18px}.boCompanyGrid small{display:block;color:#718596;margin-top:5px;font-size:11px}.boAusStyle .boSectionHead{margin-bottom:18px}.boAusStyle .boKicker{font-size:11px}.boAusStyle .boLiveSection{padding-top:30px}
+@media(max-width:900px){.boCompanyGrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.boThreeCards{grid-template-columns:1fr}.boCompanyGrid{grid-template-columns:repeat(2,1fr)}.boCompanies{padding:22px 12px}}
 </style></head><body><header><div class="brand" onclick="show('home')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')show('home')" title="Go to Home"><div class="brand"><div class="brandMark" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="nsG" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset=".48" stop-color="#8b5cf6"/><stop offset="1" stop-color="#fbbf24"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#nsG)"/><path d="M16 45c7-9 13-13 19-13 5 0 8 2 13 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M21 38l-5 7 9 1M43 27l5 12 5-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="24" r="5" fill="#fff"/><circle cx="40" cy="18" r="4" fill="#fde68a"/><circle cx="51" cy="28" r="4" fill="#67e8f9"/></svg></div><div><h1>BerOpp</h1><div class="brandTag">Your skills. Find your next opportunity.</div></div></div><p style="margin:8px 0 0;font-size:14px;opacity:.95">Ausbildung, Jobs & CV – dein nächster Karriereschritt.</p><div id="tagline" style="display:none">Your skills. Find your next opportunity.</div><label>🌐 <select id="language" onchange="setLanguage(this.value)" style="width:auto;margin:0"><option value="en">English</option><option value="de">Deutsch</option><option value="rw">Kinyarwanda</option></select><button id="themeToggle" class="nsThemeToggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙 Dark</button></label></header><main>
 <section id="auth" class="hidden">
 <div class="card nsAuthCard">
@@ -365,7 +369,7 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
   <button class="secondary nsAuthBack" onclick="show('home')">← Back to Home</button>
 </div>
 </section><section id="home">
-<div class="boHome">
+<div class="boHome boAusStyle">
   <div class="boHomeHero">
     <div class="boHomeHeroInner">
       <div class="boHomeHeroCopy">
@@ -427,7 +431,16 @@ body.dark-mode .nsAuthCard label{color:#cbd5e1}
     </div>
   </div>
 
-  <div class="boSection boLiveSection">
+  <div class="boSection boOrientation">
+  <div class="boSectionHead"><div><span class="boKicker">ORIENTIERUNG</span><h2>Orientiere dich. Entdecke deinen Beruf. Bewirb dich.</h2><p>BerOpp begleitet dich von der ersten Suche bis zum nächsten Karriereschritt.</p></div></div>
+  <div class="boThreeCards">
+    <button onclick="openFeature('matches')"><span>🧭</span><b>Finde, was zu dir passt</b><small>Suche nach Beruf, Ort und Bereich und entdecke passende Möglichkeiten.</small></button>
+    <button onclick="openFeature('ai')"><span>🤖</span><b>Persönliche Unterstützung</b><small>Nutze NextStep AI für Fragen rund um Beruf, CV und Bewerbung.</small></button>
+    <button onclick="openFeature('applications')"><span>🚀</span><b>Schnell zur Bewerbung</b><small>Bereite deine Unterlagen vor und behalte deine nächsten Schritte im Blick.</small></button>
+  </div>
+</div>
+
+<div class="boSection boLiveSection">
     <div class="boSectionHead">
       <div><span class="boKicker">LIVE</span><h2>Aktuelle Chancen</h2><p>Neu geladene Angebote aus der Live-Suche von BerOpp.</p></div>
       <div class="boHeadActions"><button class="secondary" onclick="requireAuth('matches')">Alle Jobs →</button><button class="secondary" onclick="requireAuth('ausbildung')">Alle Ausbildung →</button></div>
