@@ -3169,205 +3169,103 @@ window.findByBeruf=function(name){show("ausbildung");const box=$("berufeList");i
 
 <script id="beropp-live-6x6-final-bridge">
 (function(){
-
-  const FALLBACK_A=[];
-  const FALLBACK_J=[];
-
+  const FALLBACK_A=[], FALLBACK_J=[];
   const WORKERS=['https://beropp-ai.fredkfd.workers.dev','https://fredkfd.workers.dev'];
   const BA='https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs';
   const KEY='jobboerse-jobsuche';
 
   function escB(v){return typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
   function safeB(v){try{const u=new URL(String(v||''));return /^https?:$/.test(u.protocol)?u.href:''}catch(e){return''}}
-  async function getB(path,params){
-    const qs=params instanceof URLSearchParams?params.toString():new URLSearchParams(params||{}).toString();
-    const urls=WORKERS.map(w=>w+path+(qs?'?'+qs:''));
-    const saved=String(localStorage.getItem('beropp_ai_api_url')||'').trim().replace(/\/$/,'');
-    if(/^https:\/\//i.test(saved))urls.unshift(saved+path+(qs?'?'+qs:''));
-    let last=null;
-    for(const u of urls){
-      try{
-        const r=await fetch(u,{headers:{Accept:'application/json'}});
-        if(r.ok){
-          const d=await r.json();
-          if(Array.isArray(d))return {stellenangebote:d};
-          if(d&&Array.isArray(d.stellenangebote))return d;
-          if(d&&Array.isArray(d.angebote))return {stellenangebote:d.angebote,...d};
-          if(d&&Array.isArray(d.jobs))return {stellenangebote:d.jobs,...d};
-          if(d&&Array.isArray(d.results))return {stellenangebote:d.results,...d};
-          if(d&&d.data&&Array.isArray(d.data))return {stellenangebote:d.data,...d};
-        }
-        last=new Error('Worker '+r.status);
-      }catch(e){last=e}
+  function normalize(d){if(Array.isArray(d))return d;if(d&&Array.isArray(d.stellenangebote))return d.stellenangebote;if(d&&Array.isArray(d.angebote))return d.angebote;if(d&&Array.isArray(d.jobs))return d.jobs;if(d&&Array.isArray(d.results))return d.results;if(d&&Array.isArray(d.data))return d.data;return []}
+
+  async function request(path,params){
+    const qs=params.toString();
+    let last;
+    for(const w of WORKERS){
+      try{const r=await fetch(w+path+'?'+qs,{headers:{Accept:'application/json'},cache:'no-store'});if(r.ok){const d=await r.json();const rows=normalize(d);if(rows.length)return {rows,d};last=new Error('Worker returned no records')}}catch(e){last=e}
     }
     try{
-      const r=await fetch(BA+'?'+qs,{headers:{'X-API-Key':KEY,Accept:'application/json'}});
-      if(r.ok)return r.json();
+      const r=await fetch(BA+'?'+qs,{headers:{'X-API-Key':KEY,Accept:'application/json'},cache:'no-store'});
+      if(r.ok){const d=await r.json();return {rows:normalize(d),d}}
       last=new Error('BA '+r.status);
     }catch(e){last=e}
-    throw last||new Error('Live search unavailable');
+    throw last||new Error('Live search unavailable')
   }
-  async function detailB(ref){
-    if(!ref)return'';
-    const qs='refnr='+encodeURIComponent(ref);
-    for(const w of WORKERS){
-      try{
-        const r=await fetch(w+'/jobdetails?'+qs,{headers:{Accept:'application/json'}});
-        if(r.ok){const d=await r.json();const u=safeB(d.externeUrl||d.externeURL||d.bewerbungUrl||d.bewerbungURL||d.applicationUrl||d.applicationURL);
-          if(u){
-            try{
-              const h=new URL(u).hostname.toLowerCase();
-              if(h!=='arbeitsagentur.de'&&!h.endsWith('.arbeitsagentur.de')&&h!=='beropp.de'&&!h.endsWith('.beropp.de')&&!h.endsWith('.workers.dev'))return u;
-            }catch(e){}
-          }}
-      }catch(e){}
-    }
-    return'';
-  }
-  function mapB(o,type,i){
-    return {
-      id:'live6-'+type+'-'+(o.referenznummer||o.refnr||i),
-      refnr:String(o.referenznummer||o.refnr||''),
-      title:o.beruf||o.stellenangebotsTitel||o.titel||(type==='ausbildung'?'Ausbildung':'Stellenangebot'),
-      company:o.arbeitgeber||o.arbeitgeberName||'Arbeitgeber nicht angegeben',
-      place:typeof o.arbeitsort==='object'?(o.arbeitsort.ort||o.arbeitsort.region||'Deutschland'):(o.arbeitsort||o.ort||'Deutschland'),
-      start:o.eintrittsdatum||o.beginn||'',
-      date:o.aktuelleVeroeffentlichungsdatum||o.veroeffentlichungsdatum||'',
-      description:o.stellenangebotsBeschreibung||o.beschreibung||'',
-      applicationUrl:'',
-      url:'',
-      type:type,source:'Live listing'
-    };
-  }
+
   async function load6(type,q,city){
     const out=[],seen=new Set();
-    for(let page=1;page<=3&&out.length<300;page++){
-      const p=new URLSearchParams({
-        angebotsart:type==='ausbildung'?'4':'1',
-        page:String(page),
-        size:'100',
-        veroeffentlichtseit:'100'
-      });
+    for(let page=1;page<=5&&out.length<300;page++){
+      const p=new URLSearchParams({angebotsart:type==='ausbildung'?'4':'1',page:String(page),size:'100',pav:'false'});
       if(q)p.set('was',q);
       if(city){p.set('wo',city);p.set('umkreis','200')}
-      let d;
-      try{
-        d=await getB('/ausbildung',p);
-      }catch(e){
-        // Some worker versions expect the original BA parameter set.
-        p.set('zeitarbeit','true');
-        d=await getB('/ausbildung',p);
-      }
-      const rows=Array.isArray(d.stellenangebote)?d.stellenangebote:[];
+      const result=await request('/ausbildung',p);
+      const rows=result.rows;
       for(const raw of rows){
         const o=mapB(raw,type,out.length);
         const key=o.refnr||o.title+'|'+o.company+'|'+o.place;
-        if(seen.has(key))continue;
-        seen.add(key);out.push(o);
+        if(!seen.has(key)){seen.add(key);out.push(o)}
         if(out.length>=300)break;
       }
       if(rows.length<100)break;
     }
     for(let i=0;i<Math.min(60,out.length);i+=6){
-      await Promise.all(out.slice(i,i+6).map(async o=>{
-        if(!o.applicationUrl&&o.refnr)o.applicationUrl=await detailB(o.refnr);
-      }));
+      await Promise.all(out.slice(i,i+6).map(async o=>{if(o.refnr)o.applicationUrl=await detailB(o.refnr)}));
     }
     return out.slice(0,300);
   }
-  function companyApplyB(o){
-    const candidates=[o&&o.applicationUrl,o&&o.applicationURL,o&&o.bewerbungUrl,o&&o.bewerbungURL];
-    for(const raw of candidates){
-      const u=safeB(raw);
-      if(!u)continue;
+
+  function mapB(o,type,i){return {
+    id:'live6-'+type+'-'+(o.referenznummer||o.refnr||i),
+    refnr:String(o.referenznummer||o.refnr||''),
+    title:o.beruf||o.stellenangebotsTitel||o.titel||(type==='ausbildung'?'Ausbildung':'Stellenangebot'),
+    company:o.arbeitgeber||o.arbeitgeberName||'Arbeitgeber nicht angegeben',
+    place:typeof o.arbeitsort==='object'?(o.arbeitsort?.ort||o.arbeitsort?.region||'Deutschland'):(o.arbeitsort||o.ort||'Deutschland'),
+    start:o.eintrittsdatum||o.beginn||'',
+    date:o.aktuelleVeroeffentlichungsdatum||o.veroeffentlichungsdatum||'',
+    description:o.stellenangebotsBeschreibung||o.beschreibung||'',
+    applicationUrl:'',url:'',type,source:'Live listing'
+  }}
+
+  async function detailB(ref){
+    if(!ref)return '';
+    for(const w of WORKERS){
       try{
-        const h=new URL(u).hostname.toLowerCase();
-        if(h==='arbeitsagentur.de'||h.endsWith('.arbeitsagentur.de'))continue;
-        if(h==='beropp.de'||h.endsWith('.beropp.de'))continue;
-        if(h.endsWith('.workers.dev'))continue;
-        return u;
+        const r=await fetch(w+'/jobdetails?refnr='+encodeURIComponent(ref),{headers:{Accept:'application/json'},cache:'no-store'});
+        if(r.ok){const d=await r.json();const u=safeB(d.externeUrl||d.externeURL||d.bewerbungUrl||d.bewerbungURL||d.applicationUrl||d.applicationURL);if(u&&!/((^|\.)arbeitsagentur\.de|(^|\.)beropp\.de|\.workers\.dev)$/i.test(new URL(u).hostname))return u}
       }catch(e){}
     }
     return '';
   }
+
+  function companyApplyB(o){
+    for(const raw of [o?.applicationUrl,o?.applicationURL,o?.bewerbungUrl,o?.bewerbungURL]){
+      const u=safeB(raw);if(!u)continue;
+      try{const h=new URL(u).hostname.toLowerCase();if(h==='arbeitsagentur.de'||h.endsWith('.arbeitsagentur.de')||h==='beropp.de'||h.endsWith('.beropp.de')||h.endsWith('.workers.dev'))continue;return u}catch(e){}
+    }
+    return ''
+  }
   function applyB(o){
-    if(!o)return false;
-    const url=companyApplyB(o);
-    if(!url){
-      if(typeof setAuthStatus==='function')setAuthStatus('⚠️ This listing has no verified company application link yet.');
-      return false;
-    }
-    if(!window.beroppUser){
-      localStorage.setItem('beropp_pending_apply',JSON.stringify({target:o.type==='job'?'jobDirect':'ausbildungDirect',id:o.id,type:o.type,applicationUrl:url,title:o.title||'',company:o.company||''}));
-      if(typeof show==='function')show('auth');
-      if(typeof setAuthStatus==='function')setAuthStatus('🔐 Sign in first. After login, BerOpp opens the verified company application page.');
-      return false;
-    }
-    window.location.assign(url);return false;
+    const url=companyApplyB(o);if(!url){if(typeof setAuthStatus==='function')setAuthStatus('⚠️ This listing has no verified company application link yet.');return false}
+    if(!window.beroppUser){localStorage.setItem('beropp_pending_apply',JSON.stringify({target:o.type==='job'?'jobDirect':'ausbildungDirect',id:o.id,type:o.type,applicationUrl:url,title:o.title||'',company:o.company||''}));if(typeof show==='function')show('auth');return false}
+    window.location.assign(url);return false
   }
   window.__beroppLive6Apply=applyB;
-
-  function cardB(o){
-    const url=companyApplyB(o);
-    const button=url?'<button type="button" class="secondary" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span class="status">Company application link unavailable</span>';
-    return '<div class="card beroppLiveOffer"><span class="badge">✓ LIVE</span><h3>'+escB(o.type==='ausbildung'?'🎓 ':'💼 ')+escB(o.title)+'</h3><p>🏢 '+escB(o.company)+' · 📍 '+escB(o.place)+(o.start?' · 📅 '+escB(o.start):'')+'</p>'+button+'</div>';
-  }
+  function cardB(o){const url=companyApplyB(o);const button=url?'<button type="button" class="secondary" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span class="status">Company application link unavailable</span>';return '<div class="card beroppLiveOffer"><span class="badge">✓ LIVE</span><h3>'+escB(o.type==='ausbildung'?'🎓 ':'💼 ')+escB(o.title)+'</h3><p>🏢 '+escB(o.company)+' · 📍 '+escB(o.place)+(o.start?' · 📅 '+escB(o.start):'')+'</p>'+button+'</div>'}
   function uniq(rows){const s=new Set();return rows.filter(o=>{const k=(o.refnr||'')+'|'+o.title+'|'+o.company+'|'+o.place;if(s.has(k))return false;s.add(k);return true})}
 
-  window.fetchLiveCareerSources=async function(q,city,type){
-    const out=[];
-    if(type==='job'||type==='all'){
-      try{out.push(...await load6('job',q,city))}catch(e){}
-    }
-    if(type==='ausbildung'||type==='all'){
-      try{out.push(...await load6('ausbildung',q,city))}catch(e){}
-    }
-    return out;
-  };
+  window.fetchLiveCareerSources=async function(q,city,type){const out=[];if(type==='job'||type==='all')try{out.push(...await load6('job',q,city))}catch(e){}if(type==='ausbildung'||type==='all')try{out.push(...await load6('ausbildung',q,city))}catch(e){}return out};
 
   window.renderHomePreviews=async function(){
     const a=$('homeAusbildungPreview'),j=$('homeJobsPreview');if(!a||!j)return false;
     a.innerHTML='<div class="nsPreviewItem"><strong>⏳ 6 aktuelle Ausbildung werden geladen…</strong></div>';
     j.innerHTML='<div class="nsPreviewItem"><strong>⏳ 6 aktuelle Jobs werden geladen…</strong></div>';
-    try{
-      const [A,J]=await Promise.all([load6('ausbildung','',''),load6('job','','')]);
-      window.beroppHomeLiveAusbildung=A;window.beroppHomeLiveJobs=J;
-      const mini=o=>'<div class="nsPreviewItem"><strong>'+escB(o.type==='ausbildung'?'🎓 ':'💼 ')+escB(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+escB(o.company)+' · 📍 '+escB(o.place)+'</div>'+(companyApplyB(o)?'<button type="button" class="secondary" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span class="status">Company application link unavailable</span>')+'</div>';
-      a.innerHTML=A.map(mini).join('')||'<div class="nsPreviewItem">No current Ausbildung found.</div>';
-      j.innerHTML=J.map(mini).join('')||'<div class="nsPreviewItem">No current Jobs found.</div>';
-      return A.length===6&&J.length===6;
-    }catch(e){
-      console.warn('BerOpp final 6x6 Home failed',e);
-      return false;
-    }
+    try{const [A,J]=await Promise.all([load6('ausbildung','',''),load6('job','','')]);window.beroppHomeLiveAusbildung=A.slice(0,6);window.beroppHomeLiveJobs=J.slice(0,6);const mini=o=>'<div class="nsPreviewItem"><strong>'+escB(o.type==='ausbildung'?'🎓 ':'💼 ')+escB(o.title)+'</strong><div class="nsPreviewMeta">🏢 '+escB(o.company)+' · 📍 '+escB(o.place)+'</div>'+(companyApplyB(o)?'<button type="button" class="secondary" onclick="return window.__beroppLive6Apply('+JSON.stringify(o).replace(/</g,'\\u003c').replace(/"/g,'&quot;')+')">⚡ Apply Direct →</button>':'<span class="status">Company application link unavailable</span>')+'</div>';a.innerHTML=A.map(mini).join('')||'<div class="nsPreviewItem">No current Ausbildung found.</div>';j.innerHTML=J.map(mini).join('')||'<div class="nsPreviewItem">No current Jobs found.</div>';return A.length>=6&&J.length>=6}catch(e){console.warn('BerOpp live Home failed',e);return false}
   };
 
-  window.findMatches=async function(){
-    const box=$('results');if(!box)return false;
-    const q=($('oppSearch')?.value||'').trim(),city=($('oppCity')?.value||'').trim();
-    box.innerHTML='<div class="card"><h3>💼 Current Jobs</h3><p>⏳ Loading current live jobs…</p></div>';
-    try{
-      const rows=uniq(await load6('job',q,city));
-      window.beroppLiveJobsAll=rows;
-      box.innerHTML='<div class="card"><h3>🇩🇪 Current Jobs — Live Company Listings</h3><p><strong>'+rows.length+' / 6</strong> live jobs.</p>'+rows.map(cardB).join('')+'</div>';
-      return rows.length>0;
-    }catch(e){const rows=(!q&&!city)?FALLBACK_J:[]; if(rows.length){window.beroppLiveJobsAll=rows;box.innerHTML='<div class="card"><h3>🇩🇪 Current Jobs — Live Company Listings</h3><p><strong>6 / 6</strong> current listings.</p>'+rows.map(cardB).join('')+'</div>';return true} box.innerHTML='<div class="card"><h3>⚠️ Live Jobs</h3><p>Current jobs could not be loaded. Try another keyword or location.</p><button class="secondary" onclick="findMatches()">↻ Try again</button></div>';return false}
-  };
+  window.findMatches=async function(){const box=$('results');if(!box)return false;const q=($('oppSearch')?.value||'').trim(),city=($('oppCity')?.value||'').trim();box.innerHTML='<div class="card"><h3>💼 Current Jobs</h3><p>⏳ Loading current live jobs…</p></div>';try{const rows=uniq(await load6('job',q,city));window.beroppLiveJobsAll=rows;box.innerHTML='<div class="card"><h3>🇩🇪 Current Jobs — Live Company Listings</h3><p><strong>'+rows.length+'</strong> live jobs.</p>'+rows.map(cardB).join('')+'</div>';return rows.length>0}catch(e){box.innerHTML='<div class="card"><h3>⚠️ Live Jobs</h3><p>Current jobs could not be loaded. Try another keyword or location.</p><button class="secondary" onclick="findMatches()">↻ Try again</button></div>';return false}};
 
-  window.renderBerufe=async function(){
-    const box=$('berufeList');if(!box)return false;
-    const q=($('berufSearch')?.value||'').trim(),city=($('oppCity')?.value||'').trim();
-    box.innerHTML='<div class="card"><h3>🎓 Current Ausbildung</h3><p>⏳ Loading current live Ausbildung…</p></div>';
-    try{
-      const rows=uniq(await load6('ausbildung',q,city));
-      window.beroppLiveAusbildungAll=rows;
-      if($('berufeCount'))$('berufeCount').textContent=rows.length+' aktuelle Ausbildung-Angebote';
-      const first=rows.slice(0,20),rest=rows.slice(20); const moreId='beroppAusMore'; box.innerHTML='<div class="card"><h3>🇩🇪 Current Ausbildung — Live Company Listings</h3><p><strong>'+rows.length+'</strong> aktuelle Ausbildung-Angebote gefunden.</p>'+first.map(cardB).join('')+(rest.length?'<button id="'+moreId+'" type="button" class="secondary" style="display:block;margin:14px auto;font-weight:800">＋ Mehr Ergebnisse laden</button><div id="'+moreId+'Rest" style="display:none">'+rest.map(cardB).join('')+'</div>':'')+'</div>'; const mb=$(moreId),mr=$(moreId+'Rest'); if(mb)mb.onclick=()=>{mr.style.display='block';mb.remove()};
-      return rows.length>0;
-    }catch(e){const rows=(!q&&!city)?FALLBACK_A:[]; if(rows.length){window.beroppLiveAusbildungAll=rows;if($('berufeCount'))$('berufeCount').textContent='6 aktuelle Ausbildung-Angebote';box.innerHTML='<div class="card"><h3>🇩🇪 Current Ausbildung — Live Company Listings</h3><p><strong>6 / 6</strong> current listings.</p>'+rows.map(cardB).join('')+'</div>';return true} box.innerHTML='<div class="card"><h3>⚠️ Live Ausbildung</h3><p>Current Ausbildung could not be loaded. Try another keyword or location.</p><button class="secondary" onclick="renderBerufe()">↻ Try again</button></div>';return false}
-  };
-
-  window.addEventListener('load',function(){setTimeout(function(){window.renderHomePreviews()},1200)});
+  window.renderBerufe=async function(){const box=$('berufeList');if(!box)return false;const q=($('berufSearch')?.value||'').trim(),city=($('oppCity')?.value||'').trim();box.innerHTML='<div class="card"><h3>🎓 Current Ausbildung</h3><p>⏳ Loading current live Ausbildung…</p></div>';try{const rows=uniq(await load6('ausbildung',q,city));window.beroppLiveAusbildungAll=rows;if($('berufeCount'))$('berufeCount').textContent=rows.length+' aktuelle Ausbildung-Angebote';const first=rows.slice(0,20),rest=rows.slice(20),moreId='beroppAusMore';box.innerHTML='<div class="card"><h3>🇩🇪 Current Ausbildung — Live Company Listings</h3><p><strong>'+rows.length+'</strong> aktuelle Ausbildung-Angebote gefunden.</p>'+first.map(cardB).join('')+(rest.length?'<button id="'+moreId+'" type="button" class="secondary" style="display:block;margin:14px auto;font-weight:800">＋ Mehr Ergebnisse laden</button><div id="'+moreId+'Rest" style="display:none">'+rest.map(cardB).join('')+'</div>':'')+'</div>';const mb=$(moreId),mr=$(moreId+'Rest');if(mb)mb.onclick=()=>{mr.style.display='block';mb.remove()};return rows.length>0}catch(e){console.warn('BerOpp Ausbildung failed',e);box.innerHTML='<div class="card"><h3>⚠️ Live Ausbildung</h3><p>Current Ausbildung could not be loaded. Try another keyword or location.</p><button class="secondary" onclick="renderBerufe()">↻ Try again</button></div>';return false}};
+  window.addEventListener('load',()=>setTimeout(window.renderHomePreviews,900));
 })();
 </script>
 
