@@ -32,7 +32,7 @@ body.locked > *:not(#modal){display:none !important;} body.locked #modal{display
   <nav class="nav">
    <a href="#ausbildung">Ausbildung</a><a href="#jobs">Jobs</a><a href="#berufe">Berufe</a><a href="international-ausbildung.html">International</a><a href="remote-international.html">Remote</a><a href="#unternehmen">Unternehmen</a><a href="#ratgeber">Ratgeber</a>
   </nav>
-  <div class="actions"><select class="lang" aria-label="Sprache wählen" onchange="changeLanguage(this.value)"><option value="de">🇩🇪 DE</option><option value="en">🇬🇧 EN</option></select><button class="login" onclick="openModal()">Einloggen</button><button class="signup" onclick="openModal()">Kostenlos registrieren</button><button class="hamb" onclick="document.querySelector('.nav').classList.toggle('show')">☰</button></div>
+  <div class="actions"><select class="lang" aria-label="Sprache wählen" onchange="changeLanguage(this.value)"><option value="de">🇩🇪 DE</option><option value="en">🇬🇧 EN</option><option value="rw">🇷🇼 RW</option></select><button class="login" onclick="openModal()">Einloggen</button><button class="signup" onclick="openModal()">Kostenlos registrieren</button><button class="hamb" onclick="document.querySelector('.nav').classList.toggle('show')">☰</button></div>
  </div>
 </header>
 
@@ -195,7 +195,65 @@ function showAllBerufe(){document.getElementById('q').value='';document.getEleme
 function apply(id){let x=data.find(v=>v.id===id);if(x)window.open(x.url,'_blank','noopener')}
 function openModal(){document.getElementById('modal').style.display='flex'}
 function closeModal(){document.getElementById('modal').style.display='none'}
-function changeLanguage(lang){if(lang==='en')alert('English language version is coming soon.');}
+function changeLanguage(lang){
+  const t={
+    en:{
+      'Ausbildung':'Apprenticeships','Jobs':'Jobs','Berufe':'Careers','International':'International','Remote':'Remote','Unternehmen':'Companies','Ratgeber':'Guides',
+      'Einloggen':'Log in','Kostenlos registrieren':'Register for free','Finde deine Ausbildung und deinen nächsten Schritt.':'Find your apprenticeship and your next step.',
+      'Ausbildungsplätze, Jobs und Berufe entdecken – einfach suchen, vergleichen und direkt zum Arbeitgeber.':'Discover apprenticeships, jobs and careers – search, compare and go directly to the employer.',
+      'Stellen finden':'Find jobs','Beliebte Suchen:':'Popular searches:','Fachlagerist':'Warehouse specialist','Elektroniker':'Electronics technician','Kaufmann':'Commercial clerk','Pflege':'Healthcare','Ausbildung 2027':'Apprenticeships 2027',
+      'Orientieren. Entdecken. Bewerben.':'Explore. Discover. Apply.','Finde passende Möglichkeiten und öffne die offizielle Arbeitgeberseite für die Bewerbung.':'Find suitable opportunities and open the official employer page to apply.',
+      'Berufe nach Interessen':'Careers by interest','Entdecke beliebte Bereiche für deinen Berufseinstieg.':'Discover popular fields for starting your career.','Alle Berufe →':'All careers →',
+      'Lager & Logistik':'Warehouse & Logistics','Ausbildung & Jobs':'Apprenticeships & Jobs','Elektrotechnik':'Electrical Engineering','Technik & Handwerk':'Technology & Skilled Trades',
+      'Kaufmännisch':'Business & Commerce','Büro & Handel':'Office & Retail','Mechatronik':'Mechatronics','Technik & Industrie':'Technology & Industry','Gesundheit':'Healthcare','Pflege & Medizin':'Care & Medicine','Verkauf':'Sales','Handel & Kunden':'Retail & Customers',
+      'Deine Zukunft beginnt mit dem richtigen Beruf.':'Your future starts with the right career.','Entdecke freie Ausbildungsplätze und starte deinen nächsten Schritt.':'Discover available apprenticeships and take your next step.','Ausbildung finden →':'Find an apprenticeship →',
+      'Dein Profil. Deine Bewerbung. Dein Weg.':'Your profile. Your application. Your path.','Bereite deine Daten vor und gehe bei passenden Angeboten direkt zum Unternehmen.':'Prepare your details and go directly to the company for suitable opportunities.','Mehr erfahren →':'Learn more →',
+      'Finde deinen nächsten beruflichen Schritt.':'Find your next career step.','Suche nach Beruf und Ort und entdecke passende Möglichkeiten.':'Search by career and location and discover suitable opportunities.','Jobs ansehen →':'View jobs →',
+      'Aktuelle Ausbildungsplätze':'Current apprenticeships','Ausgewählte Angebote für deinen Einstieg.':'Selected opportunities for your start.','Alle Ausbildungen →':'All apprenticeships →',
+      'Jobs & Minijobs':'Jobs & part-time jobs','Stellen aus Hamburg und weiteren Regionen in Deutschland – inklusive Remote und internationaler Chancen.':'Jobs from Hamburg and other regions in Germany – including remote and international opportunities.','Remote Jobs →':'Remote jobs →',
+      'Was BEROPP dir bietet':'What BEROPP offers','Alles Wichtige für deine Suche an einem Ort.':'Everything important for your search in one place.',
+      'Passende Angebote finden':'Find suitable opportunities','Suche nach Beruf, Unternehmen und Ort und filtere die Ergebnisse direkt.':'Search by career, company and location and filter results directly.','Suche starten →':'Start search →',
+      'CV & Bewerbung':'CV & Application','Bereite deine wichtigsten Angaben übersichtlich für Bewerbungen vor.':'Prepare your key details clearly for applications.','Profil starten →':'Start profile →',
+      'Direkt zum Arbeitgeber':'Direct to employer','Bei einem Angebot öffnet BEROPP die offizielle Bewerbungsseite des Unternehmens.':'For an offer, BEROPP opens the company’s official application page.','Angebote ansehen →':'View opportunities →',
+      'Bewerbung & Berufseinstieg':'Applications & Career Start','Kurze Hinweise für deinen nächsten Schritt.':'Short tips for your next step.',
+      'BEROPP Konto':'BEROPP Account','Für gespeicherte Stellen und dein Profil kannst du hier starten.':'Start here for saved jobs and your profile.','Weiter':'Continue'
+    },
+    rw:{
+      'Ausbildung':'Amahugurwa y’umwuga','Jobs':'Akazi','Berufe':'Imyuga','International':'Mpuzamahanga','Remote':'Akazi ka kure','Unternehmen':'Ibigo','Ratgeber':'Inama',
+      'Einloggen':'Injira','Kostenlos registrieren':'Iyandikishe ku buntu','Finde deine Ausbildung und deinen nächsten Schritt.':'Shaka amahugurwa y’umwuga n’intambwe yawe ikurikira.',
+      'Ausbildungsplätze, Jobs und Berufe entdecken – einfach suchen, vergleichen und direkt zum Arbeitgeber.':'Shaka amahugurwa, akazi n’imyuga – shakisha, gereranya kandi ujye ku kigo gitanga akazi.',
+      'Stellen finden':'Shaka akazi','Beliebte Suchen:':'Ibyo abantu bakunze gushaka:','Ausbildung 2027':'Amahugurwa 2027',
+      'Orientieren. Entdecken. Bewerben.':'Menya. Shakisha. Saba akazi.','Finde passende Möglichkeiten und öffne die offizielle Arbeitgeberseite für die Bewerbung.':'Shaka amahirwe akubereye kandi ufungure urubuga rwemewe rw’ikigo usabe akazi.',
+      'Berufe nach Interessen':'Imyuga ukurikije ibyo ukunda','Entdecke beliebte Bereiche für deinen Berufseinstieg.':'Menya imirimo ikunzwe watangiriramo umwuga.','Alle Berufe →':'Imyuga yose →',
+      'Lager & Logistik':'Ububiko n’ubwikorezi','Ausbildung & Jobs':'Amahugurwa n’akazi','Elektrotechnik':'Amashanyarazi','Technik & Handwerk':'Tekiniki n’ubukorikori',
+      'Kaufmännisch':'Ubucuruzi n’ubuyobozi','Büro & Handel':'Ibiro n’ubucuruzi','Mechatronik':'Mechatronics','Technik & Industrie':'Tekiniki n’inganda','Gesundheit':'Ubuzima','Pflege & Medizin':'Ubuvuzi','Verkauf':'Ubucuruzi','Handel & Kunden':'Ubucuruzi n’abakiriya',
+      'Deine Zukunft beginnt mit dem richtigen Beruf.':'Ejo hazaza hawe hatangirana n’umwuga ukwiriye.','Entdecke freie Ausbildungsplätze und starte deinen nächsten Schritt.':'Menya imyanya y’amahugurwa ihari utangire intambwe yawe ikurikira.','Ausbildung finden →':'Shaka amahugurwa →',
+      'Dein Profil. Deine Bewerbung. Dein Weg.':'Umwirondoro wawe. Gusaba akazi kwawe. Inzira yawe.','Bereite deine Daten vor und gehe bei passenden Angeboten direkt zum Unternehmen.':'Tegura amakuru yawe kandi ujye ku kigo gitanga amahirwe akubereye.','Mehr erfahren →':'Menya byinshi →',
+      'Finde deinen nächsten beruflichen Schritt.':'Shaka intambwe yawe ikurikira mu mwuga.','Suche nach Beruf und Ort und entdecke passende Möglichkeiten.':'Shakisha umwuga n’aho uri kandi ubone amahirwe akubereye.','Jobs ansehen →':'Reba akazi →',
+      'Aktuelle Ausbildungsplätze':'Amahugurwa ahari ubu','Ausgewählte Angebote für deinen Einstieg.':'Amahirwe yatoranyijwe yo gutangiriramo.','Alle Ausbildungen →':'Amahugurwa yose →',
+      'Jobs & Minijobs':'Akazi n’akazi gato','Stellen aus Hamburg und weiteren Regionen in Deutschland – inklusive Remote und internationaler Chancen.':'Akazi ko muri Hamburg no mu tundi turere two mu Budage – harimo akazi ka kure n’amahirwe mpuzamahanga.','Remote Jobs →':'Akazi ka kure →',
+      'Was BEROPP dir bietet':'Ibyo BEROPP iguha','Alles Wichtige für deine Suche an einem Ort.':'Iby’ingenzi byose byo gushaka akazi ahantu hamwe.',
+      'Passende Angebote finden':'Shaka amahirwe akubereye','Suche nach Beruf, Unternehmen und Ort und filtere die Ergebnisse direkt.':'Shakisha umwuga, ikigo n’aho giherereye kandi ushungure ibisubizo.','Suche starten →':'Tangira gushakisha →',
+      'CV & Bewerbung':'CV no gusaba akazi','Bereite deine wichtigsten Angaben übersichtlich für Bewerbungen vor.':'Tegura amakuru yawe y’ingenzi neza kugira ngo usabe akazi.','Profil starten →':'Tangira umwirondoro →',
+      'Direkt zum Arbeitgeber':'Jya ku kigo gitanga akazi','Bei einem Angebot öffnet BEROPP die offizielle Bewerbungsseite des Unternehmens.':'Iyo ubonye amahirwe, BEROPP ifungura urubuga rwemewe rwo gusaba akazi rw’ikigo.','Angebote ansehen →':'Reba amahirwe →',
+      'Bewerbung & Berufseinstieg':'Gusaba akazi no gutangira umwuga','Kurze Hinweise für deinen nächsten Schritt.':'Inama ngufi ku ntambwe yawe ikurikira.',
+      'BEROPP Konto':'Konti ya BEROPP','Für gespeicherte Stellen und dein Profil kannst du hier starten.':'Aha ni ho utangirira ku kazi wabikije no ku mwirondoro wawe.','Weiter':'Komeza'
+    }
+  };
+  if(lang==='de'){location.reload();return;}
+  const dict=t[lang]||t.en;
+  document.querySelectorAll('body *').forEach(el=>{
+    if(el.children.length===0){
+      const key=el.textContent.trim();
+      if(dict[key]) el.textContent=dict[key];
+    }
+  });
+  document.querySelectorAll('input[placeholder]').forEach(el=>{
+    if(lang==='en'){if(el.id==='q')el.placeholder='Career, apprenticeship or company';if(el.id==='loc')el.placeholder='City or postcode';if(el.id==='email')el.placeholder='Your email address';}
+    if(lang==='rw'){if(el.id==='q')el.placeholder='Umwuga, amahugurwa cyangwa ikigo';if(el.id==='loc')el.placeholder='Umujyi cyangwa postcode';if(el.id==='email')el.placeholder='Email yawe';}
+  });
+  localStorage.setItem('beroppLanguage',lang);
+}
 function register(){
   const e=document.getElementById('email').value.trim();
   if(!e || !e.includes('@')){
