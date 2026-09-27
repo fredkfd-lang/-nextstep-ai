@@ -260,11 +260,19 @@ function register(){
     document.getElementById('email').focus();
     return;
   }
+  localStorage.setItem('beroppEmail',e);
+  localStorage.setItem('beroppLoggedIn','1');
   document.body.classList.remove('locked');
   closeModal();
 }
+function restoreAccount(){
+  if(localStorage.getItem('beroppLoggedIn')==='1' && localStorage.getItem('beroppEmail')){
+    document.body.classList.remove('locked');
+    closeModal();
+  }
+}
 function show(n){slide=(n+3)%3;document.getElementById('adtrack').style.transform='translateX(-'+slide*100+'%)';document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===slide))}
-function init(){document.getElementById('dots').innerHTML=[0,1,2].map(i=>'<button class="dot '+(i===0?'active':'')+'" onclick="show('+i+')"></button>').join('');setInterval(()=>show(slide+1),5000);render()}
+function init(){restoreAccount();document.getElementById('dots').innerHTML=[0,1,2].map(i=>'<button class="dot '+(i===0?'active':'')+'" onclick="show('+i+')"></button>').join('');setInterval(()=>show(slide+1),5000);render()}
 document.addEventListener('DOMContentLoaded',init);document.getElementById('q').addEventListener('keyup',e=>{if(e.key==='Enter')searchNow()});document.getElementById('loc').addEventListener('keyup',e=>{if(e.key==='Enter')searchNow()});
 </script>
 </body>
