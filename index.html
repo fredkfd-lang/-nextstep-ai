@@ -58,7 +58,7 @@
 </section>
 
 <section class="section" id="berufe"><div class="wrap">
- <div class="head"><div><h2>Berufe nach Interessen</h2><p>Entdecke beliebte Bereiche für deinen Berufseinstieg.</p></div><a class="more" href="#ausbildung">Alle Berufe →</a></div>
+ <div class="head"><div><h2>Berufe nach Interessen</h2><p>Entdecke beliebte Bereiche für deinen Berufseinstieg.</p></div><a class="more" href="#ausbildung" onclick="showAllBerufe();return false">Alle Berufe →</a></div>
  <div class="categories">
   <button class="cat" onclick="quick('Lager')"><div class="ico">📦</div><strong>Lager & Logistik</strong><small>Ausbildung & Jobs</small></button>
   <button class="cat" onclick="quick('Elektroniker')"><div class="ico">⚡</div><strong>Elektrotechnik</strong><small>Technik & Handwerk</small></button>
@@ -141,7 +141,8 @@ function card(x){return '<article class="card"><span class="badge '+(x.type==='j
 function render(){let q=(document.getElementById('q').value||'').toLowerCase(),l=(document.getElementById('loc').value||'').toLowerCase();let a=data.filter(x=>x.type===type&&(!q||(x.title+' '+x.company).toLowerCase().includes(q))&&(!l||x.location.toLowerCase().includes(l)));document.getElementById('results').innerHTML=a.filter(x=>x.type==='ausbildung').slice(0,6).map(card).join('')||'<p>Keine passenden Angebote gefunden.</p>';document.getElementById('jobresults').innerHTML=data.filter(x=>x.type==='jobs').map(card).join('')}
 function setType(t){type=t;document.getElementById('ta').classList.toggle('active',t==='ausbildung');document.getElementById('tj').classList.toggle('active',t==='jobs');render();document.getElementById(t==='jobs'?'jobs':'ausbildung').scrollIntoView({behavior:'smooth'})}
 function searchNow(){render();document.getElementById(type==='jobs'?'jobs':'ausbildung').scrollIntoView({behavior:'smooth'})}
-function quick(q){document.getElementById('q').value=q;type='ausbildung';document.getElementById('ta').classList.add('active');document.getElementById('tj').classList.remove('active');render()}
+function quick(q){document.getElementById('q').value=q;document.getElementById('loc').value='';type='ausbildung';document.getElementById('ta').classList.add('active');document.getElementById('tj').classList.remove('active');render();document.getElementById('ausbildung').scrollIntoView({behavior:'smooth'});}
+function showAllBerufe(){document.getElementById('q').value='';document.getElementById('loc').value='';type='ausbildung';document.getElementById('ta').classList.add('active');document.getElementById('tj').classList.remove('active');render();document.getElementById('ausbildung').scrollIntoView({behavior:'smooth'});}
 function apply(id){let x=data.find(v=>v.id===id);if(x)window.open(x.url,'_blank','noopener')}
 function openModal(){document.getElementById('modal').style.display='flex'}
 function closeModal(){document.getElementById('modal').style.display='none'}
