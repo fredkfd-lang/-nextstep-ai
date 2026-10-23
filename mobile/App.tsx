@@ -16,7 +16,7 @@ const COPY: Record<Language, Record<string, string>> = {
   rw: {
     subtitle: "Amatsinda · Inama · Umuryango", heroTitle: "Huza itsinda ryawe",
     heroText: "Sangiza ubutumire bw’itsinda ukoresheje Share → Linkora. Link izaza hano mu buryo bwikora iyo app imaze gushyirwaho neza.",
-    language: "Ururimi", groupName: "Izina ry’itsinda", namePlaceholder: "Urugero: Inshuti zo mu Budage",
+    language: "Ururimi", groupName: "Izina ry’itsinda", namePlaceholder: "Urugero: Inshuti zo mu Budage", platform: "Urubuga rw’itsinda", supportedLinks: "WhatsApp, Telegram, Facebook Groups na Discord birashyigikiwe.",
     invite: "Link y’ubutumire bw’itsinda", linkPlaceholder: "Link izaza hano uhisemo Share → Linkora",
     permission: "Ndi admin cyangwa nemerewe na admin gusangiza iyi link.",
     save: "Emeza kandi ubike itsinda", saved: "Amatsinda wabitswe", empty: "Nta tsinda rirabikwa kuri iyi telefoni.",
@@ -24,7 +24,7 @@ const COPY: Record<Language, Record<string, string>> = {
     initial: "Sangiza invite link ukoresheje Share → Linkora.", loaded: "Twakiriye link. Andika izina ry’itsinda, wemeze uburenganzira, hanyuma ubike.",
     invalidShared: "Twakiriye ibyo wasangije, ariko nta link y’itsinda ishyigikiwe yabonetse.",
     savedStatus: "Itsinda ryabitswe kuri iyi telefoni gusa.", readError: "Ntibyashobotse gusoma amatsinda yabitswe.",
-    nameRequired: "Andika izina ry’itsinda.", linkInvalid: "Shyiramo link y’ubutumire itangirana na https://.",
+    nameRequired: "Andika izina ry’itsinda.", linkInvalid: "Shyiramo link ya HTTPS ya WhatsApp, Telegram, Facebook Groups cyangwa Discord.",
     permissionRequired: "Banza wemeze ko wemerewe gusangiza invite link.", saveError: "Ntibyashobotse kubika itsinda. Ongera ugerageze.",
     removeError: "Ntibyashobotse gukuraho iri tsinda.", nameTitle: "Izina rirakenewe", linkTitle: "Link ntikwiye",
     permissionTitle: "Emeza uburenganzira", errorTitle: "Ikibazo", groupLabel: "Itsinda",
@@ -32,7 +32,7 @@ const COPY: Record<Language, Record<string, string>> = {
   en: {
     subtitle: "Groups · Meetups · Community", heroTitle: "Connect your group",
     heroText: "Share a group invite using Share → Linkora. The link will appear here automatically once the app is properly installed.",
-    language: "Language", groupName: "Group name", namePlaceholder: "Example: Friends in Germany",
+    language: "Language", groupName: "Group name", namePlaceholder: "Example: Friends in Germany", platform: "Group platform", supportedLinks: "WhatsApp, Telegram, Facebook Groups and Discord are supported.",
     invite: "Group invite link", linkPlaceholder: "The link appears here after Share → Linkora",
     permission: "I’m an admin or have permission from the admin to share this link.",
     save: "Confirm and save group", saved: "Saved groups", empty: "No groups saved on this phone yet.",
@@ -40,7 +40,7 @@ const COPY: Record<Language, Record<string, string>> = {
     initial: "Share an invite link using Share → Linkora.", loaded: "Invite link received. Enter the group name, confirm permission, then save.",
     invalidShared: "Shared content received, but no supported group invite link was found.",
     savedStatus: "Group saved on this phone only.", readError: "Could not load saved groups.",
-    nameRequired: "Enter a group name.", linkInvalid: "Enter a valid invite link starting with https://.",
+    nameRequired: "Enter a group name.", linkInvalid: "Enter an HTTPS invite link for WhatsApp, Telegram, Facebook Groups or Discord.",
     permissionRequired: "Please confirm you have permission to share this invite link.", saveError: "Could not save the group. Please try again.",
     removeError: "Could not remove this group.", nameTitle: "Group name required", linkTitle: "Invalid link",
     permissionTitle: "Permission required", errorTitle: "Error", groupLabel: "Group",
@@ -48,7 +48,7 @@ const COPY: Record<Language, Record<string, string>> = {
   de: {
     subtitle: "Gruppen · Treffen · Community", heroTitle: "Gruppe verbinden",
     heroText: "Teile eine Gruppeneinladung über Teilen → Linkora. Der Link erscheint hier automatisch, sobald die App richtig installiert ist.",
-    language: "Sprache", groupName: "Gruppenname", namePlaceholder: "Beispiel: Freunde in Deutschland",
+    language: "Sprache", groupName: "Gruppenname", namePlaceholder: "Beispiel: Freunde in Deutschland", platform: "Gruppenplattform", supportedLinks: "WhatsApp, Telegram, Facebook-Gruppen und Discord werden unterstützt.",
     invite: "Einladungslink der Gruppe", linkPlaceholder: "Der Link erscheint nach Teilen → Linkora",
     permission: "Ich bin Admin oder darf den Link mit Erlaubnis des Admins teilen.",
     save: "Bestätigen und Gruppe speichern", saved: "Gespeicherte Gruppen", empty: "Auf diesem Telefon wurden noch keine Gruppen gespeichert.",
@@ -56,7 +56,7 @@ const COPY: Record<Language, Record<string, string>> = {
     initial: "Teile einen Einladungslink über Teilen → Linkora.", loaded: "Einladungslink empfangen. Gruppennamen eingeben, Berechtigung bestätigen und speichern.",
     invalidShared: "Geteilte Inhalte empfangen, aber kein unterstützter Gruppeneinladungslink gefunden.",
     savedStatus: "Gruppe nur auf diesem Telefon gespeichert.", readError: "Gespeicherte Gruppen konnten nicht geladen werden.",
-    nameRequired: "Bitte einen Gruppennamen eingeben.", linkInvalid: "Bitte einen gültigen Einladungslink mit https:// eingeben.",
+    nameRequired: "Bitte einen Gruppennamen eingeben.", linkInvalid: "Bitte einen HTTPS-Einladungslink für WhatsApp, Telegram, Facebook-Gruppen oder Discord eingeben.",
     permissionRequired: "Bitte bestätige, dass du den Einladungslink teilen darfst.", saveError: "Gruppe konnte nicht gespeichert werden. Bitte erneut versuchen.",
     removeError: "Gruppe konnte nicht entfernt werden.", nameTitle: "Gruppenname erforderlich", linkTitle: "Ungültiger Link",
     permissionTitle: "Berechtigung erforderlich", errorTitle: "Fehler", groupLabel: "Gruppe",
@@ -64,7 +64,7 @@ const COPY: Record<Language, Record<string, string>> = {
   fr: {
     subtitle: "Groupes · Rencontres · Communauté", heroTitle: "Connectez votre groupe",
     heroText: "Partagez un lien d’invitation avec Partager → Linkora. Le lien apparaîtra ici automatiquement une fois l’application correctement installée.",
-    language: "Langue", groupName: "Nom du groupe", namePlaceholder: "Exemple : Amis en Allemagne",
+    language: "Langue", groupName: "Nom du groupe", namePlaceholder: "Exemple : Amis en Allemagne", platform: "Plateforme du groupe", supportedLinks: "WhatsApp, Telegram, les groupes Facebook et Discord sont pris en charge.",
     invite: "Lien d’invitation du groupe", linkPlaceholder: "Le lien apparaît après Partager → Linkora",
     permission: "Je suis administrateur ou j’ai son autorisation de partager ce lien.",
     save: "Confirmer et enregistrer le groupe", saved: "Groupes enregistrés", empty: "Aucun groupe enregistré sur ce téléphone.",
@@ -72,20 +72,37 @@ const COPY: Record<Language, Record<string, string>> = {
     initial: "Partagez un lien d’invitation avec Partager → Linkora.", loaded: "Lien reçu. Saisissez le nom du groupe, confirmez l’autorisation, puis enregistrez.",
     invalidShared: "Contenu reçu, mais aucun lien d’invitation de groupe pris en charge n’a été trouvé.",
     savedStatus: "Groupe enregistré uniquement sur ce téléphone.", readError: "Impossible de charger les groupes enregistrés.",
-    nameRequired: "Saisissez le nom du groupe.", linkInvalid: "Saisissez un lien d’invitation valide commençant par https://.",
+    nameRequired: "Saisissez le nom du groupe.", linkInvalid: "Saisissez un lien HTTPS pour WhatsApp, Telegram, les groupes Facebook ou Discord.",
     permissionRequired: "Confirmez que vous êtes autorisé à partager ce lien.", saveError: "Impossible d’enregistrer le groupe. Réessayez.",
     removeError: "Impossible de supprimer ce groupe.", nameTitle: "Nom requis", linkTitle: "Lien invalide",
     permissionTitle: "Autorisation requise", errorTitle: "Erreur", groupLabel: "Groupe",
   },
 };
 
-type SavedGroup = { id: string; name: string; link: string; savedAt: string };
+type Platform = "WhatsApp" | "Telegram" | "Facebook Groups" | "Discord";
+type SavedGroup = { id: string; name: string; link: string; platform?: Platform; savedAt: string };
 const STORAGE_KEY = "linkora.savedWhatsAppGroups.v1";
 const LANGUAGE_STORAGE_KEY = "linkora.language.v1";
-const INVITE_PATTERN = /https?:\/\/chat\.whatsapp\.com\/[A-Za-z0-9_-]+/i;
+const SUPPORTED_URL = /https?:\/\/[^\s<>"']+/gi;
+
+function detectPlatform(value: string): Platform | null {
+  try {
+    const url = new URL(value.trim().replace(/[),.;!?]+$/, ""));
+    if (url.protocol !== "https:") return null;
+    const host = url.hostname.toLowerCase().replace(/^www\./, "");
+    if (host === "chat.whatsapp.com") return "WhatsApp";
+    if (host === "t.me" || host === "telegram.me" || host === "telegram.dog") return "Telegram";
+    if ((host === "facebook.com" || host === "m.facebook.com") && url.pathname.toLowerCase().startsWith("/groups/")) return "Facebook Groups";
+    if (host === "discord.gg" || (host === "discord.com" && url.pathname.toLowerCase().startsWith("/invite/"))) return "Discord";
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 function extractInvite(value: string): string {
-  return value.match(INVITE_PATTERN)?.[0] ?? "";
+  const candidates = value.match(SUPPORTED_URL) ?? [];
+  return candidates.map((item) => item.replace(/[),.;!?]+$/, "")).find((item) => detectPlatform(item) !== null) ?? "";
 }
 
 export default function App() {
@@ -95,6 +112,7 @@ export default function App() {
   const [groupName, setGroupName] = useState("");
   const [inviteLink, setInviteLink] = useState("");
   const [hasPermission, setHasPermission] = useState(false);
+  const detectedPlatform = detectPlatform(inviteLink);
   const [status, setStatus] = useState(COPY.de.initial);
   const [savedGroups, setSavedGroups] = useState<SavedGroup[]>([]);
   const [loading, setLoading] = useState(true);
@@ -122,7 +140,7 @@ export default function App() {
     const invite = extractInvite(sharedText);
     if (invite) {
       setInviteLink(invite);
-      setStatus(t.loaded);
+      setStatus(COPY[language].loaded);
     } else {
       setStatus(t.invalidShared);
     }
@@ -139,14 +157,7 @@ export default function App() {
     }
   }
 
-  const validLink = useMemo(() => {
-    try {
-      const url = new URL(inviteLink.trim());
-      return url.protocol === "https:" && url.hostname.toLowerCase() === "chat.whatsapp.com";
-    } catch {
-      return false;
-    }
-  }, [inviteLink]);
+  const validLink = useMemo(() => detectPlatform(inviteLink) !== null, [inviteLink]);
 
   async function saveGroup() {
     const name = groupName.trim();
@@ -163,7 +174,8 @@ export default function App() {
       Alert.alert(t.permissionTitle, t.permissionRequired);
       return;
     }
-    const next: SavedGroup[] = [{ id: String(Date.now()), name, link, savedAt: new Date().toISOString() }, ...savedGroups];
+    const platform = detectPlatform(link) ?? undefined;
+    const next: SavedGroup[] = [{ id: String(Date.now()), name, link, platform, savedAt: new Date().toISOString() }, ...savedGroups];
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       setSavedGroups(next);
@@ -223,6 +235,15 @@ export default function App() {
         <View style={styles.panel}>
           <Text style={styles.label}>{t.groupName}</Text>
           <TextInput value={groupName} onChangeText={setGroupName} placeholder={t.namePlaceholder} style={styles.input} maxLength={100} />
+          <Text style={styles.label}>{t.platform}</Text>
+          <View style={styles.platformRow}>
+            {(["WhatsApp", "Telegram", "Facebook Groups", "Discord"] as Platform[]).map((platform) => (
+              <View key={platform} style={[styles.platformChip, detectedPlatform === platform && styles.platformChipActive]}>
+                <Text style={[styles.platformChipText, detectedPlatform === platform && styles.platformChipTextActive]}>{platform}</Text>
+              </View>
+            ))}
+          </View>
+          <Text style={styles.helperText}>{t.supportedLinks}</Text>
           <Text style={styles.label}>{t.invite}</Text>
           <TextInput value={inviteLink} onChangeText={setInviteLink} placeholder={t.linkPlaceholder} style={styles.input} autoCapitalize="none" keyboardType="url" autoCorrect={false} />
           <Pressable style={styles.checkRow} onPress={() => setHasPermission((v) => !v)} accessibilityRole="checkbox" accessibilityState={{ checked: hasPermission }}>
@@ -244,6 +265,7 @@ export default function App() {
         ) : savedGroups.map((group) => (
           <View style={styles.groupCard} key={group.id}>
             <Text style={styles.groupName}>{group.name}</Text>
+            <Text style={styles.groupPlatform}>{group.platform ?? detectPlatform(group.link) ?? "Group link"}</Text>
             <Text style={styles.groupLink} numberOfLines={2}>{group.link}</Text>
             <Pressable onPress={() => removeGroup(group.id)} style={styles.removeButton}><Text style={styles.removeText}>{t.remove}</Text></Pressable>
           </View>
@@ -270,7 +292,8 @@ const styles = StyleSheet.create({
   languageChip: { borderWidth: 1, borderColor: "#dce3ef", borderRadius: 20, paddingVertical: 8, paddingHorizontal: 11, backgroundColor: "#fff" },
   languageChipActive: { backgroundColor: "#2459d3", borderColor: "#2459d3" },
   languageChipText: { color: "#38445c", fontSize: 12, fontWeight: "600" },
-  languageChipTextActive: { color: "#fff" },\n  panel: { backgroundColor: "#fff", borderColor: "#e4e9f2", borderWidth: 1, borderRadius: 18, padding: 17, gap: 10 },
+  languageChipTextActive: { color: "#fff" },
+  panel: { backgroundColor: "#fff", borderColor: "#e4e9f2", borderWidth: 1, borderRadius: 18, padding: 17, gap: 10 },
   label: { fontWeight: "700", color: "#18233b", marginTop: 4 },
   input: { borderWidth: 1, borderColor: "#dce3ef", borderRadius: 11, paddingHorizontal: 12, paddingVertical: 12, color: "#18233b", backgroundColor: "#fff" },
   checkRow: { flexDirection: "row", alignItems: "flex-start", gap: 10, marginVertical: 5 },
@@ -288,6 +311,7 @@ const styles = StyleSheet.create({
   emptyText: { color: "#68758d" },
   groupCard: { backgroundColor: "#fff", borderWidth: 1, borderColor: "#e4e9f2", borderRadius: 14, padding: 14, marginBottom: 10 },
   groupName: { color: "#18233b", fontWeight: "800", fontSize: 16 },
+  groupPlatform: { color: "#2459d3", fontWeight: "700", fontSize: 11, marginTop: 4 },
   groupLink: { color: "#68758d", marginTop: 5, fontSize: 12 },
   removeButton: { alignSelf: "flex-start", paddingVertical: 8, paddingHorizontal: 10, backgroundColor: "#fff0f0", borderRadius: 8, marginTop: 8 },
   removeText: { color: "#a11", fontWeight: "700" },
