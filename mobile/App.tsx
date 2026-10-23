@@ -82,7 +82,7 @@ const COPY: Record<Language, Record<string, string>> = {
 type Platform = "WhatsApp" | "Telegram" | "Facebook Groups" | "Discord";
 type SavedGroup = { id: string; name: string; link: string; platform?: Platform; savedAt: string };
 const STORAGE_KEY = "linkora.savedWhatsAppGroups.v1";
-const LANGUAGE_STORAGE_KEY = "linkora.language.v1";
+const LANGUAGE_STORAGE_KEY = "linkora.language.v2";
 const SUPPORTED_URL = /https?:\/\/[^\s<>"']+/gi;
 
 function detectPlatform(value: string): Platform | null {
@@ -113,7 +113,7 @@ export default function App() {
   const [inviteLink, setInviteLink] = useState("");
   const [hasPermission, setHasPermission] = useState(false);
   const detectedPlatform = detectPlatform(inviteLink);
-  const [status, setStatus] = useState(COPY.rw.initial);
+  const [status, setStatus] = useState(COPY.de.initial);
   const [savedGroups, setSavedGroups] = useState<SavedGroup[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -130,7 +130,7 @@ export default function App() {
           setStatus(COPY[savedLanguage].initial);
         }
       })
-      .catch(() => setStatus(COPY.rw.readError))
+      .catch(() => setStatus(COPY.de.readError))
       .finally(() => setLoading(false));
   }, []);
 
