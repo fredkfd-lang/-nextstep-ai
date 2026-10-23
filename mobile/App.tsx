@@ -7,9 +7,9 @@ import { useShareIntent } from "expo-share-intent";
 
 type Language = "rw" | "en" | "de" | "fr";
 const LANGUAGES: { id: Language; label: string }[] = [
+  { id: "de", label: "Deutsch" },
   { id: "rw", label: "Kinyarwanda" },
   { id: "en", label: "English" },
-  { id: "de", label: "Deutsch" },
   { id: "fr", label: "Français" },
 ];
 const COPY: Record<Language, Record<string, string>> = {
