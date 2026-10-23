@@ -81,6 +81,7 @@ const COPY: Record<Language, Record<string, string>> = {
 
 type SavedGroup = { id: string; name: string; link: string; savedAt: string };
 const STORAGE_KEY = "linkora.savedWhatsAppGroups.v1";
+const LANGUAGE_STORAGE_KEY = "linkora.language.v1";
 const INVITE_PATTERN = /https?:\/\/chat\.whatsapp\.com\/[A-Za-z0-9_-]+/i;
 
 function extractInvite(value: string): string {
@@ -89,19 +90,29 @@ function extractInvite(value: string): string {
 
 export default function App() {
   const { hasShareIntent, shareIntent, resetShareIntent, error: shareError } = useShareIntent();
-  const [language, setLanguage] = useState<Language>("rw");
+  const [language, setLanguage] = useState<Language>("de");
   const t = COPY[language];
   const [groupName, setGroupName] = useState("");
   const [inviteLink, setInviteLink] = useState("");
   const [hasPermission, setHasPermission] = useState(false);
-  const [status, setStatus] = useState("Sangiza invite link ukoresheje Share → Linkora.");
+  const [status, setStatus] = useState(COPY.de.initial);
   const [savedGroups, setSavedGroups] = useState<SavedGroup[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    AsyncStorage.getItem(STORAGE_KEY)
-      .then((value) => setSavedGroups(value ? JSON.parse(value) as SavedGroup[] : []))
-      .catch(() => setStatus(t.readError))
+    Promise.all([
+      AsyncStorage.getItem(STORAGE_KEY),
+      AsyncStorage.getItem(LANGUAGE_STORAGE_KEY),
+    ])
+      .then(([groupsValue, languageValue]) => {
+        setSavedGroups(groupsValue ? JSON.parse(groupsValue) as SavedGroup[] : []);
+        if (languageValue && Object.prototype.hasOwnProperty.call(COPY, languageValue)) {
+          const savedLanguage = languageValue as Language;
+          setLanguage(savedLanguage);
+          setStatus(COPY[savedLanguage].initial);
+        }
+      })
+      .catch(() => setStatus(COPY.de.readError))
       .finally(() => setLoading(false));
   }, []);
 
@@ -117,6 +128,16 @@ export default function App() {
     }
     resetShareIntent();
   }, [hasShareIntent, shareIntent, resetShareIntent]);
+
+  async function changeLanguage(nextLanguage: Language) {
+    setLanguage(nextLanguage);
+    setStatus(COPY[nextLanguage].initial);
+    try {
+      await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, nextLanguage);
+    } catch {
+      // Keep the language active for this session even if persistence fails.
+    }
+  }
 
   const validLink = useMemo(() => {
     try {
@@ -177,13 +198,30 @@ export default function App() {
           </View>
         </View>
 
+        <View style={styles.languagePanel}>
+          <Text style={styles.label}>{t.language}</Text>
+          <View style={styles.languageRow}>
+            {LANGUAGES.map((item) => (
+              <Pressable
+                key={item.id}
+                onPress={() => changeLanguage(item.id)}
+                style={[styles.languageChip, language === item.id && styles.languageChipActive]}
+                accessibilityRole="button"
+                accessibilityState={{ selected: language === item.id }}
+              >
+                <Text style={[styles.languageChipText, language === item.id && styles.languageChipTextActive]}>{item.label}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+
         <View style={styles.hero}>
           <Text style={styles.heroTitle}>{t.heroTitle}</Text>
           <Text style={styles.heroText}>{t.heroText}</Text>
         </View>
 
         <View style={styles.panel}>
-          <Text style={styles.label}>Izina ry’itsinda</Text>
+          <Text style={styles.label}>{t.groupName}</Text>
           <TextInput value={groupName} onChangeText={setGroupName} placeholder={t.namePlaceholder} style={styles.input} maxLength={100} />
           <Text style={styles.label}>{t.invite}</Text>
           <TextInput value={inviteLink} onChangeText={setInviteLink} placeholder={t.linkPlaceholder} style={styles.input} autoCapitalize="none" keyboardType="url" autoCorrect={false} />
@@ -227,7 +265,12 @@ const styles = StyleSheet.create({
   hero: { backgroundColor: "#173c99", padding: 22, borderRadius: 20, marginBottom: 16 },
   heroTitle: { color: "#fff", fontSize: 25, fontWeight: "800", marginBottom: 8 },
   heroText: { color: "#eaf0ff", lineHeight: 22 },
-  languagePanel: { backgroundColor: "#fff", borderColor: "#e4e9f2", borderWidth: 1, borderRadius: 16, padding: 14, marginBottom: 14, gap: 9 },\n  languageRow: { flexDirection: "row", flexWrap: "wrap", gap: 7 },\n  languageChip: { borderWidth: 1, borderColor: "#dce3ef", borderRadius: 20, paddingVertical: 8, paddingHorizontal: 11, backgroundColor: "#fff" },\n  languageChipActive: { backgroundColor: "#2459d3", borderColor: "#2459d3" },\n  languageChipText: { color: "#38445c", fontSize: 12, fontWeight: "600" },\n  languageChipTextActive: { color: "#fff" },\n  panel: { backgroundColor: "#fff", borderColor: "#e4e9f2", borderWidth: 1, borderRadius: 18, padding: 17, gap: 10 },
+  languagePanel: { backgroundColor: "#fff", borderColor: "#e4e9f2", borderWidth: 1, borderRadius: 16, padding: 14, marginBottom: 14, gap: 9 },
+  languageRow: { flexDirection: "row", flexWrap: "wrap", gap: 7 },
+  languageChip: { borderWidth: 1, borderColor: "#dce3ef", borderRadius: 20, paddingVertical: 8, paddingHorizontal: 11, backgroundColor: "#fff" },
+  languageChipActive: { backgroundColor: "#2459d3", borderColor: "#2459d3" },
+  languageChipText: { color: "#38445c", fontSize: 12, fontWeight: "600" },
+  languageChipTextActive: { color: "#fff" },\n  panel: { backgroundColor: "#fff", borderColor: "#e4e9f2", borderWidth: 1, borderRadius: 18, padding: 17, gap: 10 },
   label: { fontWeight: "700", color: "#18233b", marginTop: 4 },
   input: { borderWidth: 1, borderColor: "#dce3ef", borderRadius: 11, paddingHorizontal: 12, paddingVertical: 12, color: "#18233b", backgroundColor: "#fff" },
   checkRow: { flexDirection: "row", alignItems: "flex-start", gap: 10, marginVertical: 5 },
