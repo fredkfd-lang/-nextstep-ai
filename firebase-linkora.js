@@ -5,19 +5,22 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, se
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js";
 
 const firebaseConfig = {
-  apiKey: "PASTE_FIREBASE_WEB_API_KEY",
-  authDomain: "PASTE_FIREBASE_PROJECT_ID.firebaseapp.com",
-  projectId: "PASTE_FIREBASE_PROJECT_ID",
-  appId: "PASTE_FIREBASE_WEB_APP_ID"
+  apiKey: "AIzaSyBKJ7KGeMg7ATm6rSJmhfBPgp9c3cOTMaI",
+  authDomain: "beropp.firebaseapp.com",
+  projectId: "beropp",
+  storageBucket: "beropp.firebasestorage.app",
+  messagingSenderId: "175693628880",
+  appId: "1:175693628880:web:a6e377b0deb5a73b66a5d5",
+  measurementId: "G-H654XFZKV6"
 };
-const configured = !Object.values(firebaseConfig).some(v => v.startsWith("PASTE_"));
+const configured = true;
 const status = (message, error=false) => {
   const el = document.getElementById("cloudStatus");
   if (el) { el.textContent = message; el.classList.toggle("error", error); }
 };
 let auth, functions, phoneConfirmation=null, recaptcha=null, activeCloudGroupId=null;
 if (configured) {
-  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+  const app = getApps().find(existing => existing.name === "linkora") || initializeApp(firebaseConfig, "linkora");
   auth = getAuth(app);
   functions = getFunctions(app, "europe-west1");
   onAuthStateChanged(auth, user => {
