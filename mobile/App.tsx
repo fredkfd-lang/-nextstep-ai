@@ -7,8 +7,8 @@ import { useShareIntent } from "expo-share-intent";
 
 type Language = "rw" | "en" | "de" | "fr";
 const LANGUAGES: { id: Language; label: string }[] = [
-  { id: "de", label: "Deutsch" },
   { id: "rw", label: "Kinyarwanda" },
+  { id: "de", label: "Deutsch" },
   { id: "en", label: "English" },
   { id: "fr", label: "Français" },
 ];
@@ -107,13 +107,13 @@ function extractInvite(value: string): string {
 
 export default function App() {
   const { hasShareIntent, shareIntent, resetShareIntent, error: shareError } = useShareIntent();
-  const [language, setLanguage] = useState<Language>("de");
+  const [language, setLanguage] = useState<Language>("rw");
   const t = COPY[language];
   const [groupName, setGroupName] = useState("");
   const [inviteLink, setInviteLink] = useState("");
   const [hasPermission, setHasPermission] = useState(false);
   const detectedPlatform = detectPlatform(inviteLink);
-  const [status, setStatus] = useState(COPY.de.initial);
+  const [status, setStatus] = useState(COPY.rw.initial);
   const [savedGroups, setSavedGroups] = useState<SavedGroup[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -130,7 +130,7 @@ export default function App() {
           setStatus(COPY[savedLanguage].initial);
         }
       })
-      .catch(() => setStatus(COPY.de.readError))
+      .catch(() => setStatus(COPY.rw.readError))
       .finally(() => setLoading(false));
   }, []);
 
