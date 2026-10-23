@@ -1,0 +1,29 @@
+{
+  "id": "/",
+  "name": "Linkora — Groups, Meetups & Community",
+  "short_name": "Linkora",
+  "description": "Connect groups, plan meetups and share community activities.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f7fc",
+  "theme_color": "#2459d3",
+  "icons": [
+    {
+      "src": "/linkora-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "share_target": {
+    "action": "/?share-target=1",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}
