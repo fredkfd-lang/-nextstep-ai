@@ -19,7 +19,7 @@ const COPY: Record<Language, Record<string, string>> = {
     language: "Ururimi", groupName: "Izina ry’itsinda", namePlaceholder: "Urugero: Inshuti zo mu Budage",
     invite: "Link y’ubutumire bw’itsinda", linkPlaceholder: "Link izaza hano uhisemo Share → Linkora",
     permission: "Ndi admin cyangwa nemerewe na admin gusangiza iyi link.",
-    save: "Emeza kandi ubike itsinda", saved: "Amatsinda wabitswe", empty: "{t.empty}",
+    save: "Emeza kandi ubike itsinda", saved: "Amatsinda wabitswe", empty: "Nta tsinda rirabikwa kuri iyi telefoni.",
     remove: "Kuraho", disclaimer: "Icyitonderwa: Linkora ntishobora gusoma amatsinda yawe bwite. Yakira gusa link uhisemo gusangiza. Amakuru abikwa kuri iyi telefoni gusa.",
     initial: "Sangiza invite link ukoresheje Share → Linkora.", loaded: "Twakiriye link. Andika izina ry’itsinda, wemeze uburenganzira, hanyuma ubike.",
     invalidShared: "Twakiriye ibyo wasangije, ariko nta link y’itsinda ishyigikiwe yabonetse.",
@@ -178,8 +178,8 @@ export default function App() {
         </View>
 
         <View style={styles.hero}>
-          <Text style={styles.heroTitle}>Huza WhatsApp group</Text>
-          <Text style={styles.heroText}>Muri WhatsApp, fungura Group info → Invite via link → Share, hanyuma uhitemo Linkora muri Share menu.</Text>
+          <Text style={styles.heroTitle}>{t.heroTitle}</Text>
+          <Text style={styles.heroText}>{t.heroText}</Text>
         </View>
 
         <View style={styles.panel}>
@@ -202,7 +202,7 @@ export default function App() {
           <Text style={styles.count}>{loading ? "…" : String(savedGroups.length)}</Text>
         </View>
         {savedGroups.length === 0 ? (
-          <View style={styles.empty}><Text style={styles.emptyText}>Nta tsinda rirabikwa kuri iyi telefoni.</Text></View>
+          <View style={styles.empty}><Text style={styles.emptyText}>{t.empty}</Text></View>
         ) : savedGroups.map((group) => (
           <View style={styles.groupCard} key={group.id}>
             <Text style={styles.groupName}>{group.name}</Text>
