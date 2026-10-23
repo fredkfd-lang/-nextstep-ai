@@ -15,9 +15,9 @@ const LANGUAGES: { id: Language; label: string }[] = [
 const COPY: Record<Language, Record<string, string>> = {
   rw: {
     subtitle: "Amatsinda · Inama · Umuryango", heroTitle: "Huza itsinda ryawe",
-    heroText: "Sangiza ubutumire bw’itsinda ukoresheje Share → Linkora. Link izaza hano mu buryo bwikora iyo app imaze gushyirwaho neza.",
+    heroText: "Sangiza link y’itsinda rya WhatsApp, Telegram, Facebook cyangwa Discord ukoresheje Share → Linkora. Linkora izamenya urubuga kandi ibike amatsinda yawe ahantu hamwe.",
     language: "Ururimi", groupName: "Izina ry’itsinda", namePlaceholder: "Urugero: Inshuti zo mu Budage", platform: "Urubuga rw’itsinda", supportedLinks: "WhatsApp, Telegram, Facebook Groups na Discord birashyigikiwe.",
-    invite: "Link y’ubutumire bw’itsinda", linkPlaceholder: "Link izaza hano uhisemo Share → Linkora",
+    invite: "Link y’ubutumire bw’itsinda", linkPlaceholder: "Shyiramo link cyangwa uyisangize Linkora",
     permission: "Ndi admin cyangwa nemerewe na admin gusangiza iyi link.",
     save: "Emeza kandi ubike itsinda", saved: "Amatsinda wabitswe", empty: "Nta tsinda rirabikwa kuri iyi telefoni.",
     remove: "Kuraho", disclaimer: "Icyitonderwa: Linkora ntishobora gusoma amatsinda yawe bwite. Yakira gusa link uhisemo gusangiza. Amakuru abikwa kuri iyi telefoni gusa.",
@@ -31,9 +31,9 @@ const COPY: Record<Language, Record<string, string>> = {
   },
   en: {
     subtitle: "Groups · Meetups · Community", heroTitle: "Connect your group",
-    heroText: "Share a group invite using Share → Linkora. The link will appear here automatically once the app is properly installed.",
+    heroText: "Share a WhatsApp, Telegram, Facebook or Discord group link using Share → Linkora. Linkora detects the platform and keeps your groups together in one place.",
     language: "Language", groupName: "Group name", namePlaceholder: "Example: Friends in Germany", platform: "Group platform", supportedLinks: "WhatsApp, Telegram, Facebook Groups and Discord are supported.",
-    invite: "Group invite link", linkPlaceholder: "The link appears here after Share → Linkora",
+    invite: "Group invite link", linkPlaceholder: "Paste a link or share it to Linkora",
     permission: "I’m an admin or have permission from the admin to share this link.",
     save: "Confirm and save group", saved: "Saved groups", empty: "No groups saved on this phone yet.",
     remove: "Remove", disclaimer: "Note: Linkora cannot read your private groups. It only receives links you choose to share. Data is stored on this phone only.",
@@ -47,9 +47,9 @@ const COPY: Record<Language, Record<string, string>> = {
   },
   de: {
     subtitle: "Gruppen · Treffen · Community", heroTitle: "Gruppe verbinden",
-    heroText: "Teile eine Gruppeneinladung über Teilen → Linkora. Der Link erscheint hier automatisch, sobald die App richtig installiert ist.",
+    heroText: "Teile einen WhatsApp-, Telegram-, Facebook- oder Discord-Gruppenlink über Teilen → Linkora. Linkora erkennt die Plattform und sammelt deine Gruppen an einem Ort.",
     language: "Sprache", groupName: "Gruppenname", namePlaceholder: "Beispiel: Freunde in Deutschland", platform: "Gruppenplattform", supportedLinks: "WhatsApp, Telegram, Facebook-Gruppen und Discord werden unterstützt.",
-    invite: "Einladungslink der Gruppe", linkPlaceholder: "Der Link erscheint nach Teilen → Linkora",
+    invite: "Einladungslink der Gruppe", linkPlaceholder: "Link einfügen oder mit Linkora teilen",
     permission: "Ich bin Admin oder darf den Link mit Erlaubnis des Admins teilen.",
     save: "Bestätigen und Gruppe speichern", saved: "Gespeicherte Gruppen", empty: "Auf diesem Telefon wurden noch keine Gruppen gespeichert.",
     remove: "Entfernen", disclaimer: "Hinweis: Linkora kann deine privaten Gruppen nicht lesen. Die App erhält nur Links, die du selbst teilst. Daten werden nur auf diesem Telefon gespeichert.",
@@ -63,9 +63,9 @@ const COPY: Record<Language, Record<string, string>> = {
   },
   fr: {
     subtitle: "Groupes · Rencontres · Communauté", heroTitle: "Connectez votre groupe",
-    heroText: "Partagez un lien d’invitation avec Partager → Linkora. Le lien apparaîtra ici automatiquement une fois l’application correctement installée.",
+    heroText: "Partagez un lien de groupe WhatsApp, Telegram, Facebook ou Discord avec Partager → Linkora. Linkora détecte la plateforme et rassemble vos groupes au même endroit.",
     language: "Langue", groupName: "Nom du groupe", namePlaceholder: "Exemple : Amis en Allemagne", platform: "Plateforme du groupe", supportedLinks: "WhatsApp, Telegram, les groupes Facebook et Discord sont pris en charge.",
-    invite: "Lien d’invitation du groupe", linkPlaceholder: "Le lien apparaît après Partager → Linkora",
+    invite: "Lien d’invitation du groupe", linkPlaceholder: "Collez un lien ou partagez-le avec Linkora",
     permission: "Je suis administrateur ou j’ai son autorisation de partager ce lien.",
     save: "Confirmer et enregistrer le groupe", saved: "Groupes enregistrés", empty: "Aucun groupe enregistré sur ce téléphone.",
     remove: "Supprimer", disclaimer: "Remarque : Linkora ne peut pas lire vos groupes privés. L’application reçoit uniquement les liens que vous choisissez de partager. Les données restent sur ce téléphone.",
@@ -145,7 +145,7 @@ export default function App() {
       setStatus(t.invalidShared);
     }
     resetShareIntent();
-  }, [hasShareIntent, shareIntent, resetShareIntent]);
+  }, [hasShareIntent, shareIntent, resetShareIntent, language]);
 
   async function changeLanguage(nextLanguage: Language) {
     setLanguage(nextLanguage);
