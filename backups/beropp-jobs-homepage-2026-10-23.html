@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BEROPP – Ausbildung & Jobs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0066d9;--blue2:#004fa8;--ink:#172235;--muted:#68758a;--bg:#f5f7fa;--line:#e2e7ee;--white:#fff;--green:#0b9f70;--orange:#ff8a00}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#f8fbff 0%,#eef5fc 48%,#f5f7fa 100%)}a{text-decoration:none;color:inherit}button,input,select{font:inherit}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}
+.topbar{background:var(--blue);border-bottom:1px solid #0058bb;box-shadow:0 3px 14px #004fa822}.topin{height:70px;display:flex;align-items:center;justify-content:space-between;gap:24px}.logo{font-weight:800;font-size:25px;letter-spacing:-1px;color:#fff}.logo span{color:#dbeaff}.nav{display:flex;gap:24px;font-size:14px;font-weight:600;color:#fff}.nav a:hover{color:#dbeaff}.actions{display:flex;gap:9px;align-items:center}.login{border:1px solid #ffffff66;background:#ffffff12;color:#fff;border-radius:8px;padding:10px 14px;font-weight:700}.signup{border:0;background:#fff;color:var(--blue);border-radius:8px;padding:11px 15px;font-weight:700}.lang{border:1px solid #ffffff66;background:#ffffff12;color:#fff;border-radius:8px;padding:9px 10px;font-weight:700;cursor:pointer}.lang option{color:#172235;background:#fff}.hamb{display:none;border:1px solid #ffffff66;background:#ffffff12;color:#fff;border-radius:8px;padding:9px 11px}
+.hero{background:#87ceeb;padding:54px 0 0}.hero h1{font-size:44px;line-height:1.08;letter-spacing:-1.7px;text-align:center;margin:0 auto 12px;max-width:760px}.hero p{text-align:center;color:var(--muted);font-size:16px;margin:0 auto 28px}.search{position:relative;z-index:4;display:grid;grid-template-columns:1.25fr 1fr 150px;gap:8px;background:#fff;padding:9px;border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 35px #17223518;max-width:900px;margin:0 auto}.field{display:flex;align-items:center;border:1px solid #d7dde6;border-radius:7px;padding:0 12px;background:#fff}.field b{font-size:17px;margin-right:8px}.field input,.field select{border:0;outline:0;width:100%;padding:13px 0;color:#26354b;background:#fff}.find{border:0;border-radius:7px;background:var(--blue);color:#fff;font-weight:800}.popular{text-align:center;margin:16px 0 30px;color:#6b778a;font-size:12px}.popular a{display:inline-block;margin:0 4px;color:var(--blue);font-weight:600}
+.heroimg{height:310px;background-image:linear-gradient(90deg,#071d3d66,#071d3d05),url('https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1800');background-size:cover;background-position:center 48%;display:flex;align-items:flex-end}.heroimg .wrap{padding-bottom:28px}.hero-note{background:#fff;border-radius:10px;padding:18px 22px;width:min(500px,100%);box-shadow:0 12px 30px #0002}.hero-note strong{font-size:18px}.hero-note p{margin:5px 0 0;text-align:left;font-size:13px}
+.section{padding:42px 0}.head{display:flex;align-items:end;justify-content:space-between;margin-bottom:18px}.head h2{margin:0;font-size:26px;letter-spacing:-.7px}.head p{margin:5px 0 0;color:var(--muted);font-size:13px}.more{color:var(--blue);font-size:13px;font-weight:800}
+.categories{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.cat{background:#fff;border:1px solid var(--line);border-radius:9px;padding:18px 12px;text-align:center;min-height:116px;cursor:pointer}.cat:hover{border-color:#8db9ec;box-shadow:0 7px 22px #1b5da915}.cat .ico{font-size:27px}.cat strong{display:block;margin-top:10px;font-size:12px}.cat small{color:var(--muted);font-size:10px}
+.adwrap{padding:8px 0 42px}.ad{position:relative;overflow:hidden;border-radius:12px;background:#0c2347;color:#fff;min-height:270px}.adtrack{display:flex;transition:transform .45s ease}.adslide{min-width:100%;display:grid;grid-template-columns:1fr 1fr;min-height:270px}.adcopy{padding:38px 42px}.adcopy .tag{font-size:11px;font-weight:800;background:#ffffff1a;border:1px solid #ffffff2d;padding:6px 9px;border-radius:99px}.adcopy h2{font-size:31px;line-height:1.12;margin:15px 0 9px}.adcopy p{font-size:13px;color:#d4e0f3;max-width:480px}.adbtn{display:inline-block;margin-top:9px;background:#fff;color:#12345e;padding:11px 15px;border-radius:7px;font-size:12px;font-weight:800}.adphoto{background-size:cover;background-position:center}.s1 .adphoto{background-image:url('https://images.pexels.com/photos/3862632/pexels-photo-3862632.jpeg?auto=compress&cs=tinysrgb&w=1300')}.s2 .adphoto{background-image:url('https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=1300')}.s3 .adphoto{background-image:url('https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1300')}.dots{position:absolute;bottom:13px;left:42px;display:flex;gap:6px}.dot{width:8px;height:8px;border:0;border-radius:50%;background:#fff6;padding:0}.dot.active{width:24px;border-radius:8px;background:#fff}
+.tabs{display:flex;gap:8px;margin-bottom:15px}.tab{border:1px solid var(--line);background:#fff;border-radius:7px;padding:10px 15px;font-size:12px;font-weight:800;color:#5b687a}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;min-height:210px;display:flex;flex-direction:column}.card:hover{box-shadow:0 12px 28px #17223512}.badge{display:inline-block;width:max-content;background:#eaf3ff;color:#075bbf;border-radius:5px;padding:5px 7px;font-size:9px;font-weight:900}.badge.job{background:#e8f8f2;color:#087e5a}.card h3{font-size:14px;line-height:1.4;margin:12px 0 8px}.meta{font-size:11px;color:#66758b;margin:3px 0}.card .desc{font-size:11px;color:#7a8798;margin:9px 0}.apply{margin-top:auto;border:0;background:var(--blue);color:#fff;border-radius:7px;padding:10px;font-size:11px;font-weight:800}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.feature{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px}.feature .ico{font-size:25px}.feature h3{font-size:15px;margin:10px 0 5px}.feature p{font-size:12px;color:var(--muted);line-height:1.6}.feature a{color:var(--blue);font-size:12px;font-weight:800}
+.companybar{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:28px 0}.companyrow{display:flex;gap:34px;justify-content:space-around;align-items:center;flex-wrap:wrap;color:#8a95a5;font-weight:800;font-size:16px}.companyrow span,.companyrow a{opacity:.8;color:inherit}.companyrow a{cursor:pointer}.companyrow a:hover{opacity:1;color:var(--blue)}
+.footer{background:#142033;color:#b9c4d4;padding:42px 0 20px}.footgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:25px}.footer h4{color:#fff;margin:0 0 12px;font-size:13px}.footer a{display:block;font-size:11px;margin:8px 0}.footer p{font-size:11px;line-height:1.7}.copy{border-top:1px solid #ffffff18;margin-top:25px;padding-top:15px;font-size:10px;display:flex;justify-content:space-between}
+.modal{display:none;position:fixed;inset:0;background:#07152dcc;z-index:50;align-items:center;justify-content:center;padding:18px}.modalbox{background:#fff;border-radius:12px;width:min(450px,100%);padding:24px}.modalbox h3{margin:0 0 7px}.modalbox p{font-size:12px;color:var(--muted)}.modalbox input{width:100%;padding:12px;border:1px solid var(--line);border-radius:7px;margin:10px 0;outline:0}.close{float:right;border:0;background:none;font-size:24px;color:#66758b}
+@media(max-width:900px){.nav{display:none}.hamb{display:block}.actions .login{display:none}.hero h1{font-size:36px}.categories{grid-template-columns:repeat(3,1fr)}.cards{grid-template-columns:repeat(2,1fr)}.adslide{grid-template-columns:1fr}.adphoto{min-height:180px}.features{grid-template-columns:1fr 1fr}.footgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.wrap{width:calc(100% - 24px)}.topin{height:62px}.logo{font-size:22px}.signup{padding:9px 11px;font-size:11px}.hero{padding-top:36px}.hero h1{font-size:31px}.hero p{font-size:13px}.search{grid-template-columns:1fr}.find{height:46px}.heroimg{height:270px}.categories{grid-template-columns:repeat(2,1fr)}.cards,.features{grid-template-columns:1fr}.adcopy{padding:28px}.adcopy h2{font-size:25px}.dots{left:28px}.companyrow{gap:20px}.footgrid{grid-template-columns:1fr 1fr}.copy{display:block}.copy span{display:block;margin:5px 0}}
+body.locked > *:not(#modal){display:block;} body.locked #modal{display:none !important;} .accountGateNote{font-size:12px;color:#667085;margin:8px 0 0;}\n</style>
+</head>
+<body>
+<header class="topbar">
+ <div class="wrap topin">
+  <a class="logo" href="#home">Ber<span>Opp</span></a>
+  <nav class="nav">
+   <a href="#ausbildung">Ausbildung</a><a href="#jobs">Jobs</a><a href="#berufe">Berufe</a><a href="international-ausbildung.html">International</a><a href="remote-international.html">Remote</a><a href="#unternehmen">Unternehmen</a><a href="#ratgeber">Ratgeber</a>
+  </nav>
+  <div class="actions"><select class="lang" aria-label="Sprache wählen" onchange="changeLanguage(this.value)"><option value="de">🇩🇪 DE</option><option value="en">🇬🇧 EN</option><option value="rw">🇷🇼 RW</option></select><button class="login" onclick="openModal()">Einloggen</button><button class="signup" onclick="openModal()">Kostenlos registrieren</button><button class="hamb" onclick="document.querySelector('.nav').classList.toggle('show')">☰</button></div>
+ </div>
+</header>
+
+<main id="home">
+<section class="hero">
+ <div class="wrap">
+  <h1>Finde deine Ausbildung und deinen nächsten Schritt.</h1>
+  <p>Ausbildungsplätze, Jobs und Berufe entdecken – einfach suchen, vergleichen und direkt zum Arbeitgeber.</p>
+  <div class="search">
+   <div class="field"><b>⌕</b><input id="q" placeholder="Ausbildung, Beruf oder Unternehmen"></div>
+   <div class="field"><b>⌖</b><input id="loc" placeholder="Ort oder Postleitzahl"></div>
+   <button class="find" onclick="searchNow()">Stellen finden</button>
+  </div>
+  <div class="popular">Beliebte Suchen:
+   <a href="#ausbildung" onclick="quick('Fachlagerist')">Fachlagerist</a>
+   <a href="#ausbildung" onclick="quick('Elektroniker')">Elektroniker</a>
+   <a href="#ausbildung" onclick="quick('Kaufmann')">Kaufmann</a>
+   <a href="#ausbildung" onclick="quick('Pflege')">Pflege</a>
+   <a href="#ausbildung" onclick="quick('2027')">Ausbildung 2027</a>
+  </div>
+ </div>
+ <div class="heroimg"><div class="wrap"><div class="hero-note"><strong>Orientieren. Entdecken. Bewerben.</strong><p>Finde passende Möglichkeiten und öffne die offizielle Arbeitgeberseite für die Bewerbung.</p></div></div></div>
+</section>
+
+<section class="section" id="berufe"><div class="wrap">
+ <div class="head"><div><h2>Berufe nach Interessen</h2><p>Entdecke beliebte Bereiche für deinen Berufseinstieg.</p></div><a class="more" href="#ausbildung" onclick="showAllBerufe();return false">Alle Berufe →</a></div>
+ <div class="categories">
+  <button class="cat" onclick="quick('Lager')"><div class="ico">📦</div><strong>Lager & Logistik</strong><small>Ausbildung & Jobs</small></button>
+  <button class="cat" onclick="quick('Elektroniker')"><div class="ico">⚡</div><strong>Elektrotechnik</strong><small>Technik & Handwerk</small></button>
+  <button class="cat" onclick="quick('Kaufmann')"><div class="ico">💼</div><strong>Kaufmännisch</strong><small>Büro & Handel</small></button>
+  <button class="cat" onclick="quick('Mechatroniker')"><div class="ico">⚙️</div><strong>Mechatronik</strong><small>Technik & Industrie</small></button>
+  <button class="cat" onclick="quick('Pflege')"><div class="ico">🩺</div><strong>Gesundheit</strong><small>Pflege & Medizin</small></button>
+  <button class="cat" onclick="quick('Verkäufer')"><div class="ico">🛍️</div><strong>Verkauf</strong><small>Handel & Kunden</small></button>
+ </div>
+</div></section>
+
+<section class="adwrap"><div class="wrap">
+ <div class="ad">
+  <div class="adtrack" id="adtrack">
+   <article class="adslide s1"><div class="adcopy"><span class="tag">AUSBILDUNG 2027</span><h2>Deine Zukunft beginnt mit dem richtigen Beruf.</h2><p>Entdecke freie Ausbildungsplätze und starte deinen nächsten Schritt.</p><a class="adbtn" href="#ausbildung">Ausbildung finden →</a></div><div class="adphoto"></div></article>
+   <article class="adslide s2"><div class="adcopy"><span class="tag">BEROPP</span><h2>Dein Profil. Deine Bewerbung. Dein Weg.</h2><p>Bereite deine Daten vor und gehe bei passenden Angeboten direkt zum Unternehmen.</p><a class="adbtn" href="#ratgeber">Mehr erfahren →</a></div><div class="adphoto"></div></article>
+   <article class="adslide s3"><div class="adcopy"><span class="tag">JOBS & CHANCEN</span><h2>Finde deinen nächsten beruflichen Schritt.</h2><p>Suche nach Beruf und Ort und entdecke passende Möglichkeiten.</p><a class="adbtn" href="#jobs">Jobs ansehen →</a></div><div class="adphoto"></div></article>
+  </div>
+  <div class="dots" id="dots"></div>
+ </div>
+</div></section>
+
+<section class="section" id="ausbildung"><div class="wrap">
+ <div class="head"><div><h2>Aktuelle Ausbildungsplätze</h2><p>Ausgewählte Angebote für deinen Einstieg.</p></div><a class="more" href="#ausbildung">Alle Ausbildungen →</a></div>
+ <div class="tabs"><button class="tab active" id="ta" onclick="setType('ausbildung')">🎓 Ausbildung</button><button class="tab" id="tj" onclick="setType('jobs')">💼 Jobs</button></div>
+ <div class="cards" id="results"></div>
+</div></section>
+
+<section class="section" id="jobs" style="padding-top:0"><div class="wrap">
+ <div class="head"><div><h2>Jobs & Minijobs</h2><p>Stellen aus Hamburg und weiteren Regionen in Deutschland – inklusive Remote und internationaler Chancen.</p></div><a class="more" href="remote-international.html">Remote Jobs →</a></div>
+ <div class="cards" id="jobresults"></div>
+</div></section>
+
+<section class="section" id="unternehmen"><div class="wrap">
+ <div class="head"><div><h2>Was BEROPP dir bietet</h2><p>Alles Wichtige für deine Suche an einem Ort.</p></div></div>
+ <div class="features">
+  <div class="feature"><div class="ico">🔎</div><h3>Passende Angebote finden</h3><p>Suche nach Beruf, Unternehmen und Ort und filtere die Ergebnisse direkt.</p><a href="#home">Suche starten →</a></div>
+  <div class="feature"><div class="ico">📄</div><h3>CV & Bewerbung</h3><p>Bereite deine wichtigsten Angaben übersichtlich für Bewerbungen vor.</p><a href="#" onclick="openModal();return false">Profil starten →</a></div>
+  <div class="feature"><div class="ico">🏢</div><h3>Direkt zum Arbeitgeber</h3><p>Bei einem Angebot öffnet BEROPP die offizielle Bewerbungsseite des Unternehmens.</p><a href="#ausbildung">Angebote ansehen →</a></div>
+ </div>
+</div></section>
+
+<section class="companybar"><div class="wrap"><div class="companyrow">
+  <a href="https://db.jobs/" target="_blank" rel="noopener" aria-label="Deutsche Bahn Karriere">DEUTSCHE BAHN</a>
+  <a href="https://careers.dhl.com/" target="_blank" rel="noopener" aria-label="DHL Karriere">DHL</a>
+  <a href="https://jobs.lidl.de/" target="_blank" rel="noopener" aria-label="Lidl Karriere">LIDL</a>
+  <a href="https://www.aldi-nord.de/karriere.html" target="_blank" rel="noopener" aria-label="ALDI Karriere">ALDI</a>
+  <a href="https://karriere.rewe.de/" target="_blank" rel="noopener" aria-label="REWE Karriere">REWE</a>
+  <a href="https://hhla.de/karriere" target="_blank" rel="noopener" aria-label="HHLA Karriere">HHLA</a>
+</div></div></section>
+
+<section class="section" id="ratgeber"><div class="wrap">
+ <div class="head"><div><h2>Bewerbung & Berufseinstieg</h2><p>Kurze Hinweise für deinen nächsten Schritt.</p></div></div>
+ <div class="features">
+  <div class="feature"><div class="ico">📄</div><h3>Lebenslauf</h3><p>Halte Ausbildung, Berufserfahrung, Kenntnisse und Sprachkenntnisse übersichtlich.</p></div>
+  <div class="feature"><div class="ico">✉️</div><h3>Bewerbung</h3><p>Zeige kurz deine Motivation und warum die Stelle zu dir passt.</p></div>
+  <div class="feature"><div class="ico">🗣️</div><h3>Deutschkenntnisse</h3><p>Prüfe bei jeder Ausbildung oder Stelle die Anforderungen des Arbeitgebers.</p></div>
+ </div>
+</div></section>
+<section class="section" id="international"><div class="wrap"><div class="head"><div><h2>International & Remote Chancen</h2><p>Zusätzliche Seiten für Bewerber in Deutschland und aus dem Ausland.</p></div></div><div class="features"><div class="feature"><div class="ico">🌍</div><h3>International Ausbildung</h3><p>Ausbildungsangebote mit Informationen für internationale Bewerber.</p><a href="international-ausbildung.html">Ausbildungen ansehen →</a></div><div class="feature"><div class="ico">✈️</div><h3>International Jobs</h3><p>Jobs in Germany with international recruitment information and employer links.</p><a href="international-jobs.html">International Jobs →</a></div><div class="feature"><div class="ico">💻</div><h3>Remote International</h3><p>Remote and home-office opportunities across Germany, with live search sources.</p><a href="remote-international.html">Remote Jobs ansehen →</a></div></div></div></section></main>
+
+<footer class="footer">
+ <div class="wrap footgrid">
+  <div><div class="logo" style="color:#fff">BerOpp</div><p>Ausbildung, Jobs, Berufe und Bewerbung – einfach an einem Ort.</p></div>
+  <div><h4>Für Bewerber</h4><a href="#ausbildung">Ausbildung</a><a href="#jobs">Jobs</a><a href="#berufe">Berufe</a><a href="international-ausbildung.html">International Ausbildung</a><a href="international-jobs.html">International Jobs</a><a href="remote-international.html">Remote International</a></div>
+  <div><h4>BEROPP</h4><a href="#unternehmen">Über uns</a><a href="#ratgeber">Ratgeber</a><a href="#home">Startseite</a></div>
+  <div><h4>Informationen</h4><a href="datenschutz.html">Datenschutz</a><a href="impressum.html">Impressum</a><a href="kontakt.html">Kontakt</a></div>
+ </div>
+ <div class="wrap copy"><span>© 2026 BEROPP</span><span>Karriere · Bildung · Zukunft</span></div>
+</footer>
+
+<div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeModal()">×</button><h3>BEROPP Konto</h3><p>Für gespeicherte Stellen und dein Profil kannst du hier starten.</p><input type="email" id="email" placeholder="Deine E-Mail-Adresse"><button class="find" style="width:100%;height:44px" onclick="register()">Weiter</button></div></div>
+
+<script>
+const data=[
+{id:1,type:'ausbildung',title:'Ausbildung Fachkraft für Lagerlogistik (m/w/d)',company:'DHL Group',location:'Hamburg',start:'01.08.2027',url:'https://careers.dhl.com/de/de/ausbildung'},
+{id:2,type:'ausbildung',title:'Ausbildung zum Verkäufer / Kaufmann im Einzelhandel (m/w/d)',company:'ALDI Nord',location:'Buxtehude / Hamburg',start:'01.08.2027',url:'https://www.aldi-nord.de/karriere/schueler/ausbildung.html'},
+{id:3,type:'ausbildung',title:'Ausbildung Verkäufer / Kaufmann im Einzelhandel (m/w/d)',company:'Lidl',location:'Hamburg / bundesweit',start:'01.08.2027',url:'https://jobs.lidl.de/schueler/ausbildung'},
+{id:4,type:'ausbildung',title:'Ausbildung Elektroniker/-in (m/w/d)',company:'Deutsche Bahn',location:'Hamburg / Berlin',start:'01.09.2027',url:'https://db.jobs/de-de/karriere-fuer-schueler/ausbildung'},
+{id:5,type:'ausbildung',title:'Ausbildung Kaufmann/-frau für Spedition und Logistikdienstleistung',company:'Logistikunternehmen',location:'Hamburg / Harburg',start:'01.08.2027',url:'https://www.ihk.de/'},
+{id:6,type:'ausbildung',title:'Ausbildung Fachlagerist (m/w/d)',company:'Kaufland',location:'Stade / Hamburg',start:'01.08.2027',url:'https://unternehmen.kaufland.de/karriere/schueler'},
+{id:7,type:'jobs',title:'Lagerhelfer / Staplerfahrer (m/w/d)',company:'HHLA',location:'Hamburg',start:'Sofort',url:'https://hhla.de/karriere'},
+{id:8,type:'jobs',title:'Kommissionierer Logistik (m/w/d)',company:'REWE Group',location:'Neu Wulmstorf / Seevetal',start:'Sofort',url:'https://karriere.rewe.de/'},
+{id:9,type:'jobs',title:'Aushilfe / Verkauf (m/w/d)',company:'EDEKA',location:'Hamburg / Harburg',start:'Sofort',url:'https://verbund.edeka/karriere/'},
+{id:10,type:'ausbildung',title:'Ausbildung Fachkraft für Lagerlogistik / Fachlagerist 2027 (m/w/d)',company:'Lidl GmbH & Co. KG (Siek)',location:'Siek, Schleswig-Holstein',start:'01.08.2027 / 01.09.2027',url:'https://jobs.lidl.de/jobs/ausbildung-fachkraft-fur-lagerlogistik-fachlagerist-2027-m-w-d-siek-717469'},
+{id:11,type:'ausbildung',title:'Ausbildung Fachkraft für Lagerlogistik / Fachlagerist 09.2027 (m/w/d)',company:'Lidl GmbH & Co. KG (Herne)',location:'Herne, Nordrhein-Westfalen',start:'09.2027',url:'https://jobs.lidl.de/jobs/ausbildung-fachkraft-fuer-lagerlogistik-fachlagerist-09.2027-m-w-d-herne-726969'},
+{id:12,type:'ausbildung',title:'Ausbildung Fachkraft für Lagerlogistik / Fachlagerist 2027 (m/w/d)',company:'Lidl GmbH & Co. KG (Freiburg)',location:'Eschbach / Freiburg, Baden-Württemberg',start:'2027',url:'https://jobs.lidl.de/jobs/ausbildung-fachkraft-fur-lagerlogistik-fachlagerist-2027-m-w-d-eschbach-716610'},
+{id:13,type:'ausbildung',title:'Ausbildung Fachkraft für Lagerlogistik / Fachlagerist 2027 (m/w/d)',company:'Lidl GmbH & Co. KG (Erlensee)',location:'Erlensee, Hessen',start:'2027',url:'https://jobs.lidl.de/jobs/ausbildung-fachkraft-fuer-lagerlogistik-fachlagerist-2027-m-w-d-erlensee-langendiebach-729813'},
+{id:14,type:'ausbildung',title:'Ausbildung Fachkraft für Lagerlogistik / Fachlagerist 2027 (m/w/d)',company:'Lidl GmbH & Co. KG (Siegen)',location:'Burbach / Siegen, Nordrhein-Westfalen',start:'2027',url:'https://jobs.lidl.de/jobs/ausbildung-fachkraft-fur-lagerlogistik-fachlagerist-2027-m-w-d-burbach-719239'},
+{id:15,type:'ausbildung',title:'Ausbildung Fachlagerist 08.2027 (m/w/d)',company:'Lidl GmbH & Co. KG (Bremen)',location:'Schwanewede / Bremen',start:'08.2027',url:'https://jobs.lidl.de/suche?filter=%7B%22contract_type%22%3A%5B%5D%2C%22employment_area%22%3A%5B%5D%2C%22entry_level%22%3A%5B%5D%7D&hash=&page=1&query=Fachlagerist&with_event=true'},
+{id:16,type:'ausbildung',title:'Ausbildung Fachkraft für Lagerlogistik / Fachlagerist 2027 (m/w/d)',company:'Lidl GmbH & Co. KG (Augsburg)',location:'Graben / Augsburg, Bayern',start:'2027',url:'https://jobs.lidl.de/suche?filter=%7B%22contract_type%22%3A%5B%5D%2C%22employment_area%22%3A%5B%5D%2C%22entry_level%22%3A%5B%5D%7D&hash=&page=1&query=Fachlagerist&with_event=true'},
+{id:61,type:'ausbildung',title:'Ausbildung Pflegefachkraft (m/w/d) – 2027',company:'DIAKOVERE Krankenhaus gGmbH',location:'Hannover',start:'01.04.2027',url:'https://jobs.diakovere.de/'},
+{id:62,type:'ausbildung',title:'Gesundheitsberuf Pflegefachkraft',company:'DIAKOVERE Krankenhaus gGmbH',location:'Hannover',start:'01.02.2027',url:'https://jobs.diakovere.de/'},
+{id:63,type:'ausbildung',title:'Ausbildung zum/zur Pflegefachmann/Pflegefachfrau (m/w/d)',company:'Dr. med. Ernst-August Wilkening Pflegeheime GmbH',location:'Hannover',start:'01.10.2027',url:'https://www.pflegeheime-wilkening.de/karriere/'},
+{id:64,type:'ausbildung',title:'Ausbildung zur Pflegefachkraft (m/w/d)',company:'Alloheim Senioren-Residenzen SE',location:'Hannover',start:'2027',url:'https://alloheim.softgarden.io/de/vacancies'},
+{id:65,type:'ausbildung',title:'Ausbildung zur Pflegefachkraft (m/w/d)',company:'Vinzenzkrankenhaus Hannover gGmbH',location:'Hannover',start:'01.04.2027',url:'https://karriere.vinzenzkrankenhaus.de/wir-als-arbeitgeber/aus-und-weiterbildung/berufsfachschule-pflege/'},
+{id:66,type:'ausbildung',title:'Ausbildung Pflegefachkraft (m/w/d)',company:'v. Bodelschwinghsche Stiftungen Bethel',location:'Hannover',start:'01.04.2027',url:'https://karriere.bethel.de/bin/job/Hannover-Ausbildung-Pflegefachkraft-%28mwd%29-Praxisplatz-01_04_2027-station%C3%A4re-Pflege-30559/1440040933/'},
+{id:67,type:'ausbildung',title:'Pflegefachkraft (m/w/d) – Generalistische Ausbildung',company:'Stift zum Heiligen Geist',location:'Hannover',start:'2027',url:'https://das-stift.org/karriere/'},
+{id:68,type:'ausbildung',title:'Auszubildende/r Pflegefachfrau/Pflegefachmann (m/w/d)',company:'Johanniter-Unfall-Hilfe e.V.',location:'Hannover',start:'2027',url:'https://www.johanniter.de/juh/lv-ndsbr/pflegefachkraft-bei-den-johannitern-werden/ausbildung-zur-pflegefachfrau/zum-pflegefachmann/'},
+{id:69,type:'ausbildung',title:'Ausbildung Pflegefachmann/-frau (m/w/d)',company:'St. Bernward Krankenhaus',location:'Hildesheim',start:'2027',url:'https://jobs.bernward-khs.de/prj/shw/4e4e53aa080247bc31d0eb4e7aeb07a0_0/1207/Ausbildung_zur_Pflegefachfrau_-mann_w_m_d.htm'},
+{id:70,type:'ausbildung',title:'Ausbildung Pflegefachmann/-frau (m/w/d)',company:'ASB Kreisverband Hildesheim/Hameln-Pyrmont',location:'Hildesheim',start:'2027',url:'https://www.asbhildesheim.de/'},
+{id:17,type:'ausbildung',title:'Ausbildung Kaufmann für Büromanagement 2027 (m/w/d)',company:'Lidl Vertriebs-GmbH & Co. KG (Freienbrink)',location:'Grünheide / Berlin-Brandenburg',start:'2027',url:'https://jobs.lidl.de/suche?baseSearch=%7B%22location%22%3A%7B%22midPointName%22%3A%22Freienbrink%22%2C%22latitude%22%3A52.377835%2C%22longitude%22%3A13.7975%2C%22max_distance%22%3A%2210%22%7D%7D&general=%5B%5D'},
+{id:18,type:'ausbildung',title:'Ausbildung Elektroniker:in für Betriebstechnik 2027',company:'DB Systemtechnik GmbH',location:'Minden, Nordrhein-Westfalen',start:'23.08.2027',url:'https://db.jobs/de-de/Suche/--13971476'},
+{id:19,type:'ausbildung',title:'Ausbildung Elektroniker:in für Betriebstechnik 2027',company:'DB InfraGO AG',location:'Celle / Hannover / Niedersachsen',start:'01.09.2027',url:'https://db.jobs/de-de/Suche/Ausbildung-Elektroniker-in-fuer-Betriebstechnik-2027-13962940'},
+{id:20,type:'ausbildung',title:'Ausbildung Elektroniker:in für Geräte und Systeme 2027',company:'DB InfraGO AG',location:'Ingolstadt, Bayern',start:'01.09.2027',url:'https://db.jobs/de-de/Suche/--13887058'},
+{id:21,type:'ausbildung',title:'Ausbildung Elektroniker:in für Betriebstechnik im Cargo-Werk 2027',company:'DB Cargo AG',location:'Nürnberg, Bayern',start:'01.09.2027',url:'https://db.jobs/service/search/de-de/5441588?isMapTabDefault=true&itemsPerPage=10&pageNum=0&positiontype=Ausbildung&qli=true&query=%22Elektroniker%3Ain%22&sort=pubExternalDate_tdt'},
+{id:22,type:'ausbildung',title:'Ausbildung Elektroniker:in für Betriebstechnik im Werk 2027',company:'DB Cargo AG',location:'Köln, Nordrhein-Westfalen',start:'01.09.2027',url:'https://db.jobs/service/search/de-de/5441588?isMapTabDefault=true&itemsPerPage=10&pageNum=0&positiontype=Ausbildung&qli=true&query=%22Elektroniker%3Ain%22&sort=pubExternalDate_tdt'},
+{id:23,type:'ausbildung',title:'Ausbildung Elektroniker:in für Betriebstechnik im Regio-Werk 2027',company:'DB Regio - Schiene',location:'Würzburg, Bayern',start:'01.09.2027',url:'https://db.jobs/service/search/de-de/5441588?isMapTabDefault=true&itemsPerPage=10&pageNum=0&positiontype=Ausbildung&qli=true&query=%22Elektroniker%3Ain%22&sort=pubExternalDate_tdt'},
+{id:24,type:'ausbildung',title:'Ausbildung Elektroniker:in für Betriebstechnik 2027',company:'DB InfraGO AG',location:'Bremen, Deutschland',start:'01.09.2027',url:'https://db.jobs/service/search/de-de/5441588?country=Deutschland&itemsPerPage=20&pageNum=0&qli=true&query=Ausbildung+Elektroniker%3Ain+&sort=score'},
+{id:25,type:'ausbildung',title:'Ausbildung Elektroniker:in für Betriebstechnik im Streckennetz 2027',company:'DB InfraGO AG',location:'Halle (Saale), Sachsen-Anhalt',start:'01.08.2027',url:'https://db.jobs/service/search/de-de/5441588?country=Deutschland&itemsPerPage=20&pageNum=0&qli=true&query=Ausbildung+Elektroniker%3Ain+&sort=score'},
+{id:26,type:'ausbildung',title:'Ausbildung Elektroniker:in für Betriebstechnik im Streckennetz 2027',company:'DB InfraGO AG',location:'Osnabrück, Niedersachsen',start:'01.09.2027',url:'https://db.jobs/service/search/de-de/5441588?country=Deutschland&itemsPerPage=20&pageNum=0&qli=true&query=Ausbildung+Elektroniker%3Ain+&sort=score'},
+{id:27,type:'ausbildung',title:'Ausbildung Elektroniker:in für Betriebstechnik im Streckennetz 2027',company:'DB InfraGO AG',location:'Hamburg / Uelzen, Niedersachsen',start:'01.09.2027',url:'https://db.jobs/service/search/de-de/5441588?operationsarea=Elektrotechnik+%2F+Mechatronik+%2F+Anlagentechnik&positiontype=Ausbildung&qli=true&state=Hamburg&state=Niedersachsen'},
+{id:28,type:'ausbildung',title:'Ausbildung Kfz-Mechatroniker:in in der Businstandhaltung 2027',company:'Weser-Ems Busverkehr GmbH',location:'Oldenburg, Niedersachsen',start:'01.08.2027',url:'https://db.jobs/service/search/de-de/5441588?operationsarea=Elektrotechnik+%2F+Mechatronik+%2F+Anlagentechnik&positiontype=Ausbildung&qli=true&state=Hamburg&state=Niedersachsen'},
+{id:29,type:'ausbildung',title:'Ausbildung Mechatroniker:in im Werk 2027',company:'DB Regio - Schiene',location:'Braunschweig, Niedersachsen',start:'01.09.2027',url:'https://db.jobs/service/search/de-de/5441588?operationsarea=Elektrotechnik+%2F+Mechatronik+%2F+Anlagentechnik&positiontype=Ausbildung&qli=true&state=Hamburg&state=Niedersachsen'},
+{id:30,type:'ausbildung',title:'Ausbildung Industriemechaniker:in im Streckennetz 2027',company:'DB InfraGO AG',location:'Hamburg, Deutschland',start:'01.09.2027',url:'https://db.jobs/service/search/de-de/5441588?operationsarea=Elektrotechnik+%2F+Mechatronik+%2F+Anlagentechnik&positiontype=Ausbildung&qli=true&state=Hamburg&state=Niedersachsen'},
+{id:31,"type":"jobs","title":"Fachkraft für Lagerlogistik (w/m/d)","company":"DB Zeitarbeit GmbH","location":"Hannover, Niedersachsen","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?contentId=2653760&query=lagerlogistik&positiontype=Fachkraft"},
+{"id":32,"type":"jobs","title":"Fachkraft für Lagerlogistik (w/m/d)","company":"DB Zeitarbeit GmbH","location":"Leipzig, Sachsen","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?contentId=2653760&query=lagerlogistik&positiontype=Fachkraft"},
+{"id":33,"type":"jobs","title":"Fachkraft für Lagerlogistik (w/m/d)","company":"DB InfraGO AG","location":"Haltingen, Baden-Württemberg","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?operationsarea=Lagerlogistik+und+Materialwirtschaft&positiontype=Fachkraft&qli=true&state=Baden-W%C3%BCrttemberg"},
+{"id":34,"type":"jobs","title":"Fachlagerist:in (w/m/d)","company":"DB Zeitarbeit GmbH","location":"Wuppertal, Nordrhein-Westfalen","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?keywords=Fachlagerist&qli=true&rootNavigationId=2652598"},
+{"id":35,"type":"jobs","title":"Lagerhelfer:in (w/m/d)","company":"DB Zeitarbeit GmbH","location":"Witten, Nordrhein-Westfalen","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?keywords=Fachlagerist&qli=true&rootNavigationId=2652598"},
+{"id":36,"type":"jobs","title":"Mitarbeiter Logistik (w/m/d)","company":"DB Zeitarbeit GmbH","location":"Wittenberge, Brandenburg","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?country=Deutschland&itemsPerPage=20&pageNum=0&qli=true&query=Materialwirtschaft&sort=score"},
+{"id":37,"type":"jobs","title":"Staplerfahrer:in (w/m/d)","company":"DB Zeitarbeit GmbH","location":"Krefeld, Nordrhein-Westfalen","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?keywords=Fachlagerist&qli=true&rootNavigationId=2652598"},
+{"id":38,"type":"jobs","title":"Staplerfahrer (m/w/d) für Seecontainer","company":"DB Intermodal Services GmbH","location":"Dornstadt, Baden-Württemberg","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?operationsarea=Lagerlogistik+und+Materialwirtschaft&positiontype=Fachkraft&qli=true&state=Baden-W%C3%BCrttemberg"},
+{"id":39,"type":"jobs","title":"Kranführer:in / Ladeaufsicht (w/m/d)","company":"DUSS GmbH","location":"München, Bayern","start":"01.12.2026","url":"https://db.jobs/service/search/de-de/5441588?operationsarea=Lagerlogistik+und+Materialwirtschaft&positiontype=Fachkraft&qli=true"},
+{"id":40,"type":"jobs","title":"Kranführer:in / Ladeaufsicht (w/m/d)","company":"DUSS GmbH","location":"Köln, Nordrhein-Westfalen","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?operationsarea=Lagerlogistik+und+Materialwirtschaft&positiontype=Fachkraft&qli=true"},
+{"id":41,"type":"jobs","title":"Mitarbeiter:in Customer Service","company":"TFG Transfracht GmbH","location":"Hamburg, Deutschland","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?country=Deutschland&itemsPerPage=20&pageNum=0&qli=true&query=Materialwirtschaft&sort=score"},
+{"id":42,"type":"jobs","title":"Lagerhelfer:in / Transportmitarbeiter:in","company":"DB Zeitarbeit GmbH","location":"Hannover, Niedersachsen","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?country=Deutschland&itemsPerPage=20&pageNum=0&qli=true&query=Materialwirtschaft&sort=score"},
+{"id":43,"type":"jobs","title":"Fachkraft Lagerlogistik (w/m/d)","company":"DB Bahnbau Gruppe GmbH","location":"Königsborn / Biederitz, Sachsen-Anhalt","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?country=Deutschland&itemsPerPage=20&pageNum=0&qli=true&query=Materialwirtschaft&sort=score"},
+{"id":44,"type":"jobs","title":"Fachkraft für Lagerlogistik (w/m/d)","company":"DB Zeitarbeit GmbH","location":"Fulda, Hessen","start":"01.10.2026","url":"https://db.jobs/service/search/de-de/5441588?operationsarea=Lagerlogistik+und+Materialwirtschaft&positiontype=Fachkraft&qli=true"},
+{"id":45,"type":"jobs","title":"Fachkraft für Lagerlogistik mit Zusatzaufgaben (w/m/d)","company":"DB Zeitarbeit GmbH","location":"Wuppertal, Nordrhein-Westfalen","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?contentId=2653760&query=lagerlogistik&positiontype=Fachkraft"},
+{"id":46,"type":"jobs","title":"Berufskraftfahrer:in Lagerlogistik","company":"DB InfraGO AG","location":"Oberhausen, Nordrhein-Westfalen","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?contentId=2653760&query=lagerlogistik&positiontype=Fachkraft"},
+{"id":47,"type":"jobs","title":"Operative:r Mitarbeiter:in – Kranführer:in / Ladeaufsicht / Umfuhrfahrer:in","company":"DUSS GmbH","location":"Köln, Nordrhein-Westfalen","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?keywords=Transport&qli=true&rootNavigationId=5441412"},
+{"id":48,"type":"jobs","title":"Arbeiter:in – Schwellenaufbereitung und Recycling","company":"DB Bahnbau Gruppe GmbH","location":"Hanau, Hessen","start":"ab sofort","url":"https://db.jobs/service/search/de-de/5441588?keywords=Fachlagerist&qli=true&rootNavigationId=2652598"},
+{"id":49,"type":"jobs","title":"Verkäufer (m/w/d)","company":"REWE","location":"Landsberg am Lech, Bayern","start":"laufend","url":"https://karriere.rewe.de/jobs/suche"},
+{"id":50,"type":"jobs","title":"Aushilfe / Minijob mit Kassiertätigkeit (m/w/d)","company":"REWE","location":"München, Bayern","start":"laufend","url":"https://karriere.rewe.de/jobs/suche"},
+{"id":51,"type":"jobs","title":"Stellvertretender Filialleiter / Marktmanager Assistent","company":"REWE","location":"Bremen, Deutschland","start":"laufend","url":"https://karriere.rewe.de/jobs/suche"}
+,
+{id:17,type:'ausbildung',title:'Ausbildung Pflegefachfrau / Pflegefachmann (m/w/d) – 2027',company:'KORIAN Holding GmbH',location:'Lüneburg',start:'2027',url:'https://www.make-it-in-germany.com/de/arbeiten-in-deutschland/jobboerse/job/job-13183-8338-KORIAN1-S'},
+{id:18,type:'ausbildung',title:'Ausbildung Pflegefachperson (w/m/d) mit ausländischem Schulabschluss',company:'Universitätsklinikum Ulm',location:'Ulm',start:'01.04.2027',url:'https://www.make-it-in-germany.com/de/arbeiten-in-deutschland/jobboerse/job/job-10001-1003223676-S'},
+{id:19,type:'ausbildung',title:'Ausbildung Pflegefachfrau/-mann (m/w/d) – 2027',company:'Klinikverbund Allgäu gGmbH',location:'Kempten (Allgäu)',start:'01.09.2027',url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachfrau%2F-mann'},
+{id:20,type:'ausbildung',title:'Ausbildung Pflegefachfrau/-mann (m/w/d)',company:'Stephanus gGmbH',location:'Berlin',start:'01.10.2027',url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachfrau%2F-mann'},
+{id:21,type:'ausbildung',title:'Ausbildung Pflegefachfrau/Pflegefachmann (m/w/d)',company:'DRK KV Chemnitzer Umland e.V.',location:'Limbach-Oberfrohna',start:'01.09.2027',url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachfrau%2FPflegefachmann'},
+{id:22,type:'ausbildung',title:'Ausbildung Pflegefachmann/-frau (m/w/d)',company:'Landkreis Leer',location:'Leer (Ostfriesland)',start:'01.08.2027',url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann'},
+{id:23,type:'ausbildung',title:'Ausbildung Pflegefachmann/-frau (m/w/d)',company:'Kliniken am Goldenen Steig gGmbH',location:'Freyung',start:'01.09.2027',url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann'},
+{id:24,type:'ausbildung',title:'Ausbildung Pflegefachmann/-frau (m/w/d)',company:'Wohlfahrtswerk für Baden-Württemberg',location:'Stuttgart',start:'01.04.2027',url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},,
+{id:25,type:'ausbildung',title:"Pflegefachfrau / Pflegefachmann (m/w/d)",company:"Klinikum Esslingen GmbH",location:"Esslingen am Neckar",start:"01.10.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:26,type:'ausbildung',title:"Pflegefachmann (m/w/d)",company:"diakonis Stiftung Diakonissenhaus",location:"Detmold",start:"01.08.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:27,type:'ausbildung',title:"Ausbildung 2027 - Pflegefachmann/-frau",company:"Allg. Krankenhaus Viersen GmbH",location:"Viersen",start:"01.03.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:28,type:'ausbildung',title:"Ausbildung Pflegefachmann/-frau (m/w/d)",company:"Altenpflegeheim Stolpen",location:"Stolpen",start:"23.08.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:29,type:'ausbildung',title:"Ausbildung Pflegefachfrau / Pflegefachmann",company:"Dr. Fontheim GmbH & Co. KG",location:"Liebenburg",start:"01.09.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:30,type:'ausbildung',title:"Azubi Pflege (m/w/d) für 2027",company:"CURATA Pflegebetriebe GmbH",location:"Sudwalde",start:"01.08.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:31,type:'ausbildung',title:"Ausbildung 2027: Pflegefachkraft (m/w/d)",company:"Regionalcaritasverband e.V.",location:"Bamberg",start:"01.09.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:32,type:'ausbildung',title:"Ausbildung 2027 Pflegefachmann (m/w/d)",company:"Haus Edelberg Senioren-Zentrum",location:"Elchesheim-Illingen",start:"01.10.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:33,type:'ausbildung',title:"Pflegefachmann/-frau (m/w/d) 2027",company:"Deutsches Rotes Kreuz",location:"Meiningen",start:"01.09.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:34,type:'ausbildung',title:"Ausbildung Pflegefachfrau / Pflegefachmann",company:"v. Bodelschwinghsche Stiftungen Bethel",location:"Bielefeld",start:"01.04.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:35,type:'ausbildung',title:"Ausbildung 2027 Pflegefachmann/-frau",company:"Tannenhof Fachpflegeheime GmbH",location:"Bad Sachsa",start:"01.08.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:36,type:'ausbildung',title:"Ausbildung Pflegefachkraft Seniorenhaus",company:"Seniorenhaus GmbH",location:"Würselen",start:"2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:37,type:'ausbildung',title:"Ausbildung Pflegefachkraft Seniorenhaus",company:"Seniorenhaus GmbH",location:"Bonn",start:"2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:38,type:'ausbildung',title:"3-jährige generalistische Ausbildung Pflegefachfrau/-mann",company:"Klinik Bavaria GmbH & Co KG",location:"Bad Kissingen",start:"2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:39,type:'ausbildung',title:"Pflegefachfrau / Pflegefachmann (m/w/d)",company:"Diakonisches Werk Plauen e.V.",location:"Plauen",start:"01.09.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:40,type:'ausbildung',title:"Pflegefachmann / Pflegefachfrau (m/w/d)",company:"KREISKLINIKEN BOGEN-MALLERSDORF",location:"Bogen-Mallersdorf",start:"01.09.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:41,type:'ausbildung',title:"Pflegefachkraft (m/w/d)",company:"DGD DKH Wehrda gGmbH",location:"Marburg",start:"01.04.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:42,type:'ausbildung',title:"Pflegefachkraft (w/m/d)",company:"K&S Dr. Krantz Sozialbau und Betreuung",location:"Sottrum",start:"01.08.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:43,type:'ausbildung',title:"Pflegefachkraft (m/w/d)",company:"Mattes Dehne Ihr Pflegedienst Dehne",location:"Bodenwerder",start:"01.08.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:44,type:'ausbildung',title:"Pflegefachkraft",company:"Klinikum Obergöltzsch Rodewisch",location:"Rodewisch",start:"01.09.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:45,type:'ausbildung',title:"Ausbildung Pflegefachfrau/Pflegefachmann",company:"Stiftung Diakoniewerk Kropp",location:"Marne",start:"2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'},
+{id:46,type:'ausbildung',title:"Ausbildung zum Pflegefachmann/-frau",company:"Volkssolidarität Elbtalkreis",location:"Radebeul",start:"01.09.2027",url:'https://www.arbeitsagentur.de/jobsuche/suche?suchbereich=ausbildung&was=Pflegefachmann%2F-frau'}]
+let type='ausbildung',slide=0;
+function card(x){return '<article class="card"><span class="badge '+(x.type==='jobs'?'job':'')+'">'+(x.type==='jobs'?'JOB':'AUSBILDUNG')+'</span><h3>'+x.title+'</h3><div class="meta">🏢 '+x.company+'</div><div class="meta">📍 '+x.location+'</div><div class="meta">📅 '+x.start+'</div><p class="desc">Details prüfen und anschließend direkt zur offiziellen Arbeitgeberseite gehen.</p><button class="apply" onclick="apply('+x.id+')">Direkt bewerben →</button></article>'}
+function render(){let q=(document.getElementById('q').value||'').toLowerCase(),l=(document.getElementById('loc').value||'').toLowerCase();let filtered=data.filter(x=>x.type===type&&(!q||(x.title+' '+x.company+' '+x.location).toLowerCase().includes(q))&&(!l||x.location.toLowerCase().includes(l)));document.getElementById('results').innerHTML=filtered.map(card).join('')||'<p>Keine passenden Angebote gefunden.</p>';let jobs=data.filter(x=>x.type==='jobs'&&(!q||(x.title+' '+x.company+' '+x.location).toLowerCase().includes(q))&&(!l||x.location.toLowerCase().includes(l)));document.getElementById('jobresults').innerHTML=jobs.map(card).join('')||'<p>Keine passenden Jobs gefunden.</p>'}
+function setType(t){type=t;document.getElementById('ta').classList.toggle('active',t==='ausbildung');document.getElementById('tj').classList.toggle('active',t==='jobs');render();document.getElementById(t==='jobs'?'jobs':'ausbildung').scrollIntoView({behavior:'smooth'})}
+function searchNow(){render();document.getElementById(type==='jobs'?'jobs':'ausbildung').scrollIntoView({behavior:'smooth'})}
+function quick(q){document.getElementById('q').value=q;document.getElementById('loc').value='';type='ausbildung';document.getElementById('ta').classList.add('active');document.getElementById('tj').classList.remove('active');render();document.getElementById('ausbildung').scrollIntoView({behavior:'smooth'});}
+function showAllBerufe(){document.getElementById('q').value='';document.getElementById('loc').value='';type='ausbildung';document.getElementById('ta').classList.add('active');document.getElementById('tj').classList.remove('active');render();document.getElementById('ausbildung').scrollIntoView({behavior:'smooth'});}
+function apply(id){let x=data.find(v=>v.id===id);if(x)window.open(x.url,'_blank','noopener')}
+function openModal(){document.getElementById('modal').style.display='flex'}
+function closeModal(){document.getElementById('modal').style.display='none'}
+function changeLanguage(lang){
+  const t={
+    en:{
+      'Ausbildung':'Apprenticeships','Jobs':'Jobs','Berufe':'Careers','International':'International','Remote':'Remote','Unternehmen':'Companies','Ratgeber':'Guides',
+      'Einloggen':'Log in','Kostenlos registrieren':'Register for free','Finde deine Ausbildung und deinen nächsten Schritt.':'Find your apprenticeship and your next step.',
+      'Ausbildungsplätze, Jobs und Berufe entdecken – einfach suchen, vergleichen und direkt zum Arbeitgeber.':'Discover apprenticeships, jobs and careers – search, compare and go directly to the employer.',
+      'Stellen finden':'Find jobs','Beliebte Suchen:':'Popular searches:','Fachlagerist':'Warehouse specialist','Elektroniker':'Electronics technician','Kaufmann':'Commercial clerk','Pflege':'Healthcare','Ausbildung 2027':'Apprenticeships 2027',
+      'Orientieren. Entdecken. Bewerben.':'Explore. Discover. Apply.','Finde passende Möglichkeiten und öffne die offizielle Arbeitgeberseite für die Bewerbung.':'Find suitable opportunities and open the official employer page to apply.',
+      'Berufe nach Interessen':'Careers by interest','Entdecke beliebte Bereiche für deinen Berufseinstieg.':'Discover popular fields for starting your career.','Alle Berufe →':'All careers →',
+      'Lager & Logistik':'Warehouse & Logistics','Ausbildung & Jobs':'Apprenticeships & Jobs','Elektrotechnik':'Electrical Engineering','Technik & Handwerk':'Technology & Skilled Trades',
+      'Kaufmännisch':'Business & Commerce','Büro & Handel':'Office & Retail','Mechatronik':'Mechatronics','Technik & Industrie':'Technology & Industry','Gesundheit':'Healthcare','Pflege & Medizin':'Care & Medicine','Verkauf':'Sales','Handel & Kunden':'Retail & Customers',
+      'Deine Zukunft beginnt mit dem richtigen Beruf.':'Your future starts with the right career.','Entdecke freie Ausbildungsplätze und starte deinen nächsten Schritt.':'Discover available apprenticeships and take your next step.','Ausbildung finden →':'Find an apprenticeship →',
+      'Dein Profil. Deine Bewerbung. Dein Weg.':'Your profile. Your application. Your path.','Bereite deine Daten vor und gehe bei passenden Angeboten direkt zum Unternehmen.':'Prepare your details and go directly to the company for suitable opportunities.','Mehr erfahren →':'Learn more →',
+      'Finde deinen nächsten beruflichen Schritt.':'Find your next career step.','Suche nach Beruf und Ort und entdecke passende Möglichkeiten.':'Search by career and location and discover suitable opportunities.','Jobs ansehen →':'View jobs →',
+      'Aktuelle Ausbildungsplätze':'Current apprenticeships','Ausgewählte Angebote für deinen Einstieg.':'Selected opportunities for your start.','Alle Ausbildungen →':'All apprenticeships →',
+      'Jobs & Minijobs':'Jobs & part-time jobs','Stellen aus Hamburg und weiteren Regionen in Deutschland – inklusive Remote und internationaler Chancen.':'Jobs from Hamburg and other regions in Germany – including remote and international opportunities.','Remote Jobs →':'Remote jobs →',
+      'Was BEROPP dir bietet':'What BEROPP offers','Alles Wichtige für deine Suche an einem Ort.':'Everything important for your search in one place.',
+      'Passende Angebote finden':'Find suitable opportunities','Suche nach Beruf, Unternehmen und Ort und filtere die Ergebnisse direkt.':'Search by career, company and location and filter results directly.','Suche starten →':'Start search →',
+      'CV & Bewerbung':'CV & Application','Bereite deine wichtigsten Angaben übersichtlich für Bewerbungen vor.':'Prepare your key details clearly for applications.','Profil starten →':'Start profile →',
+      'Direkt zum Arbeitgeber':'Direct to employer','Bei einem Angebot öffnet BEROPP die offizielle Bewerbungsseite des Unternehmens.':'For an offer, BEROPP opens the company’s official application page.','Angebote ansehen →':'View opportunities →',
+      'Bewerbung & Berufseinstieg':'Applications & Career Start','Kurze Hinweise für deinen nächsten Schritt.':'Short tips for your next step.',
+      'BEROPP Konto':'BEROPP Account','Für gespeicherte Stellen und dein Profil kannst du hier starten.':'Start here for saved jobs and your profile.','Weiter':'Continue'
+    },
+    rw:{
+      'Ausbildung':'Amahugurwa y’umwuga','Jobs':'Akazi','Berufe':'Imyuga','International':'Mpuzamahanga','Remote':'Akazi ka kure','Unternehmen':'Ibigo','Ratgeber':'Inama',
+      'Einloggen':'Injira','Kostenlos registrieren':'Iyandikishe ku buntu','Finde deine Ausbildung und deinen nächsten Schritt.':'Shaka amahugurwa y’umwuga n’intambwe yawe ikurikira.',
+      'Ausbildungsplätze, Jobs und Berufe entdecken – einfach suchen, vergleichen und direkt zum Arbeitgeber.':'Shaka amahugurwa, akazi n’imyuga – shakisha, gereranya kandi ujye ku kigo gitanga akazi.',
+      'Stellen finden':'Shaka akazi','Beliebte Suchen:':'Ibyo abantu bakunze gushaka:','Ausbildung 2027':'Amahugurwa 2027',
+      'Orientieren. Entdecken. Bewerben.':'Menya. Shakisha. Saba akazi.','Finde passende Möglichkeiten und öffne die offizielle Arbeitgeberseite für die Bewerbung.':'Shaka amahirwe akubereye kandi ufungure urubuga rwemewe rw’ikigo usabe akazi.',
+      'Berufe nach Interessen':'Imyuga ukurikije ibyo ukunda','Entdecke beliebte Bereiche für deinen Berufseinstieg.':'Menya imirimo ikunzwe watangiriramo umwuga.','Alle Berufe →':'Imyuga yose →',
+      'Lager & Logistik':'Ububiko n’ubwikorezi','Ausbildung & Jobs':'Amahugurwa n’akazi','Elektrotechnik':'Amashanyarazi','Technik & Handwerk':'Tekiniki n’ubukorikori',
+      'Kaufmännisch':'Ubucuruzi n’ubuyobozi','Büro & Handel':'Ibiro n’ubucuruzi','Mechatronik':'Mechatronics','Technik & Industrie':'Tekiniki n’inganda','Gesundheit':'Ubuzima','Pflege & Medizin':'Ubuvuzi','Verkauf':'Ubucuruzi','Handel & Kunden':'Ubucuruzi n’abakiriya',
+      'Deine Zukunft beginnt mit dem richtigen Beruf.':'Ejo hazaza hawe hatangirana n’umwuga ukwiriye.','Entdecke freie Ausbildungsplätze und starte deinen nächsten Schritt.':'Menya imyanya y’amahugurwa ihari utangire intambwe yawe ikurikira.','Ausbildung finden →':'Shaka amahugurwa →',
+      'Dein Profil. Deine Bewerbung. Dein Weg.':'Umwirondoro wawe. Gusaba akazi kwawe. Inzira yawe.','Bereite deine Daten vor und gehe bei passenden Angeboten direkt zum Unternehmen.':'Tegura amakuru yawe kandi ujye ku kigo gitanga amahirwe akubereye.','Mehr erfahren →':'Menya byinshi →',
+      'Finde deinen nächsten beruflichen Schritt.':'Shaka intambwe yawe ikurikira mu mwuga.','Suche nach Beruf und Ort und entdecke passende Möglichkeiten.':'Shakisha umwuga n’aho uri kandi ubone amahirwe akubereye.','Jobs ansehen →':'Reba akazi →',
+      'Aktuelle Ausbildungsplätze':'Amahugurwa ahari ubu','Ausgewählte Angebote für deinen Einstieg.':'Amahirwe yatoranyijwe yo gutangiriramo.','Alle Ausbildungen →':'Amahugurwa yose →',
+      'Jobs & Minijobs':'Akazi n’akazi gato','Stellen aus Hamburg und weiteren Regionen in Deutschland – inklusive Remote und internationaler Chancen.':'Akazi ko muri Hamburg no mu tundi turere two mu Budage – harimo akazi ka kure n’amahirwe mpuzamahanga.','Remote Jobs →':'Akazi ka kure →',
+      'Was BEROPP dir bietet':'Ibyo BEROPP iguha','Alles Wichtige für deine Suche an einem Ort.':'Iby’ingenzi byose byo gushaka akazi ahantu hamwe.',
+      'Passende Angebote finden':'Shaka amahirwe akubereye','Suche nach Beruf, Unternehmen und Ort und filtere die Ergebnisse direkt.':'Shakisha umwuga, ikigo n’aho giherereye kandi ushungure ibisubizo.','Suche starten →':'Tangira gushakisha →',
+      'CV & Bewerbung':'CV no gusaba akazi','Bereite deine wichtigsten Angaben übersichtlich für Bewerbungen vor.':'Tegura amakuru yawe y’ingenzi neza kugira ngo usabe akazi.','Profil starten →':'Tangira umwirondoro →',
+      'Direkt zum Arbeitgeber':'Jya ku kigo gitanga akazi','Bei einem Angebot öffnet BEROPP die offizielle Bewerbungsseite des Unternehmens.':'Iyo ubonye amahirwe, BEROPP ifungura urubuga rwemewe rwo gusaba akazi rw’ikigo.','Angebote ansehen →':'Reba amahirwe →',
+      'Bewerbung & Berufseinstieg':'Gusaba akazi no gutangira umwuga','Kurze Hinweise für deinen nächsten Schritt.':'Inama ngufi ku ntambwe yawe ikurikira.',
+      'BEROPP Konto':'Konti ya BEROPP','Für gespeicherte Stellen und dein Profil kannst du hier starten.':'Aha ni ho utangirira ku kazi wabikije no ku mwirondoro wawe.','Weiter':'Komeza'
+    }
+  };
+  if(lang==='de'){location.reload();return;}
+  const dict=t[lang]||t.en;
+  document.querySelectorAll('body *').forEach(el=>{
+    if(el.children.length===0){
+      const key=el.textContent.trim();
+      if(dict[key]) el.textContent=dict[key];
+    }
+  });
+  document.querySelectorAll('input[placeholder]').forEach(el=>{
+    if(lang==='en'){if(el.id==='q')el.placeholder='Career, apprenticeship or company';if(el.id==='loc')el.placeholder='City or postcode';if(el.id==='email')el.placeholder='Your email address';}
+    if(lang==='rw'){if(el.id==='q')el.placeholder='Umwuga, amahugurwa cyangwa ikigo';if(el.id==='loc')el.placeholder='Umujyi cyangwa postcode';if(el.id==='email')el.placeholder='Email yawe';}
+  });
+  localStorage.setItem('beroppLanguage',lang);
+}
+function register(){
+  const e=document.getElementById('email').value.trim();
+  if(!e || !e.includes('@')){
+    document.getElementById('email').focus();
+    return;
+  }
+  localStorage.setItem('beroppEmail',e);
+  localStorage.setItem('beroppLoggedIn','1');
+  document.body.classList.remove('locked');
+  closeModal();
+}
+function restoreAccount(){
+  if(localStorage.getItem('beroppLoggedIn')==='1' && localStorage.getItem('beroppEmail')){
+    document.body.classList.remove('locked');
+    closeModal();
+  }
+}
+function show(n){slide=(n+3)%3;document.getElementById('adtrack').style.transform='translateX(-'+slide*100+'%)';document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===slide))}
+function init(){restoreAccount();document.getElementById('dots').innerHTML=[0,1,2].map(i=>'<button class="dot '+(i===0?'active':'')+'" onclick="show('+i+')"></button>').join('');setInterval(()=>show(slide+1),5000);render()}
+document.addEventListener('DOMContentLoaded',init);document.getElementById('q').addEventListener('keyup',e=>{if(e.key==='Enter')searchNow()});document.getElementById('loc').addEventListener('keyup',e=>{if(e.key==='Enter')searchNow()});
+</script>
+</body>
+</html>
