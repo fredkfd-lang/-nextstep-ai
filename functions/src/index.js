@@ -40,7 +40,7 @@ exports.createGiftGroup = onCall(async (request) => {
   const name = textValue(request.data?.name, "Group name");
   const description = typeof request.data?.description === "string" ? request.data.description.trim().slice(0, 500) : "";
   const code = makeCode();
-  const ref = db.collection("giftGroups").doc();
+  const ref = db.collection("linkoraGiftGroups").doc();
   await ref.set({ name, description, ownerUid: uid, inviteCode: code, createdAt: FieldValue.serverTimestamp(), drawCreatedAt: null });
   await ref.collection("members").doc(uid).set({ uid, displayName: textValue(request.data?.displayName || "Organizer", "Display name"), joinedAt: FieldValue.serverTimestamp() });
   return { groupId: ref.id, inviteCode: code };
@@ -50,7 +50,7 @@ exports.joinGiftGroup = onCall(async (request) => {
   const uid = verifiedUid(request);
   const code = textValue(request.data?.inviteCode, "Invitation code", 200);
   const displayName = textValue(request.data?.displayName, "Display name");
-  const found = await db.collection("giftGroups").where("inviteCode", "==", code).limit(1).get();
+  const found = await db.collection("linkoraGiftGroups").where("inviteCode", "==", code).limit(1).get();
   if (found.empty) throw new HttpsError("not-found", "Invitation is invalid or expired.");
   const group = found.docs[0];
   if (group.get("drawCreatedAt")) throw new HttpsError("failed-precondition", "This group has already drawn names.");
@@ -61,7 +61,7 @@ exports.joinGiftGroup = onCall(async (request) => {
 exports.drawGiftRecipients = onCall(async (request) => {
   const uid = verifiedUid(request);
   const groupId = textValue(request.data?.groupId, "Group ID", 150);
-  const groupRef = db.collection("giftGroups").doc(groupId);
+  const groupRef = db.collection("linkoraGiftGroups").doc(groupId);
   return db.runTransaction(async (tx) => {
     const group = await tx.get(groupRef);
     if (!group.exists) throw new HttpsError("not-found", "Group not found.");
@@ -82,7 +82,7 @@ exports.drawGiftRecipients = onCall(async (request) => {
 exports.revealGiftRecipient = onCall(async (request) => {
   const uid = verifiedUid(request);
   const groupId = textValue(request.data?.groupId, "Group ID", 150);
-  const groupRef = db.collection("giftGroups").doc(groupId);
+  const groupRef = db.collection("linkoraGiftGroups").doc(groupId);
   const [group, member, assignment] = await Promise.all([
     groupRef.get(), groupRef.collection("members").doc(uid).get(), groupRef.collection("privateAssignments").doc(uid).get()
   ]);
