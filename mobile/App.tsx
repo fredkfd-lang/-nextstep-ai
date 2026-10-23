@@ -7,9 +7,9 @@ import { useShareIntent } from "expo-share-intent";
 
 type Language = "rw" | "en" | "de" | "fr";
 const LANGUAGES: { id: Language; label: string }[] = [
-  { id: "rw", label: "Kinyarwanda" },
   { id: "de", label: "Deutsch" },
   { id: "en", label: "English" },
+  { id: "rw", label: "Kinyarwanda" },
   { id: "fr", label: "Français" },
 ];
 const COPY: Record<Language, Record<string, string>> = {
@@ -107,7 +107,7 @@ function extractInvite(value: string): string {
 
 export default function App() {
   const { hasShareIntent, shareIntent, resetShareIntent, error: shareError } = useShareIntent();
-  const [language, setLanguage] = useState<Language>("rw");
+  const [language, setLanguage] = useState<Language>("de");
   const t = COPY[language];
   const [groupName, setGroupName] = useState("");
   const [inviteLink, setInviteLink] = useState("");
