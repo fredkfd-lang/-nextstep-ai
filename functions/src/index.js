@@ -57,10 +57,15 @@ exports.joinGiftGroup = onCall(async (request) => {
   const displayName = textValue(request.data?.displayName, "Display name");
   const found = await db.collection("linkoraGiftGroups").where("inviteCode", "==", code).limit(1).get();
   if (found.empty) throw new HttpsError("not-found", "Invitation is invalid or expired.");
-  const group = found.docs[0];
-  if (group.get("drawCreatedAt")) throw new HttpsError("failed-precondition", "This group has already drawn names.");
-  await group.ref.collection("members").doc(uid).set({ uid, displayName, joinedAt: FieldValue.serverTimestamp() }, { merge: true });
-  return { groupId: group.id, groupName: group.get("name") };
+  const groupRef = found.docs[0].ref;
+  return db.runTransaction(async (tx) => {
+    const group = await tx.get(groupRef);
+    if (!group.exists) throw new HttpsError("not-found", "Invitation is invalid or expired.");
+    if (group.get("drawCreatedAt")) throw new HttpsError("failed-precondition", "This group has already drawn names.");
+    const memberRef = groupRef.collection("members").doc(uid);
+    tx.set(memberRef, { uid, displayName, joinedAt: FieldValue.serverTimestamp() }, { merge: true });
+    return { groupId: groupRef.id, groupName: group.get("name") };
+  });
 });
 
 exports.drawGiftRecipients = onCall(async (request) => {
