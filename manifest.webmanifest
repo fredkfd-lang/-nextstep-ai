@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "Linkora — Groups, Meetups & Community",
-  "short_name": "Linkora",
+  "name": "BerOpp — Groups, Meetups & Community",
+  "short_name": "BerOpp",
   "description": "Connect groups, plan meetups and share community activities.",
   "start_url": "/?source=pwa",
   "scope": "/",
