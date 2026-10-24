@@ -1,11 +1,11 @@
-# Linkora secure gift-group backend
+# BerOpp secure gift-group backend
 
 This folder contains Firebase callable Cloud Functions for verified members and secret gift draws.
 
 ## Data separation
-- Linkora stores group data in the `linkoraGiftGroups` collection, with `members` and `privateAssignments` subcollections.
-- The Firebase project is currently configured as `beropp`, as requested. This keeps Linkora's Firestore group data in its own collection, separate from BerOpp's application collections.
-- **Firebase Authentication users are project-wide**, so accounts created for Linkora use the same Firebase Auth user pool as BerOpp. A named Firebase web app does not isolate user accounts.
+- BerOpp stores group data in the `linkoraGiftGroups` collection, with `members` and `privateAssignments` subcollections.
+- The Firebase project is currently configured as `beropp`, as requested. This keeps BerOpp's Firestore group data in its own collection, separate from BerOpp's application collections.
+- **Firebase Authentication users are project-wide**, so accounts created for BerOpp use the same Firebase Auth user pool as BerOpp. A named Firebase web app does not isolate user accounts.
 - Never deploy the repository's restrictive `firestore.rules` to the BerOpp project without first reviewing and merging them with BerOpp's existing production rules. The root `firebase.json` is intentionally configured to deploy **Cloud Functions only**.
 
 ## What it provides
@@ -15,8 +15,8 @@ This folder contains Firebase callable Cloud Functions for verified members and 
 - `revealGiftRecipient`: a member can request only their own recipient.
 
 ## Required before it is live
-1. Confirm that using the shared `beropp` Firebase Authentication user pool is acceptable for Linkora and BerOpp.
-2. In Firebase Console, enable Email/Password and Phone providers under Authentication. Configure authorized domains for the Linkora website.
+1. Confirm that using the shared `beropp` Firebase Authentication user pool is acceptable for BerOpp and BerOpp.
+2. In Firebase Console, enable Email/Password and Phone providers under Authentication. Configure authorized domains for the BerOpp website.
 3. Enable Cloud Firestore if it is not already enabled. Cloud Functions deployment may require the Firebase project to use the Blaze billing plan.
 4. From the repository root, install Firebase CLI if needed, sign in with an account that has permission to deploy to `beropp`, then run:
    `npm install --prefix functions`
@@ -24,3 +24,7 @@ This folder contains Firebase callable Cloud Functions for verified members and 
 5. Test account verification, group creation/joining, one-time draw, and each member's private reveal with test accounts before using real group members.
 
 The website client configuration is in `firebase-linkora.js`. Firebase web configuration values are intended for client use; never put service-account private keys or other server secrets in the website or commit them to GitHub. The backend is committed but has not been deployed or production-tested yet.
+
+
+## Current verification status
+The source changes are saved in GitHub, but the callable functions have not been confirmed deployed to Firebase. Do not describe group creation, joining, or gift draws as live until deployment and end-to-end tests pass. The main page still labels this experience as an early prototype; group chat and shared meetup persistence are not implemented by these callable functions yet.
