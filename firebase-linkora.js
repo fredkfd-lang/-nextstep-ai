@@ -110,6 +110,17 @@ bind("cloudCreateGroup","createGroup");
 bind("cloudJoinGroup","joinGroup");
 bind("cloudRunDraw","draw");
 bind("cloudRevealRecipient","reveal");
+const copyInviteButton = document.getElementById("cloudCopyInviteCode");
+if (copyInviteButton) copyInviteButton.addEventListener("click", async () => {
+  const code = document.getElementById("cloudInviteCode")?.textContent?.trim() || "";
+  if (!code || code === "—" || code.startsWith("Joined:")) { status("Create a group first to get an invitation code.", true); return; }
+  try {
+    await navigator.clipboard.writeText(code);
+    status("Invitation code copied. Share it privately with group members.");
+  } catch (_) {
+    status("Could not copy automatically. Select and copy the invitation code manually.", true);
+  }
+});
 window.addEventListener("DOMContentLoaded", () => {
   const note=document.getElementById("cloudConfigNote");
   if(note && configured) note.textContent="Firebase client configuration loaded. Deploy Cloud Functions and Firestore rules before using this feature.";
