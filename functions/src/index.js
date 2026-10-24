@@ -24,15 +24,20 @@ function textValue(value, label, max = 100) {
 }
 function makeCode() { return randomBytes(24).toString("base64url"); }
 function noSelfDraw(members) {
-  const shuffled = [...members];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = randomInt(0, i);
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  // A random shuffle can accidentally assign someone to themselves.
+  // Retry a bounded number of times before returning a controlled error.
+  const maxAttempts = 100;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const shuffled = [...members];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = randomInt(0, i + 1);
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    if (shuffled.every((member, i) => member.uid !== members[i].uid)) {
+      return shuffled;
+    }
   }
-  if (shuffled.some((m, i) => m.uid === members[i].uid)) {
-    throw new HttpsError("internal", "Could not create a valid draw.");
-  }
-  return shuffled;
+  throw new HttpsError("internal", "Could not create a valid draw. Please try again.");
 }
 
 exports.createGiftGroup = onCall(async (request) => {
