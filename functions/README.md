@@ -1,30 +1,40 @@
-# BerOpp secure gift-group backend
+# BerOpp Community Firebase Functions
 
-This folder contains Firebase callable Cloud Functions for verified members and secret gift draws.
+This folder contains callable Cloud Functions for BerOpp groups, group chat, meetups and Secret Gift Draw.
 
 ## Data separation
-- BerOpp stores group data in the `linkoraGiftGroups` collection, with `members` and `privateAssignments` subcollections.
-- The Firebase project is currently configured as `beropp`, as requested. This keeps BerOpp's Firestore group data in its own collection, separate from BerOpp's application collections.
-- **Firebase Authentication users are project-wide**, so accounts created for BerOpp use the same Firebase Auth user pool as BerOpp. A named Firebase web app does not isolate user accounts.
-- Never deploy the repository's restrictive `firestore.rules` to the BerOpp project without first reviewing and merging them with BerOpp's existing production rules. The root `firebase.json` is intentionally configured to deploy **Cloud Functions only**.
 
-## What it provides
-- `createGiftGroup`: creates a group and a private invitation code for a signed-in user whose email or phone is verified.
-- `joinGiftGroup`: joins a group using its invitation code after verification.
-- `drawGiftRecipients`: organizer-only draw; each member is assigned someone else, and the draw can only run once.
-- `revealGiftRecipient`: a member can request only their own recipient.
+- BerOpp group data uses `beroppCommunityGroups` and `beroppCommunityInvites`, separate from other application collections.
+- Group subcollections include `members`, `privateAssignments`, `messages`, and `meetups`.
+- The Firebase project is `beropp`. Firebase Authentication users are project-wide; this named Firebase web app does not isolate accounts.
+- Cloud Functions use the Admin SDK. The repository's Firestore rules deny direct client access to community data. Do not deploy those rules to the existing BerOpp project without reviewing and merging them with the production rules.
+- The root `firebase.json` is configured to deploy Cloud Functions only.
 
-## Required before it is live
-1. Confirm that using the shared `beropp` Firebase Authentication user pool is acceptable for BerOpp and BerOpp.
-2. In Firebase Console, enable Email/Password and Phone providers under Authentication. Configure authorized domains for the BerOpp website.
-3. Enable Cloud Firestore if it is not already enabled. Cloud Functions deployment may require the Firebase project to use the Blaze billing plan.
-4. From the repository root, install Firebase CLI if needed, sign in with an account that has permission to deploy to `beropp`, then run:
-   `npm install --prefix functions`
-   `firebase deploy --only functions`
-5. Test account verification, group creation/joining, one-time draw, and each member's private reveal with test accounts before using real group members.
+## Callable functions
 
-The website client configuration is in `firebase-linkora.js`. Firebase web configuration values are intended for client use; never put service-account private keys or other server secrets in the website or commit them to GitHub. The backend is committed but has not been deployed or production-tested yet.
+- `createGiftGroup`: verified-email user creates a group with a six-character invitation code and optional budget/date.
+- `joinGiftGroup`: verified-email user joins with a valid invitation code.
+- `drawGiftRecipients`: organizer-only, one-time server-side draw; requires at least three members and prevents self-assignment.
+- `revealGiftRecipient`: each member can retrieve only their own recipient.
+- `sendGroupMessage` / `listGroupMessages`: verified group members can send messages and read the latest 50 messages.
+- `createGroupMeetup` / `listGroupMeetups`: verified group members can create and view meetups.
 
+## Verification status
 
-## Current verification status
-The source changes are saved in GitHub, but the callable functions have not been confirmed deployed to Firebase. Do not describe group creation, joining, or gift draws as live until deployment and end-to-end tests pass. The main page still labels this experience as an early prototype; group chat and shared meetup persistence are not implemented by these callable functions yet.
+The source code is committed to this GitHub branch only. It has **not** been deployed to Firebase and has **not** been tested end-to-end on `beropp.de`. The local preview for ordinary groups and external platform links still uses browser storage.
+
+## Before any deployment
+
+1. Confirm the shared Firebase Authentication user pool is acceptable.
+2. Confirm Email/Password sign-in and email verification are enabled in Firebase Authentication.
+3. Verify Firestore is enabled and the intended project is `beropp`.
+4. Use Firebase Emulator Suite and test accounts to verify group membership, message privacy, meetup access, the three-member minimum, no self-assignment and private recipient reveal.
+5. Review production Firestore rules before changing them. Do not deploy the rules file blindly.
+6. Cloud Functions deployment may require a billing-plan change. Do not change billing or deploy without explicit approval.
+
+## Local checks
+
+```sh
+npm install --prefix functions
+npm run check --prefix functions
+```
