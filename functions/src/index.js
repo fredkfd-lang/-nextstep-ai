@@ -27,6 +27,15 @@ function optionalText(value, max = 500) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
 }
 
+function validIsoDate(value) {
+  if (typeof value !== "string" || !/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year
+    && date.getUTCMonth() === month - 1
+    && date.getUTCDate() === day;
+}
+
 function makeCode() {
   return randomBytes(4).toString("hex").slice(0, 6).toUpperCase();
 }
