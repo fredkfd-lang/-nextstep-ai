@@ -10,7 +10,7 @@
   "theme_color": "#2459d3",
   "icons": [
     {
-      "src": "/linkora-icon.svg",
+      "src": "/beropp-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
