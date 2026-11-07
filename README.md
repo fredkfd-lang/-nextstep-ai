@@ -1,29 +1,42 @@
-# BerOpp Community — Social Groups Prototype
+# BerOpp Community
 
-This repository is transitioning from the BerOpp jobs/Ausbildung homepage to a social community prototype hosted under the existing project.
+BerOpp is focused on **groups, group chat, meetups/events, and Secret Gift Draw**.
 
-## Current prototype
+## Current repository contents
 
-- Connect a group by recording its WhatsApp, Facebook, or other platform details.
-- Generate a shareable invitation link and join a group space.
-- Explore group activities, friendship prompts, and meetup planning.
-- English and French interface labels.
-- Local browser storage for demo data.
+- `index.html`: mobile-friendly BerOpp community interface.
+- `firebase-beropp.js`: Firebase Authentication and callable-function client.
+- `functions/src/index.js`: server-side group, chat, meetup and private gift-draw functions.
+- `firestore.rules`: restrictive direct-client Firestore rules. Cloud Functions use the Firebase Admin SDK and are not governed by these client rules.
+
+## Implemented in source
+
+- Email/password registration and email verification.
+- Secure group creation with a six-character invitation code.
+- Verified members can join by invitation code.
+- Member-only group chat: send and list the latest 50 messages.
+- Member-only meetup creation and listing.
+- Organizer-only Secret Gift Draw with at least three verified members.
+- Server-side assignment prevents self-draw; each member can reveal only their own recipient.
+- BerOpp group data uses the separate `beroppCommunityGroups` and `beroppCommunityInvites` collections.
 
 ## Important limitations
 
-This is a prototype, not a production social network. Group data and joins are currently stored locally in the browser and are not synchronized between users or devices. The invitation URL carries basic group information. Do not use private information in demo groups or invitation links.
+**GitHub source code is not the same as a deployed service.** These changes have not been deployed to Firebase or verified on `beropp.de`. The shared group/chat/meetup/draw actions will not work until Cloud Functions are deployed and tested.
 
-There is no automatic WhatsApp/Facebook group integration, shared database, production account system, or secure server-side gift-exchange draw yet. Before a public launch, add authentication, a database with restrictive security rules, moderation and reporting, privacy controls, and server-side validation.
+The basic local group/connection preview still uses browser storage and does not synchronize between devices. Automatic WhatsApp/Facebook group import is not available; members must share an invitation code or link themselves. Admin member management, message moderation/reporting, wishlists, gift status tracking, and event editing/cancellation are not implemented in this update.
 
-## Existing homepage backup
+## Safe verification
 
-The previous jobs/Ausbildung homepage was preserved at:
-`backups/beropp-jobs-homepage-2026-10-23.html`
+From the repository root:
 
-The previous README was preserved at:
-`backups/beropp-jobs-readme-2026-10-23.md`
+```sh
+npm install --prefix functions
+npm run check --prefix functions
+```
 
-## Main prototype
+To test locally, use the Firebase Emulator Suite with test accounts and non-sensitive test data. Do not deploy Firestore rules blindly: review them against the existing BerOpp production rules first. Deploying Cloud Functions may require a Firebase billing-plan change, so this repository update does not deploy anything or change billing.
 
-Open `index.html` for the current homepage prototype. The original social prototype source is also preserved at `social/index.html`.
+## Firebase project notes
+
+The Firebase project is `beropp`. Firebase Authentication users are project-wide, so this named web app does not create a separate user pool. Firebase web configuration is public client configuration; never commit service-account private keys or other server secrets.
