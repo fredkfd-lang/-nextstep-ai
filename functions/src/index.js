@@ -52,7 +52,7 @@ async function requireMember(groupRef, uid) {
 
 function getGroupRef(request) {
   const groupId = textValue(request.data?.groupId, "Group ID", 150);
-  return db.collection("linkoraGiftGroups").doc(groupId);
+  return db.collection("beroppCommunityGroups").doc(groupId);
 }
 
 exports.createGiftGroup = onCall(async (request) => {
@@ -66,12 +66,12 @@ exports.createGiftGroup = onCall(async (request) => {
     throw new HttpsError("invalid-argument", "Exchange date must use YYYY-MM-DD.");
   }
 
-  const groupRef = db.collection("linkoraGiftGroups").doc();
+  const groupRef = db.collection("beroppCommunityGroups").doc();
   // Reserve the six-character invite code in a separate document so concurrent
   // group creation cannot silently issue the same code.
   for (let attempt = 0; attempt < 8; attempt++) {
     const inviteCode = makeCode();
-    const inviteRef = db.collection("linkoraGiftInvites").doc(inviteCode);
+    const inviteRef = db.collection("beroppCommunityInvites").doc(inviteCode);
     const created = await db.runTransaction(async (tx) => {
       const existing = await tx.get(inviteRef);
       if (existing.exists) return false;
@@ -97,10 +97,10 @@ exports.joinGiftGroup = onCall(async (request) => {
     throw new HttpsError("invalid-argument", "Enter the six-character invitation code.");
   }
   const displayName = textValue(request.data?.displayName, "Display name");
-  const inviteRef = db.collection("linkoraGiftInvites").doc(code);
+  const inviteRef = db.collection("beroppCommunityInvites").doc(code);
   const invite = await inviteRef.get();
   if (!invite.exists) throw new HttpsError("not-found", "Invitation is invalid or expired.");
-  const groupRef = db.collection("linkoraGiftGroups").doc(invite.get("groupId"));
+  const groupRef = db.collection("beroppCommunityGroups").doc(invite.get("groupId"));
 
   return db.runTransaction(async (tx) => {
     const [currentInvite, group] = await Promise.all([tx.get(inviteRef), tx.get(groupRef)]);
