@@ -112,16 +112,23 @@ exports.joinGiftGroup = onCall(async (request) => {
   const groupRef = db.collection("beroppCommunityGroups").doc(invite.get("groupId"));
 
   return db.runTransaction(async (tx) => {
-    const [currentInvite, group] = await Promise.all([tx.get(inviteRef), tx.get(groupRef)]);
+    const memberRef = groupRef.collection("members").doc(uid);
+    const [currentInvite, group, existingMember] = await Promise.all([
+      tx.get(inviteRef), tx.get(groupRef), tx.get(memberRef)
+    ]);
     if (!currentInvite.exists || !group.exists) {
       throw new HttpsError("not-found", "Invitation is invalid or expired.");
     }
+    // Existing members may recover access on a new device after the draw.
+    // New members cannot join after assignments have been created.
     if (group.get("drawCreatedAt")) {
-      throw new HttpsError("failed-precondition", "This group has already drawn names.");
+      if (!existingMember.exists) {
+        throw new HttpsError("failed-precondition", "This group has already drawn names.");
+      }
+      return { groupId: groupRef.id, groupName: group.get("name"), resumed: true };
     }
-    const memberRef = groupRef.collection("members").doc(uid);
     tx.set(memberRef, { uid, displayName, joinedAt: FieldValue.serverTimestamp() }, { merge: true });
-    return { groupId: groupRef.id, groupName: group.get("name") };
+    return { groupId: groupRef.id, groupName: group.get("name"), resumed: existingMember.exists };
   });
 });
 
