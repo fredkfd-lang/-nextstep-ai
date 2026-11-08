@@ -28,7 +28,7 @@ function optionalText(value, max = 500) {
 }
 
 function validIsoDate(value) {
-  if (typeof value !== "string" || !/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) return false;
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const [year, month, day] = value.split("-").map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
   return date.getUTCFullYear() === year
@@ -71,7 +71,7 @@ exports.createGiftGroup = onCall(async (request) => {
   const description = optionalText(request.data?.description);
   const budget = optionalText(request.data?.budget, 50);
   const exchangeDate = optionalText(request.data?.exchangeDate, 10);
-  if (exchangeDate && !/^\d{4}-\d{2}-\d{2}$/.test(exchangeDate)) {
+  if (exchangeDate && !validIsoDate(exchangeDate)) {
     throw new HttpsError("invalid-argument", "Exchange date must use YYYY-MM-DD.");
   }
 
@@ -205,7 +205,7 @@ exports.createGroupMeetup = onCall(async (request) => {
   const groupRef = getGroupRef(request);
   const title = textValue(request.data?.title, "Meetup title", 120);
   const date = textValue(request.data?.date, "Meetup date", 10);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+  if (!validIsoDate(date)) {
     throw new HttpsError("invalid-argument", "Meetup date must use YYYY-MM-DD.");
   }
   const details = optionalText(request.data?.details);
