@@ -24,7 +24,10 @@ const status = (message, error = false) => {
     el.classList.toggle("error", error);
   }
 };
-let auth, functions, activeCloudGroupId = null;
+let auth, functions, activeCloudGroupId = (() => {
+  try { return sessionStorage.getItem("beroppActiveGroupId") || null; }
+  catch (_) { return null; }
+})();
 
 if (configured) {
   const app = getApps().find(existing => existing.name === "beropp-community")
@@ -38,6 +41,10 @@ if (configured) {
       : "Signed out";
     const verify = document.getElementById("cloudVerifyEmail");
     if (verify) verify.hidden = !user || user.emailVerified;
+    if (user && activeCloudGroupId) {
+      const groupEl = document.getElementById("cloudGroupId");
+      if (groupEl) groupEl.textContent = activeCloudGroupId;
+    }
   });
 } else {
   status("Firebase is not configured. Add the Firebase Web App configuration before using shared groups.", true);
@@ -48,9 +55,19 @@ const callable = name => {
   return httpsCallable(functions, name);
 };
 const field = id => document.getElementById(id)?.value?.trim() || "";
-const groupId = () => activeCloudGroupId
-  || document.getElementById("cloudGroupId")?.textContent?.trim()
-  || "";
+const groupId = () => {
+  const displayed = document.getElementById("cloudGroupId")?.textContent?.trim() || "";
+  return activeCloudGroupId || (displayed && displayed !== "—" ? displayed : "");
+};
+const setActiveGroup = id => {
+  activeCloudGroupId = id || null;
+  try {
+    if (activeCloudGroupId) sessionStorage.setItem("beroppActiveGroupId", activeCloudGroupId);
+    else sessionStorage.removeItem("beroppActiveGroupId");
+  } catch (_) {}
+  const el = document.getElementById("cloudGroupId");
+  if (el) el.textContent = activeCloudGroupId || "—";
+};
 
 async function run(label, fn) {
   try {
@@ -109,7 +126,7 @@ window.BerOppCloud = {
   }),
   signOut: () => run("Signing out", async () => {
     await signOut(auth);
-    activeCloudGroupId = null;
+    setActiveGroup(null);
     return "Signed out.";
   }),
   createGroup: () => run("Creating secure group", async () => {
@@ -122,7 +139,7 @@ window.BerOppCloud = {
       budget: field("cloudGroupBudget"),
       exchangeDate: field("cloudExchangeDate")
     });
-    activeCloudGroupId = result.data.groupId;
+    setActiveGroup(result.data.groupId);
     document.getElementById("cloudInviteCode").textContent = result.data.inviteCode;
     document.getElementById("cloudGroupId").textContent = result.data.groupId;
     return "Secure group created. Share the six-character invitation code privately.";
@@ -134,7 +151,7 @@ window.BerOppCloud = {
       inviteCode: field("cloudJoinCode").toUpperCase(),
       displayName: field("cloudDisplayName")
     });
-    activeCloudGroupId = result.data.groupId;
+    setActiveGroup(result.data.groupId);
     document.getElementById("cloudGroupId").textContent = result.data.groupId;
     document.getElementById("cloudInviteCode").textContent = "Joined: " + result.data.groupName;
     return "Joined the secure group. You can now use its chat and meetups.";
